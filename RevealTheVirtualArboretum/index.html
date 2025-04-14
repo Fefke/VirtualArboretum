@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<link rel="icon" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/png" sizes="32x32" href="images/VA-Logo.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="images/VA-Logo.png">
+
+	<title>Virtual Arboretum - Präsentation</title>
+
+	<link rel="stylesheet" href="dist/reset.css">
+	<link rel="stylesheet" href="dist/reveal.css">
+	<link rel="stylesheet" href="dist/theme/simple.css" id="theme">
+
+	<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	<style>
+		/* Custom Background Gradient */
+		.reveal {
+			/* width: 300px; */
+			/* height: 200px; */
+			color: rgb(205, 203, 203);
+			/* Gradient mit relativ schmalen Übergängen */
+			background: radial-gradient(ellipse at center,
+					#3B1A3F 0%,
+					/* Dunkles, warmes Purpur (Start) */
+					#45204A 35%,
+					/* Wärmeres Violett (Variation 1) */
+					#502A55 70%,
+					/* Etwas helleres warmes Violett (Variation 2) */
+					#38183D 100%
+					/* Dunkles, warmes Purpur (Ende, ähnlich Start) */
+				);
+
+			/* Gradient muss größer sein als das Element, um ihn bewegen zu können */
+			background-size: 200% 100%;
+			/* Animation anwenden (z.B. 10 Sekunden Dauer) */
+			animation: gradient-scroll 23s linear infinite;
+		}
+
+		/* Keyframes, die die Hintergrundposition verschieben */
+		@keyframes gradient-scroll {
+			0% {
+				background-position: 0% 50%;
+			}
+
+			50% {
+				background-position: 100% 50%;
+			}
+
+			100% {
+				background-position: 0% 50%;
+			}
+		}
+
+		/* Optional: Ensure links are visible */
+		.reveal a {
+			color: #add8e6;
+			/* Light Blue for links */
+		}
+
+		.reveal a:hover {
+			color: #f0e68c;
+			/* Khaki on hover */
+		}
+
+		/* Optional: Anpassungen für simple.css auf dunklem Hintergrund */
+		.reveal h1,
+		.reveal h2,
+		.reveal h3,
+		.reveal h4,
+		.reveal h5,
+		.reveal h6 {
+			color: white;
+			text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+			/* Optional: Leichter Schatten für bessere Lesbarkeit */
+		}
+
+		/* Code Snippet Styling */
+		.reveal pre code {
+			font-size: 0.8em;
+			line-height: 1.2em;
+			max-height: 70vh;
+			/* Maximale Höhe für Code-Blöcke */
+			overflow-y: auto;
+			/* Scrollbar bei Bedarf */
+			background-color: rgba(0, 0, 0, 0.3);
+			/* Leicht transparenter dunkler Hintergrund für Code */
+			border-radius: 5px;
+		}
+
+		.reveal ul,
+		.reveal ol {
+			font-size: 0.9em;
+		}
+
+		.reveal section>ul,
+		.reveal section>ol {
+			margin-bottom: 15px;
+			/* Abstand nach Listen */
+		}
+
+		/* Kleinere Schrift für Dateinamen in Code-Blöcken */
+		.code-filename {
+			display: block;
+			text-align: right;
+			font-size: 0.7em;
+			color: #ccc;
+			margin-bottom: -10px;
+			margin-right: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+
+			<section>
+				<h1 style="font-size:2.7em;">Virtual Arboretum</h1>
+
+				<img src="images/VA-Logo.png" width="37%" alt="Logo Virtual Arboretum"
+					style="display: block; margin: 1em auto 0 auto;">
+				<small>
+					<p style="margin-top: 2em;"> Name: Blank, Felix / Matrikelnummer: 6011914 / Abgabedatum: 07.05.2025
+					</p>
+				</small>
+			</section>
+
+			<section>
+				<section>
+					<h2>Einführung</h2>
+					<h3>
+						Was ist
+						<img src="images/VA-Logo.png" height="120em" alt="VA Logo"
+							style="vertical-align: middle; margin: 0 0.15em;">?
+					</h3>
+				</section>
+				<section>
+					<h3>Übersicht Applikation</h3>
+					<ul>
+						<li>Verwaltung digitaler "Pflanzen" (Dat(ei)en) in "Gärten"</li>
+						<li>Verbindung von Pflanzen über "Hyphae" im "Mycelium" (Graph)</li>
+						<li>Zweck: Organisation, Versionierung, Verknüpfung von Daten</li>
+						<li>Zugriff: CLI und REST API</li>
+						<li>Use Cases: Anlegen von Gärten; Einlagern, Betrachten, Versionieren, Assoziieren, Suchen, Löschen von Pflanzen und Hyphen.</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Starten der Applikation</h3>
+					<pre><code data-trim data-noescape class="bash">
+# Platzhalter: Beispiel Startbefehl (kurz!)
+./VirtualArboretum start
+./VirtualArboretum  # startet REST Server, wen Arboretum erkannt.
+./VirtualArboretum  # andernfalls wir Arboretum (interaktiv) erstellt.
+# oder über CLI 
+./VirtualArboretum store "doc.pdf" [with Hyphae] in "/myGarden"
+#  => erhält Standard MarkerHypha, wie #doc~PDF #va:creationDate
+./VirtualArboretum store "doc.pdf" "#work~documentation #work~until~Date" "/myGarden" 
+#  => ordnet neben Standard-Hyphae weitere zu.
+
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Technischer Überblick</h3>
+					<ul>
+						<li>Technologie 1: C# / .NET: [Begründung, z.B. Plattformübergreifend, Ökosystem]</li>
+						<li>Technologie 2: Filesystem/SQLite: [Begründung, z.B. Persistenz]</li>
+						<li>Technologie 3: ASP.NET Core (für REST): [Begründung, z.B. Web API Framework]</li>
+						<li>Technologie 4: [System.CommandLine / Spectre.Console?]: [Begründung, z.B. CLI Framework]
+						</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Projektstruktur</h3>
+					<p>Aufbau orientiert an Clean Architecture / DDD:</p>
+					<ul>
+						<li>Core: Domain, Application (Use Cases, DTOs)</li>
+						<li>Infrastructure: Repositories, externe Services</li>
+						<li>Presentation: CLI, REST Controller, ViewModels</li>
+						<li>(Root): Program.cs, Dockerfile</li>
+					</ul>
+					<img src="image_e25139.png" alt="Projektstruktur"
+						style="max-height: 50vh; background-color: rgba(255,255,255,0.8); padding: 10px; border-radius: 5px;">
+				</section>
+			</section>
+
+			<section>
+				<h2>Clean Architecture</h2>
+				<section>
+					<h3>Was ist Clean Architecture für mich?</h3>
+					<p style="font-size: xx-large;">
+						Ein Schichtenmodell mit sauberen Grenzen zwischen 
+						den Schichten (Entities, Use Cases, Adapters, Frameworks),
+						sodass jede Schicht in sich und unterliegende Schichten 
+						geschlossen ist. 
+						<br>
+						Eine Grenze sollte nur mit einem Vertrag überschritten werden,
+						für die nur Tests und Entwickelnde einen Diplomatenstatus einnehmen.
+					</p>
+				</section>
+				<section>
+					<h3>Analyse Dependency Rule</h3>
+					<p><strong>Positiv-Beispiel:</strong> Regel eingehalten</p>
+					<ul>
+						<li>Klasse: <code>Core.Domain.Entities.Plant</code></li>
+						<li>Analyse: Hängt nur von Core-Typen ab</li>
+						<li>Begründung: Keine Abhängigkeit nach außen (Infrastructure, Presentation)</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Positiv (z.B. Klassensignatur)
+namespace Core.Domain.Entities;
+public class Plant { /* ... nur innere Abhängigkeiten ... */ }
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Analyse Dependency Rule</h3>
+					<p><strong>Negativ-Beispiel:</strong> Regel verletzt</p>
+					<ul>
+						<li>Klasse: <code>[Platzhalter: z.B. UseCase kennt DB-Context direkt]</code></li>
+						<li>Analyse: Hängt von äußerer Schicht (Infrastructure) ab</li>
+						<li>Begründung: Verletzung der Dependency Rule</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Negativ (z.B. using Infrastructure;)
+using Infrastructure.Persistence; // Beispiel Verletzung in Core.Application
+                    </code></pre>
+					<p><em>Hinweis: Falls kein Negativ-Beispiel existiert, 2 Positiv-Beispiele zeigen.</em></p>
+				</section>
+				<section>
+					<h3>Analyse der Schichten</h3>
+					<p><strong>Beispiel 1: Domain Layer</strong></p>
+					<ul>
+						<li>Klasse: <code>Core.Domain.ValueObjects.Hypha</code></li>
+						<li>Aufgabe: Repräsentiert Verbindung/Tag</li>
+						<li>Einordnung: Kern-Domänenkonzept, unabhängig von außen</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Schicht 1 (z.B. Hypha)
+namespace Core.Domain.ValueObjects;
+public record Hypha { /*...*/ } // Record oft für VOs genutzt
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Analyse der Schichten</h3>
+					<p><strong>Beispiel 2: Application Layer</strong></p>
+					<ul>
+						<li>Klasse: <code>Core.Application.UseCases.StorePlantUseCase</code></li>
+						<li>Aufgabe: Orchestriert Einlagerung einer Pflanze</li>
+						<li>Einordnung: Implementiert Anwendungsfall, nutzt Domain, kennt Infrastructure via Interfaces
+						</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Schicht 2 (z.B. StorePlantUseCase)
+namespace Core.Application.UseCases;
+public class StorePlantUseCase { /*...*/ }
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Analyse der Schichten</h3>
+					<p><strong>Beispiel 3: Infrastructure Layer</strong></p>
+					<ul>
+						<li>Klasse: <code>Infrastructure.Repositories.PlantRepository</code></li>
+						<li>Aufgabe: Implementiert Datenzugriff für Plants</li>
+						<li>Einordnung: Detailimplementierung (DB/FS), abhängig von externen Bibliotheken</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Schicht 3 (z.B. PlantRepository)
+namespace Infrastructure.Repositories;
+public class PlantRepository : Core.Application.Interfaces.IPlantRepository { /*...*/ }
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Analyse der Schichten</h3>
+					<p><strong>Beispiel 4: Presentation Layer</strong></p>
+					<ul>
+						<li>Klasse: <code>Presentation.Controllers.CliController</code></li>
+						<li>Aufgabe: Verarbeitet CLI-Befehle, ruft Use Cases auf</li>
+						<li>Einordnung: Benutzerschnittstelle, abhängig von Application Layer</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Schicht 4 (z.B. CliController)
+namespace Presentation.Controllers;
+public class CliController { /*...*/ }
+                    </code></pre>
+				</section>
+			</section>
+
+			<section>
+				<h2>SOLID</h2>
+				<section>
+					<h3>Analyse SRP</h3>
+					<p>Single Responsibility Principle: Eine Klasse, ein Grund zur Änderung.</p>
+					<p><strong>Positiv-Beispiel:</strong></p>
+					<ul>
+						<li>Klasse: <code>[Platzhalter: z.B. Infrastructure.Services.HyphaeSerializer]</code></li>
+						<li>Aufgabe: Nur Serialisierung/Deserialisierung von Hyphae</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet SRP Positiv (z.B. Methodenname)
+public class HyphaeSerializer { Serialize(); Deserialize(); }
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Analyse SRP</h3>
+					<p><strong>Negativ-Beispiel:</strong></p>
+					<ul>
+						<li>Klasse: <code>[Platzhalter: z.B. PlantManager lädt, speichert UND validiert]</code></li>
+						<li>Aufgaben: Mehrere Verantwortlichkeiten</li>
+						<li>Lösungsweg: Aufteilen (z.B. Loader, Saver, Validator)</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet SRP Negativ (z.B. Methoden)
+public class PlantManager { Load(); Save(); Validate(); /*...*/ }
+                    </code></pre>
+					<p><em>Hinweis: Falls kein Negativ-Beispiel existiert, 2 Positiv-Beispiele zeigen.</em></p>
+				</section>
+				<section>
+					<h3>Analyse OCP</h3>
+					<p>Open/Closed Principle: Offen für Erweiterung, geschlossen für Modifikation.</p>
+					<p><strong>Positiv-Beispiel:</strong></p>
+					<ul>
+						<li>Struktur: <code>[Platzhalter: z.B. Use Case mit Strategy für Plant-Suche]</code></li>
+						<li>Analyse: Neue Suchlogik (z.B. via Metadaten) durch neue Strategie-Klasse hinzufügbar</li>
+						<li><em>[Platzhalter für UML OCP Positiv]</em></li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet OCP Positiv (z.B. Interface)
+interface IPlantSearchStrategy { /*...*/ }
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Analyse OCP</h3>
+					<p><strong>Negativ-Beispiel:</strong></p>
+					<ul>
+						<li>Struktur: <code>[Platzhalter: z.B. Methode mit switch über Hyphae-Typ]</code></li>
+						<li>Analyse: Code-Änderung nötig bei neuem Hyphae-Typ</li>
+						<li>Lösungsvorschlag: Polymorphismus / Strategy</li>
+						<li><em>[Platzhalter für UML OCP Negativ]</em></li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet OCP Negativ (z.B. switch)
+switch(hypha.Type) { case Marker: /*...*/ case Decimal: /*...*/ }
+                    </code></pre>
+					<p><em>Hinweis: Falls kein Negativ-Beispiel existiert, 2 Positiv-Beispiele zeigen.</em></p>
+				</section>
+				<section>
+					<h3>Analyse [LSP/ISP/DIP] - Ausgewählt: [Prinzip eintragen]</h3>
+					<p>[Kurze Erklärung des gewählten Prinzips]</p>
+					<p><strong>Positiv-Beispiel:</strong></p>
+					<ul>
+						<li>Klasse(n): <code>[Platzhalter: z.B. für DIP: Use Case hängt von IPlantRepository ab]</code>
+						</li>
+						<li>Begründung: [Warum Prinzip erfüllt?]</li>
+						<li><em>[Platzhalter für UML Positiv]</em></li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet [LSP/ISP/DIP] Positiv (kurz!)
+public class MyUseCase { private readonly IPlantRepository _repo; /*...*/ } // DIP
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Analyse [LSP/ISP/DIP] - Ausgewählt: [Prinzip eintragen]</h3>
+					<p><strong>Negativ-Beispiel:</strong></p>
+					<ul>
+						<li>Klasse(n):
+							<code>[Platzhalter: z.B. für ISP: Klasse implementiert großes Interface, nutzt nur Teile]</code>
+						</li>
+						<li>Begründung: [Warum Prinzip verletzt?]</li>
+						<li>Mögliche Lösung: [Interface aufteilen]</li>
+						<li><em>[Platzhalter für UML Negativ]</em></li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet [LSP/ISP/DIP] Negativ (kurz!)
+public class SpecificHandler : IBigFatInterface { /* implementiert alles, braucht nur A()... */ } // ISP?
+                    </code></pre>
+					<p><em>Hinweis: Falls kein Negativ-Beispiel existiert, 2 Positiv-Beispiele zeigen.</em></p>
+				</section>
+			</section>
+
+			<section>
+				<h2>Weitere Prinzipien</h2>
+				<section>
+					<h3>GRASP: Geringe Kopplung</h3>
+					<p>Minimierung von Abhängigkeiten.</p>
+					<ul>
+						<li>Klasse: <code>[Platzhalter: z.B. Core.Domain.Entities.Plant]</code></li>
+						<li>Aufgabe: Repräsentiert eine Pflanze</li>
+						<li>Begründung Kopplung: Hängt primär von eigenen Daten und ggf. einfachen VOs ab. Externe
+							Klassen nutzen Plant über definierte Schnittstellen/Methoden.</li>
+						<li>Aufrufer: Use Cases, Repositories (via Interface)</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Geringe Kopplung (z.B. Signatur)
+public class Plant { /* ... interne Logik ... */ }
+                    </code></pre>
+				</section>
+				<section>
+					<h3>GRASP: [Polymorphismus/Pure Fabrication] - Ausgewählt: [Prinzip eintragen]</h3>
+					<p>[Kurze Erklärung des gewählten Prinzips]</p>
+					<ul>
+						<li>Klasse: <code>[Platzhalter: z.B. für Pure Fabrication: HyphaeSerializer]</code></li>
+						<li>Begründung Einsatz: [Warum hier genutzt? z.B. PF: Serialisierung gehört nicht zur
+							Hyphae-Domänenlogik -> Eigene Klasse für Kohäsion]</li>
+						<li><em>[Ggf. Platzhalter für UML]</em></li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Poly / PF (kurz!)
+public class HyphaeSerializer { /* ... Logik nur für Serialisierung ... */ } // Pure Fabrication
+                    </code></pre>
+				</section>
+				<section>
+					<h3>DRY (Don't Repeat Yourself)</h3>
+					<p>Vermeidung von Code-Duplizierung.</p>
+					<ul>
+						<li>Commit: <code>[Platzhalter: Commit-Hash]</code></li>
+						<li>Vorher: [Beschreibung des duplizierten Codes, z.B. ähnliche Validierungslogik an 2 Stellen]
+						</li>
+						<li>Nachher: [Beschreibung der Lösung, z.B. Extraktion in gemeinsame Methode/Klasse]</li>
+						<li>Auswirkung: Bessere Wartbarkeit, Konsistenz</li>
+					</ul>
+					<pre><code data-trim data-noescape class="diff">
+# Platzhalter: Diff-Ansicht (nur die Kernänderung!)
+                    </code></pre>
+				</section>
+			</section>
+
+			<section>
+				<h2>Testing</h2>
+				<section>
+					<h3>Unit Tests: Beispiele</h3>
+					<p>Getestete Funktionalität (Auszug):</p>
+					<ol>
+						<li>Plant Erstellung valide/invalide</li>
+						<li>Hyphae hinzufügen/suchen</li>
+						<li>Plant Versionierung ("Wachsen")</li>
+						<li>Repository Logik (mit Fakes/Mocks)</li>
+						<li>ViewModel Validierung</li>
+						<li>Use Case Logik (isoliert)</li>
+						<li>[...]</li>
+					</ol>
+					<p><em>Zeigen ausgewählter Tests im Code.</em></p>
+				</section>
+				<section>
+					<h3>Unit Test Beispiel 1: [Name des Tests, z.B. PlantGrowthTest]</h3>
+					<p>Testet: [z.B. Korrekte Versionierung und Inhaltsänderung einer Pflanze]</p>
+				</section>
+				<section>
+					<h3>Unit Test Beispiel 1: Code - Setup</h3>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet für Test Setup (Given...)
+// z.B. Erzeugen der Plant, Mock-Repository Setup
+[Fact]
+public void GrowPlant_ShouldUpdateVersionAndContent()
+{
+    // Arrange
+    var initialPlant = new Plant(/*...*/);
+    var mockRepo = new Mock<IPlantRepository>();
+    mockRepo.Setup(/*...*/);
+    var useCase = new GrowPlantUseCase(mockRepo.Object);
+    byte[] newContent = /*...*/;
+    string newVersion = "v2";
+
+    // ... Fortsetzung auf nächster Folie
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Unit Test Beispiel 1: Code - Execution</h3>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet für Test Execution (When...)
+    // ... Fortsetzung von vorheriger Folie
+
+    // Act
+    var updatedPlant = useCase.Grow(initialPlant.Id, newContent, newVersion);
+
+    // ... Fortsetzung auf nächster Folie
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Unit Test Beispiel 1: Code - Assertion</h3>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet für Test Assertion (Then...)
+    // ... Fortsetzung von vorheriger Folie
+
+    // Assert
+    Assert.NotNull(updatedPlant);
+    Assert.Equal(newVersion, updatedPlant.Version);
+    // Optional: Verify Repository-Aufrufe
+    mockRepo.Verify(r => r.Save(It.Is<Plant>(p => p.Version == newVersion)), Times.Once);
+}
+                    </code></pre>
+				</section>
+
+				<section>
+					<h3>Unit Test Beispiel 2: [Name des Tests, z.B. HyphaeSearchTest]</h3>
+					<p>Testet: [z.B. Korrekte Filterung von Plants basierend auf Hyphae]</p>
+				</section>
+				<section>
+					<h3>Unit Test Beispiel 2: Code - Setup</h3>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet für Test Setup (Given...)
+// z.B. Erzeugen mehrerer Plants mit verschiedenen Hyphae, Mock-Repo Setup
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Unit Test Beispiel 2: Code - Execution</h3>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet für Test Execution (When...)
+// z.B. Aufruf des Such-Use-Cases
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Unit Test Beispiel 2: Code - Assertion</h3>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet für Test Assertion (Then...)
+// z.B. Überprüfung, ob korrekte Plants gefunden wurden
+                    </code></pre>
+				</section>
+
+
+				<section>
+					<h3>ATRIP: Automatic</h3>
+					<ul>
+						<li>Realisierung: .NET Test Framework (xUnit/NUnit/MSTest), `dotnet test`</li>
+						<li>Ausführung: Automatisch bei Build / in CI Pipeline (z.B. GitHub Actions, Azure DevOps)</li>
+						<li>Ergebnis: Schnelles Feedback</li>
+					</ul>
+				</section>
+				<section>
+					<h3>ATRIP: Thorough</h3>
+					<ul>
+						<li>Tool: [z.B. Coverlet, AltCover]</li>
+						<li>Coverage: [Platzhalter: XX% Line / YY% Branch] - via `dotnet test --collect:"XPlat Code
+							Coverage"`</li>
+						<li>Analyse: [z.B. Kernlogik gut abgedeckt, wo sind Lücken?]</li>
+						<li><em>Zeigen des Coverage Reports (z.B. ReportGenerator HTML).</em></li>
+					</ul>
+				</section>
+				<section>
+					<h3>ATRIP: Professional</h3>
+					<p>Beispiel für professionellen Test:</p>
+					<ul>
+						<li>Test: <code>[Platzhalter: TestClassName.TestMethodName]</code></li>
+						<li>Aspekte: Klare Benennung (Given/When/Then), spezifische Assertions (FluentAssertions?), gute
+							Isolation (Mocks/Fakes), testet *ein* Verhalten.</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet professioneller Test (kurz!)
+// Fokus auf Lesbarkeit, klare Assertions
+result.Should().NotBeNull();
+result.Version.Should().Be("v2");
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Manuelle Fakes/Mocks (Unit Testing)</h3>
+					<p><strong>Beispiel: InMemoryRepository</strong></p>
+					<ul>
+						<li>Typ: Fake (simuliert Verhalten mit In-Memory Zustand)</li>
+						<li>Zweck: Testen von Use Cases ohne echte DB</li>
+						<li>Implementierung: Nutzt `List<T>` oder `Dictionary<TKey, TValue>` intern</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Fake Implementierung (kurz!)
+public class InMemoryPlantRepo : IPlantRepository { private List<Plant> _plants; /*...*/ }
+                    </code></pre>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Fake Nutzung (kurz!)
+var fakeRepo = new InMemoryPlantRepo();
+var useCase = new MyUseCase(fakeRepo);
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Integrationstests: API/CLI Mocks</h3>
+					<p>Simulation von Benutzerinteraktionen:</p>
+					<ul>
+						<li>Testen das Zusammenspiel von Presentation, Application und (gemockter) Infrastructure</li>
+						<li>Mocking an der Grenze zur "Außenwelt" (echte DB/FS wird ersetzt)</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Integrationstest: Mock für REST API User</h3>
+					<p>Simuliert HTTP-Anfragen an die laufende Anwendung (TestServer).</p>
+				</section>
+				<section>
+					<h3>REST Mock: Code - Test Setup</h3>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet REST Test Setup
+// z.B. WebApplicationFactory konfigurieren, Mock-Services registrieren
+public class RestApiIntegrationTests : IClassFixture<WebApplicationFactory<Program>> {
+    private readonly HttpClient _client;
+    public RestApiIntegrationTests(WebApplicationFactory<Program> factory) {
+        _client = factory.WithWebHostBuilder(builder => {
+            builder.ConfigureTestServices(services => {
+                // Ersetze echte Services durch Mocks
+                services.AddScoped<IPlantRepository, MockPlantRepository>();
+            });
+        }).CreateClient();
+    }
+    // ... Tests ...
+}
+                    </code></pre>
+				</section>
+				<section>
+					<h3>REST Mock: Code - Test Execution</h3>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet REST Test Execution
+    [Fact]
+    public async Task GetPlant_ReturnsOk() {
+        // Arrange (evtl. Mock-Setup)
+        // Act
+        var response = await _client.GetAsync("/api/plants/some-id");
+        // Assert
+        response.EnsureSuccessStatusCode(); // Status Code 200-299
+        // ...
+    }
+                    </code></pre>
+				</section>
+				<section>
+					<h3>REST Mock: Code - Test Assertion</h3>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet REST Test Assertion
+    [Fact]
+    public async Task GetPlant_ReturnsCorrectPlant() {
+         // Arrange
+         var expectedPlantDto = /*...*/;
+         // Act
+         var response = await _client.GetAsync("/api/plants/some-id");
+         // Assert
+         response.EnsureSuccessStatusCode();
+         var actualPlant = await response.Content.ReadFromJsonAsync<PlantDto>();
+         actualPlant.Should().BeEquivalentTo(expectedPlantDto); // FluentAssertions
+    }
+                    </code></pre>
+				</section>
+
+				<section>
+					<h3>Integrationstest: Mock für CLI User</h3>
+					<p>Simuliert Aufrufe der CLI-Anwendung und prüft Output/ExitCode.</p>
+				</section>
+				<section>
+					<h3>CLI Mock: Code - Test Setup</h3>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet CLI Test Setup
+// Evtl. Test-Fixture, die CLI-Prozess startet oder Main-Methode aufruft
+// und I/O umleitet (StringWriter/Reader für Konsole)
+// Dependency Injection für Mocks konfigurieren (falls möglich)
+
+public class CliIntegrationTests {
+    private async Task<CliResult> RunCliCommand(string args) {
+        // Logik zum Ausführen des CLI Befehls (z.B. via Process.Start
+        // oder direkter Aufruf der Main-Methode mit DI-Setup für Mocks)
+        // und Abfangen von Output/ExitCode
+        /* ... */
+        return new CliResult { Output = "...", ExitCode = 0 };
+    }
+    // ... Tests ...
+}
+struct CliResult { public string Output; public int ExitCode; }
+
+                    </code></pre>
+				</section>
+				<section>
+					<h3>CLI Mock: Code - Test Execution</h3>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet CLI Test Execution
+    [Fact]
+    public async Task StoreCommand_Success() {
+        // Arrange
+        string command = "store --garden /test --file test.txt";
+        // Mock-Setup für IPlantRepository etc.
+
+        // Act
+        var result = await RunCliCommand(command);
+
+        // Assert
+        Assert.Equal(0, result.ExitCode);
+        // ...
+    }
+                    </code></pre>
+				</section>
+				<section>
+					<h3>CLI Mock: Code - Test Assertion</h3>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet CLI Test Assertion
+    [Fact]
+    public async Task StoreCommand_OutputsSuccessMessage() {
+        // Arrange
+        string command = "store --garden /test --file test.txt";
+         // Mock-Setup
+
+        // Act
+        var result = await RunCliCommand(command);
+
+        // Assert
+        Assert.Equal(0, result.ExitCode);
+        Assert.Contains("Plant stored successfully", result.Output);
+        // Evtl. Mock Verification
+    }
+                    </code></pre>
+				</section>
+			</section>
+
+			<section>
+				<h2>Domain Driven Design</h2>
+				<section>
+					<h3>Ubiquitous Language</h3>
+					<ol>
+						<li><strong>Plant:</strong> Datei + Metadaten (Kern-Entität)</li>
+						<li><strong>Garden:</strong> Verzeichnis/Sammlung von Plants (Aggregat)</li>
+						<li><strong>Hyphae:</strong> Verbindung/Kante/Marker (Value Object/Entity?)</li>
+						<li><strong>Mycelium:</strong> Gesamtgraph der Verbindungen (Aggregat/Entity?)</li>
+						<li><strong>Cell:</strong> Kleinste Einheit einer Plant? (Entity)</li>
+						<li><strong>ToolShed / Tool:</strong> Verwaltung von Werkzeugen? (Aggregat/Entity)</li>
+						<li><em>(Weitere: Grow, Store, Branch, Tree, Incubator, IndexCard ...)</em></li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>Entities</h3>
+					<p>Objekte mit eindeutiger Identität und Lebenszyklus.</p>
+				</section>
+				<section>
+					<h4>Entity: Plant</h4>
+					<ul>
+						<li>Kernobjekt, repräsentiert eine Datei mit Metadaten und Versionen.</li>
+						<li>Identität ist wichtig, auch wenn sich Attribute ändern ("Wachsen").</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Entity: Plant - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Plant.cs (Signatur, ID)
+public class Plant { public PlantId Id { get; private set; } /*...*/ }
+                </code></pre>
+				</section>
+				<section>
+					<h4>Entity: Mycelium</h4>
+					<ul>
+						<li>Verwaltet die Gesamtheit der Hyphae (Verbindungen).</li>
+						<li>Hat eine Identität und einen Zustand (die Menge der Hyphae).</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Entity: Mycelium - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Mycelium.cs (Signatur, ID?)
+public class Mycelium { public MyceliumId Id { get; } /*...*/ }
+                </code></pre>
+				</section>
+				<section>
+					<h4>Entity: Tree</h4>
+					<ul>
+						<li>Spezielle Struktur oder Typ von Plant? Bildet Hierarchie?</li>
+						<li>Hat Identität und Zustand (Branches, Cells).</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Entity: Tree - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Tree.cs (Signatur, ID)
+public class Tree { public TreeId Id { get; } /*...*/ }
+                </code></pre>
+				</section>
+				<section>
+					<h4>Entity: Branch</h4>
+					<ul>
+						<li>Teil eines Tree, hat eigene Identität innerhalb des Trees.</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Entity: Branch - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Branch.cs (Signatur, ID)
+public class Branch { public BranchId Id { get; } /*...*/ }
+                </code></pre>
+				</section>
+				<section>
+					<h4>Entity: Cell</h4>
+					<ul>
+						<li>Kleinste Einheit innerhalb einer Plant oder Branch?</li>
+						<li>Hat Identität und eigenen Zustand/Daten.</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Entity: Cell - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Cell.cs (Signatur, ID)
+public class Cell { public CellId Id { get; } /*...*/ }
+                </code></pre>
+				</section>
+				<section>
+					<h4>Entity: Incubator</h4>
+					<ul>
+						<li>Verantwortlich für den "Wachstums"-Prozess?</li>
+						<li>Hat Identität und verfolgt den Zustand eines Wachstumsvorgangs.</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Entity: Incubator - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Incubator.cs (Signatur, ID)
+public class Incubator { public IncubatorId Id { get; } /*...*/ }
+                </code></pre>
+				</section>
+				<section>
+					<h4>Entity: IndexCard</h4>
+					<ul>
+						<li>Metadaten-Karte, assoziiert mit Plant/Garden?</li>
+						<li>Hat Identität und eigene Attribute.</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Entity: IndexCard - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.IndexCard.cs (Signatur, ID)
+public class IndexCard { public IndexCardId Id { get; } /*...*/ }
+                </code></pre>
+				</section>
+				<section>
+					<h4>Entity: ToolShed</h4>
+					<ul>
+						<li>Container für Werkzeuge (Tools).</li>
+						<li>Hat Identität und verwaltet eine Sammlung von Tools.</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Entity: ToolShed - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.ToolShed.cs (Signatur, ID)
+public class ToolShed { public ToolShedId Id { get; } /*...*/ }
+                </code></pre>
+				</section>
+				<section>
+					<h4>Entity: Tool</h4>
+					<ul>
+						<li>Ein Werkzeug innerhalb des ToolSheds.</li>
+						<li>Hat Identität und spezifische Eigenschaften/Funktionen.</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Entity: Tool - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Tool.cs (Signatur, ID)
+public class Tool { public ToolId Id { get; } /*...*/ }
+                </code></pre>
+				</section>
+
+
+				<section>
+					<h3>Value Objects</h3>
+					<p>Definiert durch Attribute, keine Identität, immutable.</p>
+				</section>
+				<section>
+					<h4>Value Object: Hypha / DecimalHypha / MarkerHypha</h4>
+					<ul>
+						<li>Repräsentieren Verbindungen oder Tags.</li>
+						<li>Identität unwichtig, nur die Art/der Wert der Verbindung zählt.</li>
+						<li>Unveränderlich (immutable). `DecimalHypha`, `MarkerHypha` als spezifische Typen.</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Value Object: Hypha - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.ValueObjects.Hypha.cs (record?)
+public record Hypha (HyphaKey Key, /*...*/); // Oder Basisklasse
+public record DecimalHypha(HyphaKey Key, decimal Value) : Hypha(Key);
+public record MarkerHypha(HyphaKey Key) : Hypha(Key);
+                </code></pre>
+				</section>
+				<section>
+					<h4>Value Object: HyphaKey</h4>
+					<ul>
+						<li>Identifiziert den Typ oder Namen einer Hypha eindeutig.</li>
+						<li>Ist selbst ein Wertobjekt (z.B. ein String oder komplexerer Typ).</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Value Object: HyphaKey - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.ValueObjects.HyphaKey.cs (record?)
+public record HyphaKey(string Value);
+                </code></pre>
+				</section>
+
+
+				<section>
+					<h3>Aggregates</h3>
+					<p>Cluster von Objekten als Konsistenzeinheit mit Aggregate Root (AR).</p>
+				</section>
+				<section>
+					<h4>Aggregat: Garden (AR) &gt; Plant</h4>
+					<ul>
+						<li>`Garden` ist der AR.</li>
+						<li>Verwaltet eine Liste von `PlantId`s (Referenzen).</li>
+						<li>Stellt Konsistenz sicher (z.B. keine doppelten Namen im Garten). Zugriff auf Plants im
+							Garden läuft über den `Garden` AR.</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Aggregat: Garden - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Code für Garden Aggregate Root (Ausschnitt)
+public class Garden // Aggregate Root
+{
+    public GardenId Id { get; }
+    private readonly List<PlantId> _plantIds = new();
+    public void AddPlant(PlantId plantId) { /* Regelprüfung... */ _plantIds.Add(plantId); }
+}
+                </code></pre>
+				</section>
+				<section>
+					<h4>Aggregat: Plant (AR) &gt; Cell</h4>
+					<ul>
+						<li>Falls `Cell`s nur im Kontext einer `Plant` existieren: `Plant` ist der AR.</li>
+						<li>Verwaltet `Cell`-Objekte oder IDs.</li>
+						<li>Stellt Konsistenz der Cells sicher.</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Aggregat: Plant - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Code für Plant Aggregate Root (Ausschnitt)
+public class Plant // Aggregate Root
+{
+    public PlantId Id { get; }
+    private readonly List<Cell> _cells = new(); // Direkte Referenzen, wenn Teil des Aggregats
+    public void AddCell(Cell cell) { /* Regelprüfung... */ _cells.Add(cell); }
+}
+                </code></pre>
+				</section>
+				<section>
+					<h4>Aggregat: ToolShed (AR) &gt; Tool</h4>
+					<ul>
+						<li>`ToolShed` ist der AR.</li>
+						<li>Verwaltet eine Sammlung von `Tool`-Objekten oder IDs.</li>
+						<li>Stellt Konsistenz sicher (z.B. unique Tool-Namen im Shed).</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Aggregat: ToolShed - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Code für ToolShed Aggregate Root (Ausschnitt)
+public class ToolShed // Aggregate Root
+{
+    public ToolShedId Id { get; }
+    private readonly List<Tool> _tools = new();
+    public void AddTool(Tool tool) { /* Regelprüfung... */ _tools.Add(tool); }
+}
+                </code></pre>
+				</section>
+				<section>
+					<h4>Aggregat: Mycelium (AR?)</h4>
+					<ul>
+						<li>Könnte ein Aggregat sein, das `Hyphae` verwaltet.</li>
+						<li>AR wäre `Mycelium`, stellt Konsistenz des Graphen sicher.</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Aggregat: Mycelium - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Code für Mycelium Aggregate Root (Ausschnitt)
+public class Mycelium // Aggregate Root?
+{
+    public MyceliumId Id { get; }
+    private readonly List<Hypha> _hyphae = new(); // Oder komplexere Struktur
+    public void AddHypha(Hypha hypha) { /* Regelprüfung... */ _hyphae.Add(hypha); }
+}
+                </code></pre>
+				</section>
+				<section>
+					<h4>Aggregat: Arboretum (Boundary?)</h4>
+					<ul>
+						<li>Das gesamte System/der Bounded Context.</li>
+						<li>Enthält die Aggregate `Garden`, `Mycelium`, `ToolShed`.</li>
+						<li>Kein typischer Aggregate Root, eher der Kontext.</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Aggregat: Arboretum - Code</h4>
+					<pre><code data-trim data-noescape class="csharp">// Kein direkter Code für den Kontext selbst, eher die Struktur der Assemblies/Namespaces
+// VirtualArboretum (Solution)
+// -> Core.Domain (enthält alle Aggregate Roots, Entities, VOs)
+                </code></pre>
+				</section>
+
+				<section>
+					<h3>Repositories</h3>
+					<ul>
+						<li>Beschreibung: Abstraktion für Persistenzzugriff auf Aggregate Roots.</li>
+						<li>Einsatz: `IPlantRepository`, `IGardenRepository`, `IToolShedRepository`, etc.</li>
+						<li>Implementierung: In `Infrastructure.Repositories`.</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Repository Interface
+namespace Core.Application.Interfaces;
+public interface IPlantRepository { Task<Plant?> GetByIdAsync(PlantId id); Task SaveAsync(Plant plant); }
+                    </code></pre>
+				</section>
+			</section>
+
+			<section>
+				<h2>Refactoring</h2>
+				<section>
+					<h3>Code Smells</h3>
+					<p><strong>Smell 1: [Name, z.B. Lange Methode]</strong></p>
+					<ul>
+						<li>Problem: Methode zu lang/komplex.</li>
+						<li>Lösung: [z.B. Extract Method].</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Smell 1 (Vorher/Nachher - kurz!)
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Code Smells</h3>
+					<p><strong>Smell 2: [Name, z.B. Feature Envy]</strong></p>
+					<ul>
+						<li>Problem: Methode nutzt Daten anderer Klasse intensiv.</li>
+						<li>Lösung: [z.B. Move Method].</li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Smell 2 (Vorher/Nachher - kurz!)
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Beispiele für Refactorings</h3>
+					<p><strong>Refactoring 1: [Name, z.B. Introduce Parameter Object]</strong></p>
+					<ul>
+						<li>Anwendung/Begründung: [z.B. Lange Parameterliste ersetzt].</li>
+						<li>Commit: <code>[Platzhalter: Commit-Hash]</code></li>
+						<li><em>[Platzhalter für UML Vorher/Nachher]</em></li>
+					</ul>
+				</section>
+				<section>
+					<h3>Beispiele für Refactorings</h3>
+					<p><strong>Refactoring 2: [Name, z.B. Replace Magic String/Number]</strong></p>
+					<ul>
+						<li>Anwendung/Begründung: [z.B. Wert durch Konstante ersetzt].</li>
+						<li>Commit: <code>[Platzhalter: Commit-Hash]</code></li>
+						<li><em>[Platzhalter für UML Vorher/Nachher (evtl. nicht nötig)]</em></li>
+					</ul>
+				</section>
+			</section>
+
+			<section>
+				<h2>Entwurfsmuster</h2>
+				<section>
+					<h3>Entwurfsmuster: [Name, z.B. Repository]</h3>
+					<ul>
+						<li>Einsatz: Abstraktion des Datenzugriffs für Aggregate Roots (Plant, Garden etc.).</li>
+						<li>Begründung: Entkopplung Domain von Infrastructure, Testbarkeit.</li>
+						<li><em>[Platzhalter für UML-Diagramm]</em></li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Repository (Interface schon gezeigt)
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Entwurfsmuster: [Name, z.B. Strategy]</h3>
+					<ul>
+						<li>Einsatz: [z.B. Unterschiedliche Suchlogiken für Plants].</li>
+						<li>Begründung: [z.B. Flexibilität, OCP].</li>
+						<li><em>[Platzhalter für UML-Diagramm]</em></li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Strategy Pattern (kurz!)
+                    </code></pre>
+				</section>
+				<section>
+					<h3>Entwurfsmuster: [Name, z.B. Builder]</h3>
+					<ul>
+						<li>Einsatz: [z.B. Komplexe Erzeugung von Plant-Objekten, siehe HyphaeBuilder?].</li>
+						<li>Begründung: [z.B. Entkopplung der Konstruktion von der Repräsentation].</li>
+						<li><em>[Platzhalter für UML-Diagramm]</em></li>
+					</ul>
+					<pre><code data-trim data-noescape class="csharp">
+// Platzhalter: Code-Snippet Builder Pattern (kurz!)
+                    </code></pre>
+				</section>
+			</section>
+
+			<section>
+				<h2>Fragen?</h2>
+				<p>Vielen Dank!</p>
+			</section>
+
+		</div>
+	</div>
+
+	<script src="dist/reveal.js"></script>
+	<script src="plugin/notes/notes.js"></script>
+	<script src="plugin/markdown/markdown.js"></script>
+	<script src="plugin/highlight/highlight.js"></script>
+	<script>
+		// More info about initialization & config:
+		// - https://revealjs.com/config/
+		// - https://revealjs.com/api/
+		Reveal.initialize({
+			hash: true,
+			controls: true,
+			progress: true,
+			center: true,
+			slideNumber: 'c/t',
+			// Standard navigation (allows vertical slides)
+			navigationMode: 'default',
+
+			plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+		});
+	</script>
+</body>
+
+</html>

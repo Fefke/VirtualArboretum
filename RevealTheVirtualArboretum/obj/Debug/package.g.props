@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <PackageJsonName Condition="$(PackageJsonName) == ''">reveal.js</PackageJsonName>
+    <PackageJsonVersion Condition="$(PackageJsonVersion) == ''">5.2.1</PackageJsonVersion>
+    <PackageJsonDescription Condition="$(PackageJsonDescription) == ''">The HTML Presentation Framework</PackageJsonDescription>
+    <PackageJsonHomepage Condition="$(PackageJsonHomepage) == ''">https://revealjs.com</PackageJsonHomepage>
+    <PackageJsonSubdomain Condition="$(PackageJsonSubdomain) == ''">revealjs</PackageJsonSubdomain>
+    <PackageJsonMain Condition="$(PackageJsonMain) == ''">dist/reveal.js</PackageJsonMain>
+    <PackageJsonModule Condition="$(PackageJsonModule) == ''">dist/reveal.esm.js</PackageJsonModule>
+    <PackageJsonLicense Condition="$(PackageJsonLicense) == ''">MIT</PackageJsonLicense>
+    <PackageJsonScriptsTest Condition="$(PackageJsonScriptsTest) == ''">gulp test</PackageJsonScriptsTest>
+    <PackageJsonScriptsStart Condition="$(PackageJsonScriptsStart) == ''">gulp serve</PackageJsonScriptsStart>
+    <PackageJsonScriptsBuild Condition="$(PackageJsonScriptsBuild) == ''">gulp build</PackageJsonScriptsBuild>
+    <PackageJsonAuthorName Condition="$(PackageJsonAuthorName) == ''">Hakim El Hattab</PackageJsonAuthorName>
+    <PackageJsonAuthorEmail Condition="$(PackageJsonAuthorEmail) == ''">hakim.elhattab@gmail.com</PackageJsonAuthorEmail>
+    <PackageJsonAuthorWeb Condition="$(PackageJsonAuthorWeb) == ''">https://hakim.se</PackageJsonAuthorWeb>
+    <PackageJsonRepositoryType Condition="$(PackageJsonRepositoryType) == ''">git</PackageJsonRepositoryType>
+    <PackageJsonRepositoryUrl Condition="$(PackageJsonRepositoryUrl) == ''">git://github.com/hakimel/reveal.js.git</PackageJsonRepositoryUrl>
+    <PackageJsonEnginesNode Condition="$(PackageJsonEnginesNode) == ''">&gt;=18.0.0</PackageJsonEnginesNode>
+    <PackageJsonKeywords Condition="$(PackageJsonKeywords) == ''">[
+  "reveal",
+  "slides",
+  "presentation"
+]</PackageJsonKeywords>
+    <PackageJsonDevdependenciesBabelCore Condition="$(PackageJsonDevdependenciesBabelCore) == ''">^7.23.2</PackageJsonDevdependenciesBabelCore>
+    <PackageJsonDevdependenciesBabelEslintParser Condition="$(PackageJsonDevdependenciesBabelEslintParser) == ''">^7.22.15</PackageJsonDevdependenciesBabelEslintParser>
+    <PackageJsonDevdependenciesBabelPresetEnv Condition="$(PackageJsonDevdependenciesBabelPresetEnv) == ''">^7.23.2</PackageJsonDevdependenciesBabelPresetEnv>
+    <PackageJsonDevdependenciesRollupPluginBabel Condition="$(PackageJsonDevdependenciesRollupPluginBabel) == ''">^6.0.4</PackageJsonDevdependenciesRollupPluginBabel>
+    <PackageJsonDevdependenciesRollupPluginCommonjs Condition="$(PackageJsonDevdependenciesRollupPluginCommonjs) == ''">^25.0.7</PackageJsonDevdependenciesRollupPluginCommonjs>
+    <PackageJsonDevdependenciesRollupPluginNodeResolve Condition="$(PackageJsonDevdependenciesRollupPluginNodeResolve) == ''">^15.2.3</PackageJsonDevdependenciesRollupPluginNodeResolve>
+    <PackageJsonDevdependenciesRollupPluginTerser Condition="$(PackageJsonDevdependenciesRollupPluginTerser) == ''">^0.4.4</PackageJsonDevdependenciesRollupPluginTerser>
+    <PackageJsonDevdependenciesBabelPluginTransformHtmlImportToString Condition="$(PackageJsonDevdependenciesBabelPluginTransformHtmlImportToString) == ''">2.0.0</PackageJsonDevdependenciesBabelPluginTransformHtmlImportToString>
+    <PackageJsonDevdependenciesColors Condition="$(PackageJsonDevdependenciesColors) == ''">^1.4.0</PackageJsonDevdependenciesColors>
+    <PackageJsonDevdependenciesCoreJs Condition="$(PackageJsonDevdependenciesCoreJs) == ''">^3.33.1</PackageJsonDevdependenciesCoreJs>
+    <PackageJsonDevdependenciesFitty Condition="$(PackageJsonDevdependenciesFitty) == ''">^2.3.7</PackageJsonDevdependenciesFitty>
+    <PackageJsonDevdependenciesGlob Condition="$(PackageJsonDevdependenciesGlob) == ''">^10.3.10</PackageJsonDevdependenciesGlob>
+    <PackageJsonDevdependenciesGulp Condition="$(PackageJsonDevdependenciesGulp) == ''">^5.0.0</PackageJsonDevdependenciesGulp>
+    <PackageJsonDevdependenciesGulpAutoprefixer Condition="$(PackageJsonDevdependenciesGulpAutoprefixer) == ''">^8.0.0</PackageJsonDevdependenciesGulpAutoprefixer>
+    <PackageJsonDevdependenciesGulpCleanCss Condition="$(PackageJsonDevdependenciesGulpCleanCss) == ''">^4.3.0</PackageJsonDevdependenciesGulpCleanCss>
+    <PackageJsonDevdependenciesGulpConnect Condition="$(PackageJsonDevdependenciesGulpConnect) == ''">^5.7.0</PackageJsonDevdependenciesGulpConnect>
+    <PackageJsonDevdependenciesGulpEslint Condition="$(PackageJsonDevdependenciesGulpEslint) == ''">^6.0.0</PackageJsonDevdependenciesGulpEslint>
+    <PackageJsonDevdependenciesGulpHeaderComment Condition="$(PackageJsonDevdependenciesGulpHeaderComment) == ''">^0.10.0</PackageJsonDevdependenciesGulpHeaderComment>
+    <PackageJsonDevdependenciesGulpZip Condition="$(PackageJsonDevdependenciesGulpZip) == ''">^5.1.0</PackageJsonDevdependenciesGulpZip>
+    <PackageJsonDevdependenciesHighlightJs Condition="$(PackageJsonDevdependenciesHighlightJs) == ''">^11.9.0</PackageJsonDevdependenciesHighlightJs>
+    <PackageJsonDevdependenciesMarked Condition="$(PackageJsonDevdependenciesMarked) == ''">^4.3.0</PackageJsonDevdependenciesMarked>
+    <PackageJsonDevdependenciesNodeQunitPuppeteer Condition="$(PackageJsonDevdependenciesNodeQunitPuppeteer) == ''">^2.2.0</PackageJsonDevdependenciesNodeQunitPuppeteer>
+    <PackageJsonDevdependenciesThrough2 Condition="$(PackageJsonDevdependenciesThrough2) == ''">^4.0.2</PackageJsonDevdependenciesThrough2>
+    <PackageJsonDevdependenciesQunit Condition="$(PackageJsonDevdependenciesQunit) == ''">^2.22.0</PackageJsonDevdependenciesQunit>
+    <PackageJsonDevdependenciesRollup Condition="$(PackageJsonDevdependenciesRollup) == ''">^4.1.5</PackageJsonDevdependenciesRollup>
+    <PackageJsonDevdependenciesSass Condition="$(PackageJsonDevdependenciesSass) == ''">^1.79.4</PackageJsonDevdependenciesSass>
+    <PackageJsonDevdependenciesYargs Condition="$(PackageJsonDevdependenciesYargs) == ''">^17.7.2</PackageJsonDevdependenciesYargs>
+    <PackageJsonOverridesGulpConnectSend Condition="$(PackageJsonOverridesGulpConnectSend) == ''">0.19.0</PackageJsonOverridesGulpConnectSend>
+    <PackageJsonOverridesGulpHeaderCommentMoment Condition="$(PackageJsonOverridesGulpHeaderCommentMoment) == ''">2.30.1</PackageJsonOverridesGulpHeaderCommentMoment>
+    <PackageJsonBrowserslist Condition="$(PackageJsonBrowserslist) == ''">&gt; 2%, not dead</PackageJsonBrowserslist>
+    <PackageJsonEslintconfigEnvBrowser Condition="$(PackageJsonEslintconfigEnvBrowser) == ''">true</PackageJsonEslintconfigEnvBrowser>
+    <PackageJsonEslintconfigEnvEs6 Condition="$(PackageJsonEslintconfigEnvEs6) == ''">true</PackageJsonEslintconfigEnvEs6>
+    <PackageJsonEslintconfigParser Condition="$(PackageJsonEslintconfigParser) == ''">@babel/eslint-parser</PackageJsonEslintconfigParser>
+    <PackageJsonEslintconfigParseroptionsSourcetype Condition="$(PackageJsonEslintconfigParseroptionsSourcetype) == ''">module</PackageJsonEslintconfigParseroptionsSourcetype>
+    <PackageJsonEslintconfigParseroptionsAllowimportexporteverywhere Condition="$(PackageJsonEslintconfigParseroptionsAllowimportexporteverywhere) == ''">true</PackageJsonEslintconfigParseroptionsAllowimportexporteverywhere>
+    <PackageJsonEslintconfigParseroptionsRequireconfigfile Condition="$(PackageJsonEslintconfigParseroptionsRequireconfigfile) == ''">false</PackageJsonEslintconfigParseroptionsRequireconfigfile>
+    <PackageJsonEslintconfigGlobalsModule Condition="$(PackageJsonEslintconfigGlobalsModule) == ''">false</PackageJsonEslintconfigGlobalsModule>
+    <PackageJsonEslintconfigGlobalsConsole Condition="$(PackageJsonEslintconfigGlobalsConsole) == ''">false</PackageJsonEslintconfigGlobalsConsole>
+    <PackageJsonEslintconfigGlobalsUnescape Condition="$(PackageJsonEslintconfigGlobalsUnescape) == ''">false</PackageJsonEslintconfigGlobalsUnescape>
+    <PackageJsonEslintconfigGlobalsDefine Condition="$(PackageJsonEslintconfigGlobalsDefine) == ''">false</PackageJsonEslintconfigGlobalsDefine>
+    <PackageJsonEslintconfigGlobalsExports Condition="$(PackageJsonEslintconfigGlobalsExports) == ''">false</PackageJsonEslintconfigGlobalsExports>
+    <PackageJsonEslintconfigRulesCurly Condition="$(PackageJsonEslintconfigRulesCurly) == ''">0</PackageJsonEslintconfigRulesCurly>
+    <PackageJsonEslintconfigRulesEqeqeq Condition="$(PackageJsonEslintconfigRulesEqeqeq) == ''">2</PackageJsonEslintconfigRulesEqeqeq>
+    <PackageJsonEslintconfigRulesWrapIife Condition="$(PackageJsonEslintconfigRulesWrapIife) == ''">[
+  2,
+  "any"
+]</PackageJsonEslintconfigRulesWrapIife>
+    <PackageJsonEslintconfigRulesNoUseBeforeDefine Condition="$(PackageJsonEslintconfigRulesNoUseBeforeDefine) == ''">[
+  2,
+  {
+    "functions": false
+  }
+]</PackageJsonEslintconfigRulesNoUseBeforeDefine>
+    <PackageJsonEslintconfigRulesNewCap Condition="$(PackageJsonEslintconfigRulesNewCap) == ''">2</PackageJsonEslintconfigRulesNewCap>
+    <PackageJsonEslintconfigRulesNoCaller Condition="$(PackageJsonEslintconfigRulesNoCaller) == ''">2</PackageJsonEslintconfigRulesNoCaller>
+    <PackageJsonEslintconfigRulesDotNotation Condition="$(PackageJsonEslintconfigRulesDotNotation) == ''">0</PackageJsonEslintconfigRulesDotNotation>
+    <PackageJsonEslintconfigRulesNoEqNull Condition="$(PackageJsonEslintconfigRulesNoEqNull) == ''">2</PackageJsonEslintconfigRulesNoEqNull>
+    <PackageJsonEslintconfigRulesNoUnusedExpressions Condition="$(PackageJsonEslintconfigRulesNoUnusedExpressions) == ''">0</PackageJsonEslintconfigRulesNoUnusedExpressions>
+  </PropertyGroup>
+</Project>
