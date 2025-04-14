@@ -5,3 +5,5 @@
 /VirtualArboretum/.vs
 /VirtualArboretum/bin/Debug/net9.0
 /VirtualArboretum/obj
+/VirtualArboretumTests/bin/Debug/net9.0
+/VirtualArboretumTests/obj
