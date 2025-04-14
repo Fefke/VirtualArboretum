@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "VirtualArboretum": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
