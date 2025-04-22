@@ -55,6 +55,12 @@ public class Plant
 
     }
 
+    // TODO: Supply a Mycelium Factory for each plant, to allow a plant to subscribe to a Mycelium.
+    public Plant AssociateWith(HyphaeStrain strain)
+    {
+        AssociatedHyphae.Add(strain);
+        return this;
+    }
 
     /// <summary>
     /// Does cultivate this plant into a new type of plant, by adding new cells,<br/>
@@ -80,6 +86,18 @@ public class Plant
         );
     }
 
+    public Plant CrossWith(
+        Plant plant,
+        HyphaeStrain primaryHyphae
+    )
+    {
+        return CultivateWith(
+            plant.Cells.Values,
+            primaryHyphae,
+            plant.AssociatedHyphae,
+            null
+        );
+    }
 }
 
 public static class PlantNameHelper
