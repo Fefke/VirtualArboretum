@@ -10,11 +10,11 @@ namespace VirtualArboretum.Core.Domain.AggregateRoots;
 /// </summary>
 public class HyphaeStrain
 {
-    public ImmutableArray<Hypha> Hyphae { get; }
+    public ImmutableArray<Hypha> Value { get; }
 
     public HyphaeStrain(ImmutableArray<Hypha> hyphae)
     {
-        Hyphae = hyphae;
+        Value = hyphae;
     }
 
     public HyphaeStrain(Hypha hyphae)
@@ -34,10 +34,10 @@ public class HyphaeStrain
             return false;
         }
 
-        return Hyphae.SequenceEqual(second.Hyphae);
+        return Value.SequenceEqual(second.Value);
     }
     public override int GetHashCode()
     {
-        return Hyphae.GetHashCode();
+        return Value.GetHashCode();
     }
 }
