@@ -29,7 +29,6 @@
 
 	<ItemGroup>
 		<Folder Include="Core\Application\Interfaces\" />
-		<Folder Include="Core\Application\UseCases\" />
 		<Folder Include="Infrastructure\Repositories\" />
 		<Folder Include="Infrastructure\Services\Interfaces\" />
 		<Folder Include="Presentation\Views\" />
