@@ -1,4 +1,4 @@
-﻿using VirtualArboretum.Core.Domain.AggregateRoots;
+﻿using VirtualArboretum.Core.Domain.Services;
 using VirtualArboretum.Core.Domain.ValueObjects;
 
 namespace VirtualArboretum.Core.Domain.Entities;
@@ -27,7 +27,7 @@ public class HyphaeBuilder
         : this(
             root,
             HyphaeHierarchy
-                .Aggregate(hyphaeStrain)
+                .AggregateHyphaeKeys(hyphaeStrain)
                 .ToList()
             )
     { }
