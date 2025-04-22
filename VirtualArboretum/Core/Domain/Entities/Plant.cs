@@ -1,5 +1,5 @@
 ﻿using System.Collections.Immutable;
-using VirtualArboretum.Core.Domain.AggregateRoots;
+using VirtualArboretum.Core.Domain.Services;
 using VirtualArboretum.Core.Domain.ValueObjects;
 
 namespace VirtualArboretum.Core.Domain.Entities;
