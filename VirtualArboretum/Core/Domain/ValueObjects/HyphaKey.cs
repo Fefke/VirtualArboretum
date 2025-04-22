@@ -13,7 +13,7 @@ public class HyphaKey
     // but has to be accessed through instance.
 
     // possible strong alternative `=`: #va=setting=some=thing
-    // possible broad alternative `)`: #va)setting)some)thing  // TODO
+    // possible broad alternative `)`: #va)setting)some)thing
 
     // static for now, as referencing readonly in [] is not allowed in C# for some reason:
     public static readonly char[] ReservedChars = [StartMarker, ExtensionDelimiter];
@@ -51,5 +51,33 @@ public class HyphaKey
     public virtual char GetStartMarker()
     {
         return StartMarker;
+    }
+
+
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as HyphaKey);
+    }
+
+    public bool Equals(HyphaKey? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            // is self-referencing.
+            return true;
+        }
+
+        
+        return this.Value == other.Value;
+    }
+
+    public override int GetHashCode()
+    {
+        return Value.GetHashCode();
     }
 }
