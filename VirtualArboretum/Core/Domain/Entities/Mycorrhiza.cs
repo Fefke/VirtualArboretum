@@ -7,6 +7,4 @@
 /// </summary>
 public class Mycorrhiza // : Hypha  // Might be more appropriate to instantiate a Hypha containing a Mycorrhiza..
 {
-    private int _dummy = 0;
-
 }
