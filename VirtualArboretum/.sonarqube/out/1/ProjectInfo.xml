@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>VirtualArboretumTests</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Test</ProjectType>
+  <ProjectGuid>6a9a3bcc-a1b9-4997-882f-017813e98938</ProjectGuid>
+  <FullPath>C:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\VirtualArboretumTests.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResults>
+    <AnalysisResult Id="FilesToAnalyze" Location="C:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretum\.sonarqube\conf\1\FilesToAnalyze.txt" />
+  </AnalysisResults>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">C:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretum\.sonarqube\out\1\Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">C:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretum\.sonarqube\out\1</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net9.0</TargetFramework>
+</ProjectInfo>

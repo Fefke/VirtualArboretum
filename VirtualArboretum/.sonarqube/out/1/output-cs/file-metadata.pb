@@ -1,0 +1,21 @@
+ß
+õC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\obj\Debug\net9.0\TestPlatformEntryPoint.csutf-8©
+ùC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\obj\Debug\net9.0\AutoRegisteredExtensions.csutf-8≥
+ßC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\obj\Debug\net9.0\VirtualArboretumTests.AssemblyInfo.csutf-8º
+∞C:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\obj\Debug\net9.0\.NETCoreApp,Version=v9.0.AssemblyAttributes.csutf-8µ
+©C:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\obj\Debug\net9.0\VirtualArboretumTests.GlobalUsings.g.csutf-8ç
+ÉC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\UnitTests\Test9.csutf-8ç
+ÉC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\UnitTests\Test8.csutf-8ç
+ÉC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\UnitTests\Test7.csutf-8ç
+ÉC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\UnitTests\Test6.csutf-8ç
+ÉC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\UnitTests\Test5.csutf-8ç
+ÉC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\UnitTests\Test4.csutf-8™
+†C:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\UnitTests\Infrastructure\TestHyphaSerializer.csutf-8†
+ñC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\UnitTests\Core\TestHyphaeHierarchy.csutf-8ú
+íC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\UnitTests\Core\TestFingerprint.csutf-8ã
+ÅC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\Program.Tests.csutf-8å
+ÇC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\MSTestSettings.csutf-8ô
+èC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\IntegrationTests\RestClient.csutf-8¶
+úC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\IntegrationTests\MockingRestApiUser.Test.csutf-8†
+ñC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\IntegrationTests\MockingCliApiUser.csutf-8ö
+êC:\Users\feblank\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests\IntegrationTests\ApiResponse.csutf-8

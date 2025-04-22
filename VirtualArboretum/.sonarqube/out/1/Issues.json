@@ -1,0 +1,513 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Microsoft (R) Visual C# Compiler",
+        "version": "4.13.0.0",
+        "fileVersion": "4.13.0-3.25112.7 (afe5bc4a)",
+        "semanticVersion": "4.13.0",
+        "language": "en-US"
+      },
+      "results": [
+        {
+          "ruleId": "CS0659",
+          "level": "warning",
+          "message": "'ApiResponse' overrides Object.Equals(object o) but does not override Object.GetHashCode()",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/IntegrationTests/ApiResponse.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 14,
+                  "endLine": 7,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS8625",
+          "level": "warning",
+          "message": "Cannot convert null literal to non-nullable reference type.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/IntegrationTests/MockingRestApiUser.Test.cs",
+                "region": {
+                  "startLine": 70,
+                  "startColumn": 105,
+                  "endLine": 70,
+                  "endColumn": 109
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS0219",
+          "level": "warning",
+          "message": "The variable 'tagJson' is assigned but its value is never used",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/IntegrationTests/MockingRestApiUser.Test.cs",
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 16,
+                  "endLine": 33,
+                  "endColumn": 23
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CA2211",
+          "level": "note",
+          "message": "Non-constant fields should not be visible",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/IntegrationTests/RestClient.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 29,
+                  "endLine": 11,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2699",
+          "level": "warning",
+          "message": "Add at least one assertion to this test case.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/Program.Tests.cs",
+                "region": {
+                  "startLine": 28,
+                  "startColumn": 21,
+                  "endLine": 28,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2699",
+          "level": "warning",
+          "message": "Add at least one assertion to this test case.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/UnitTests/Test7.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 17,
+                  "endLine": 7,
+                  "endColumn": 22
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2699",
+          "level": "warning",
+          "message": "Add at least one assertion to this test case.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/UnitTests/Test9.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 17,
+                  "endLine": 7,
+                  "endColumn": 22
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2699",
+          "level": "warning",
+          "message": "Add at least one assertion to this test case.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/UnitTests/Test4.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 17,
+                  "endLine": 7,
+                  "endColumn": 22
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2699",
+          "level": "warning",
+          "message": "Add at least one assertion to this test case.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/UnitTests/Test6.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 17,
+                  "endLine": 7,
+                  "endColumn": 22
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2699",
+          "level": "warning",
+          "message": "Add at least one assertion to this test case.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/UnitTests/Test8.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 17,
+                  "endLine": 7,
+                  "endColumn": 22
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2699",
+          "level": "warning",
+          "message": "Add at least one assertion to this test case.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/UnitTests/Test5.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 17,
+                  "endLine": 7,
+                  "endColumn": 22
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2699",
+          "level": "warning",
+          "message": "Add at least one assertion to this test case.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/Program.Tests.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 21,
+                  "endLine": 9,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2699",
+          "level": "warning",
+          "message": "Add at least one assertion to this test case.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/IntegrationTests/MockingCliApiUser.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 17,
+                  "endLine": 10,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3415",
+          "level": "warning",
+          "message": "Make sure these 2 arguments are in the correct order: expected value, actual value.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/UnitTests/Core/TestHyphaeHierarchy.cs",
+                "region": {
+                  "startLine": 60,
+                  "startColumn": 13,
+                  "endLine": 64,
+                  "endColumn": 14
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "MSTEST0026",
+          "level": "note",
+          "message": "Prefer adding an additional assertion that checks for null",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/UnitTests/Core/TestHyphaeHierarchy.cs",
+                "region": {
+                  "startLine": 59,
+                  "startColumn": 9,
+                  "endLine": 65,
+                  "endColumn": 14
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'GetRandomDateTimeOffset' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/UnitTests/Core/TestFingerprint.cs",
+                "region": {
+                  "startLine": 36,
+                  "startColumn": 28,
+                  "endLine": 36,
+                  "endColumn": 51
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'WrapFingerprints' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/UnitTests/Core/TestFingerprint.cs",
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 27,
+                  "endLine": 55,
+                  "endColumn": 43
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'WrapGuids' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretumTests/UnitTests/Core/TestFingerprint.cs",
+                "region": {
+                  "startLine": 43,
+                  "startColumn": 20,
+                  "endLine": 43,
+                  "endColumn": 29
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CA1822": {
+          "id": "CA1822",
+          "shortDescription": "Mark members as static",
+          "fullDescription": "Members that do not access instance data or call instance methods can be marked as static. After you mark the methods as static, the compiler will emit nonvirtual call sites to these members. This can give you a measurable performance gain for performance-sensitive code.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "PortedFromFxCop",
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA2211": {
+          "id": "CA2211",
+          "shortDescription": "Non-constant fields should not be visible",
+          "fullDescription": "Static fields that are neither constants nor read-only are not thread-safe. Access to such a field must be carefully controlled and requires advanced programming techniques to synchronize access to the class object.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2211",
+          "properties": {
+            "category": "Usage",
+            "isEnabledByDefault": true,
+            "tags": [
+              "PortedFromFxCop",
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CS0219": {
+          "id": "CS0219",
+          "shortDescription": "Variable is assigned but its value is never used",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0219)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS0659": {
+          "id": "CS0659",
+          "shortDescription": "Type overrides Object.Equals(object o) but does not override Object.GetHashCode()",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0659)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8625": {
+          "id": "CS8625",
+          "shortDescription": "Cannot convert null literal to non-nullable reference type.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8625)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "MSTEST0026": {
+          "id": "MSTEST0026",
+          "shortDescription": "Avoid conditional access in assertions",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/core/testing/mstest-analyzers/mstest0026",
+          "properties": {
+            "category": "Usage",
+            "isEnabledByDefault": true
+          }
+        },
+        "S2699": {
+          "id": "S2699",
+          "shortDescription": "Tests should include assertions",
+          "fullDescription": "The rule targets test methods that lack an assertion and consist solely of an action and, optionally, a setup.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2699",
+          "properties": {
+            "category": "Blocker Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S3415": {
+          "id": "S3415",
+          "shortDescription": "Assertion arguments should be passed in the correct order",
+          "fullDescription": "The standard assertions library methods such as AreEqual and AreSame in MSTest and NUnit, or Equal and Same in XUnit, expect the first argument to be the expected value and the second argument to be the actual value.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-3415",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

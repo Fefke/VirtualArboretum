@@ -1,0 +1,1900 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Microsoft (R) Visual C# Compiler",
+        "version": "4.13.0.0",
+        "fileVersion": "4.13.0-3.25112.7 (afe5bc4a)",
+        "semanticVersion": "4.13.0",
+        "language": "en-US"
+      },
+      "results": [
+        {
+          "ruleId": "CS8625",
+          "level": "warning",
+          "message": "Cannot convert null literal to non-nullable reference type.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/ViewModels/RestResponse.cs",
+                "region": {
+                  "startLine": 26,
+                  "startColumn": 68,
+                  "endLine": 26,
+                  "endColumn": 72
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Status' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/ViewModels/RestResponse.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 19,
+                  "endLine": 11,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/ViewModels/RestResponse.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 19,
+                  "endLine": 11,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Message' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/ViewModels/RestResponse.cs",
+                "region": {
+                  "startLine": 16,
+                  "startColumn": 19,
+                  "endLine": 16,
+                  "endColumn": 26
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/ViewModels/RestResponse.cs",
+                "region": {
+                  "startLine": 16,
+                  "startColumn": 19,
+                  "endLine": 16,
+                  "endColumn": 26
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Data' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/ViewModels/RestResponse.cs",
+                "region": {
+                  "startLine": 21,
+                  "startColumn": 14,
+                  "endLine": 21,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/ViewModels/RestResponse.cs",
+                "region": {
+                  "startLine": 21,
+                  "startColumn": 14,
+                  "endLine": 21,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS1998",
+          "level": "warning",
+          "message": "This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Controllers/CliController.cs",
+                "region": {
+                  "startLine": 47,
+                  "startColumn": 24,
+                  "endLine": 47,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS0414",
+          "level": "warning",
+          "message": "The field 'Mycorrhiza._dummy' is assigned but its value is never used",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/Entities/Mycorrhiza.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 17,
+                  "endLine": 10,
+                  "endColumn": 23
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/AggregateRoots/Arboretum.cs",
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 8,
+                  "endLine": 8,
+                  "endColumn": 12
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/AggregateRoots/Mycelium.cs",
+                "region": {
+                  "startLine": 29,
+                  "startColumn": 12,
+                  "endLine": 29,
+                  "endColumn": 16
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/Entities/Incubator.cs",
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 8,
+                  "endLine": 5,
+                  "endColumn": 12
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/Entities/Plexus.cs",
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/Entities/Plexus.cs",
+                "region": {
+                  "startLine": 43,
+                  "startColumn": 12,
+                  "endLine": 43,
+                  "endColumn": 16
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/Interfaces/IGrowthStep.cs",
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 5,
+                  "endLine": 8,
+                  "endColumn": 21
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/Interfaces/ISepta.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 5,
+                  "endLine": 14,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/ValueObjects/Fingerprint.cs",
+                "region": {
+                  "startLine": 116,
+                  "startColumn": 1,
+                  "endLine": 116,
+                  "endColumn": 6
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/ValueObjects/HyphaKey.cs",
+                "region": {
+                  "startLine": 16,
+                  "startColumn": 67,
+                  "endLine": 16,
+                  "endColumn": 71
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/ValueObjects/StrongHyphaKey.cs",
+                "region": {
+                  "startLine": 4,
+                  "startColumn": 1,
+                  "endLine": 4,
+                  "endColumn": 2
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Controllers/ServerController.cs",
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 12,
+                  "endLine": 22,
+                  "endColumn": 16
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/IPipeService.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 8,
+                  "endLine": 9,
+                  "endColumn": 12
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3261",
+          "level": "warning",
+          "message": "Remove this empty namespace.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/ValueObjects/StrongHyphaKey.cs",
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/PipeService.cs",
+                "region": {
+                  "startLine": 27,
+                  "startColumn": 12,
+                  "endLine": 27,
+                  "endColumn": 16
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 159,
+                  "startColumn": 16,
+                  "endLine": 159,
+                  "endColumn": 20
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 202,
+                  "startColumn": 16,
+                  "endLine": 202,
+                  "endColumn": 20
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 228,
+                  "startColumn": 16,
+                  "endLine": 228,
+                  "endColumn": 20
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 273,
+                  "startColumn": 12,
+                  "endLine": 273,
+                  "endColumn": 16
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1118",
+          "level": "warning",
+          "message": "Add a 'protected' constructor or the 'static' keyword to the class declaration.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Infrastructure/Services/HyphaeSerializer.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 14,
+                  "endLine": 10,
+                  "endColumn": 30
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1118",
+          "level": "warning",
+          "message": "Add a 'protected' constructor or the 'static' keyword to the class declaration.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Program.cs",
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 14,
+                  "endLine": 6,
+                  "endColumn": 21
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3260",
+          "level": "warning",
+          "message": "Private record classes which are not derived in the current assembly should be marked as 'sealed'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 354,
+                  "startColumn": 20,
+                  "endLine": 354,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Program.cs",
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 16,
+                  "endLine": 12,
+                  "endColumn": 20
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1824",
+          "level": "note",
+          "message": "Mark assemblies with NeutralResourcesLanguageAttribute",
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2930",
+          "level": "warning",
+          "message": "Dispose 'cts' when it is no longer needed.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 143,
+                  "startColumn": 13,
+                  "endLine": 143,
+                  "endColumn": 48
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2094",
+          "level": "warning",
+          "message": "Remove this empty class, write its code or make it an \"interface\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/Entities/Incubator.cs",
+                "region": {
+                  "startLine": 3,
+                  "startColumn": 14,
+                  "endLine": 3,
+                  "endColumn": 23
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2933",
+          "level": "warning",
+          "message": "Make '_dummy' 'readonly'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/Entities/Mycorrhiza.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 17,
+                  "endLine": 10,
+                  "endColumn": 23
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1144",
+          "level": "warning",
+          "message": "Remove the unused private field '_dummy'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/Entities/Mycorrhiza.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 5,
+                  "endLine": 10,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S4487",
+          "level": "warning",
+          "message": "Remove this unread private field 'HyphalPlexus' or refactor the code to use its value.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/AggregateRoots/Mycelium.cs",
+                "region": {
+                  "startLine": 17,
+                  "startColumn": 75,
+                  "endLine": 17,
+                  "endColumn": 87
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S4487",
+          "level": "warning",
+          "message": "Remove this unread private field 'MycorrhizalAssociations' or refactor the code to use its value.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/AggregateRoots/Mycelium.cs",
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 81,
+                  "endLine": 22,
+                  "endColumn": 104
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1118",
+          "level": "warning",
+          "message": "Add a 'protected' constructor or the 'static' keyword to the class declaration.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/Services/HyphaeHierarchy.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 14,
+                  "endLine": 9,
+                  "endColumn": 29
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1144",
+          "level": "warning",
+          "message": "Remove the unused private field 'Alphanumericals'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/ValueObjects/Fingerprint.cs",
+                "region": {
+                  "startLine": 109,
+                  "startColumn": 5,
+                  "endLine": 109,
+                  "endColumn": 79
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/Entities/Plant.cs",
+                "region": {
+                  "startLine": 18,
+                  "startColumn": 39,
+                  "endLine": 18,
+                  "endColumn": 55
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2325",
+          "level": "warning",
+          "message": "Make 'ExtendWith' a static method.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/AggregateRoots/Mycelium.cs",
+                "region": {
+                  "startLine": 43,
+                  "startColumn": 18,
+                  "endLine": 43,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S5332",
+          "level": "warning",
+          "message": "Using http protocol is insecure. Use https instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 39,
+                  "startColumn": 44,
+                  "endLine": 39,
+                  "endColumn": 78
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1116",
+          "level": "warning",
+          "message": "Remove this empty statement.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 58,
+                  "startColumn": 13,
+                  "endLine": 58,
+                  "endColumn": 14
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2325",
+          "level": "warning",
+          "message": "Make 'CleanupLockFile' a static method.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 50,
+                  "startColumn": 18,
+                  "endLine": 50,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "The parameter name 'version7Guid' is not declared in the argument list.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/ValueObjects/Fingerprint.cs",
+                "region": {
+                  "startLine": 47,
+                  "startColumn": 19,
+                  "endLine": 49,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "The parameter name 'version7Guid' is not declared in the argument list.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/ValueObjects/Fingerprint.cs",
+                "region": {
+                  "startLine": 71,
+                  "startColumn": 19,
+                  "endLine": 73,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "The parameter name 'version7Guid' is not declared in the argument list.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/ValueObjects/Fingerprint.cs",
+                "region": {
+                  "startLine": 80,
+                  "startColumn": 19,
+                  "endLine": 82,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2325",
+          "level": "warning",
+          "message": "Make 'ProcessPipedInput' a static method.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Controllers/CliController.cs",
+                "region": {
+                  "startLine": 47,
+                  "startColumn": 24,
+                  "endLine": 47,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1172",
+          "level": "warning",
+          "message": "Remove this unused method parameter 'content'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Controllers/CliController.cs",
+                "region": {
+                  "startLine": 47,
+                  "startColumn": 63,
+                  "endLine": 47,
+                  "endColumn": 77
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "IsRemovable": "True"
+            }
+          }
+        },
+        {
+          "ruleId": "S1854",
+          "level": "warning",
+          "message": "Remove this useless assignment to local variable 'index'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/Services/HyphaeHierarchy.cs",
+                "region": {
+                  "startLine": 52,
+                  "startColumn": 27,
+                  "endLine": 52,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1854",
+          "level": "warning",
+          "message": "Remove this useless assignment to local variable 'depth'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Core/Domain/Services/HyphaeHierarchy.cs",
+                "region": {
+                  "startLine": 48,
+                  "startColumn": 17,
+                  "endLine": 48,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6561",
+          "level": "warning",
+          "message": "Avoid using \"DateTime.Now\" for benchmarking or timespan calculation operations.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 253,
+                  "startColumn": 27,
+                  "endLine": 253,
+                  "endColumn": 51
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6608",
+          "level": "warning",
+          "message": "Indexing at 0 should be used instead of the \"Enumerable\" extension method \"First\"",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Infrastructure/Services/HyphaeSerializer.cs",
+                "region": {
+                  "startLine": 71,
+                  "startColumn": 49,
+                  "endLine": 71,
+                  "endColumn": 54
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S108",
+          "level": "warning",
+          "message": "Either remove or fill this block of code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 155,
+                  "startColumn": 9,
+                  "endLine": 156,
+                  "endColumn": 10
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6608",
+          "level": "warning",
+          "message": "Indexing at 0 should be used instead of the \"Enumerable\" extension method \"First\"",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Infrastructure/Services/HyphaeSerializer.cs",
+                "region": {
+                  "startLine": 76,
+                  "startColumn": 47,
+                  "endLine": 76,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'ProcessPipedInput' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Controllers/CliController.cs",
+                "region": {
+                  "startLine": 47,
+                  "startColumn": 24,
+                  "endLine": 47,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1859",
+          "level": "note",
+          "message": "Change type of field '_serverService' from 'VirtualArboretum.Presentation.Services.IServerService' to 'VirtualArboretum.Presentation.Services.ServerService' for improved performance",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Controllers/ServerController.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 37,
+                  "endLine": 7,
+                  "endColumn": 51
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1859",
+          "level": "note",
+          "message": "Change type of field '_pipeService' from 'VirtualArboretum.Presentation.Services.IPipeService' to 'VirtualArboretum.Presentation.Services.PipeService' for improved performance",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Controllers/CliController.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 35,
+                  "endLine": 9,
+                  "endColumn": 47
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2325",
+          "level": "warning",
+          "message": "Make 'HandleExitCommand' a static method.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 324,
+                  "startColumn": 20,
+                  "endLine": 324,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2325",
+          "level": "warning",
+          "message": "Make 'HandleProcessCommand' a static method.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 333,
+                  "startColumn": 32,
+                  "endLine": 333,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1835",
+          "level": "note",
+          "message": "Change the 'WriteAsync' method call to use the 'Stream.WriteAsync(ReadOnlyMemory<byte>, CancellationToken)' overload",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 224,
+                  "startColumn": 19,
+                  "endLine": 224,
+                  "endColumn": 85
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1481",
+          "level": "warning",
+          "message": "Remove the unused local variable 'completedTask'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 178,
+                  "startColumn": 17,
+                  "endLine": 178,
+                  "endColumn": 30
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1837",
+          "level": "note",
+          "message": "Use 'Environment.ProcessId' instead of 'Process.GetCurrentProcess().Id'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 136,
+                  "startColumn": 13,
+                  "endLine": 136,
+                  "endColumn": 43
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'CleanupLockFile' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 50,
+                  "startColumn": 18,
+                  "endLine": 50,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'HandleStatusRequestAsync' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 239,
+                  "startColumn": 26,
+                  "endLine": 239,
+                  "endColumn": 50
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'HandleExitCommand' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 324,
+                  "startColumn": 20,
+                  "endLine": 324,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "Member 'HandleProcessCommand' does not access instance data and can be marked as static",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/feblank/OneDrive%20-%20student.dhbw-karlsruhe.de/Stu-di-um/6.%20Semester%20-%20Adv.SWE%20-%20VA/VirtualArboretum/Presentation/Services/ServerService.cs",
+                "region": {
+                  "startLine": 333,
+                  "startColumn": 32,
+                  "endLine": 333,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CA1822": {
+          "id": "CA1822",
+          "shortDescription": "Mark members as static",
+          "fullDescription": "Members that do not access instance data or call instance methods can be marked as static. After you mark the methods as static, the compiler will emit nonvirtual call sites to these members. This can give you a measurable performance gain for performance-sensitive code.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "PortedFromFxCop",
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA1824": {
+          "id": "CA1824",
+          "shortDescription": "Mark assemblies with NeutralResourcesLanguageAttribute",
+          "fullDescription": "The NeutralResourcesLanguage attribute informs the ResourceManager of the language that was used to display the resources of a neutral culture for an assembly. This improves lookup performance for the first resource that you load and can reduce your working set.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1824",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "PortedFromFxCop",
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA1835": {
+          "id": "CA1835",
+          "shortDescription": "Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'",
+          "fullDescription": "'Stream' has a 'ReadAsync' overload that takes a 'Memory<Byte>' as the first argument, and a 'WriteAsync' overload that takes a 'ReadOnlyMemory<Byte>' as the first argument. Prefer calling the memory based overloads, which are more efficient.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1835",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA1837": {
+          "id": "CA1837",
+          "shortDescription": "Use 'Environment.ProcessId'",
+          "fullDescription": "'Environment.ProcessId' is simpler and faster than 'Process.GetCurrentProcess().Id'.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1837",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA1859": {
+          "id": "CA1859",
+          "shortDescription": "Use concrete types when possible for improved performance",
+          "fullDescription": "Using concrete types avoids virtual or interface call overhead and enables inlining.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CS0414": {
+          "id": "CS0414",
+          "shortDescription": "Field is assigned but its value is never used",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0414)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS1998": {
+          "id": "CS1998",
+          "shortDescription": "Async method lacks 'await' operators and will run synchronously",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS1998)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8618": {
+          "id": "CS8618",
+          "shortDescription": "Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8618)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8625": {
+          "id": "CS8625",
+          "shortDescription": "Cannot convert null literal to non-nullable reference type.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8625)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "S108": {
+          "id": "S108",
+          "shortDescription": "Nested blocks of code should not be left empty",
+          "fullDescription": "An empty code block is confusing. It will require some effort from maintainers to determine if it is intentional or indicates the implementation is incomplete.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-108",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S1104": {
+          "id": "S1104",
+          "shortDescription": "Fields should not have public accessibility",
+          "fullDescription": "Public fields in public classes do not respect the encapsulation principle and have three main disadvantages:",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1104",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S1116": {
+          "id": "S1116",
+          "shortDescription": "Empty statements should be removed",
+          "fullDescription": "Empty statements represented by a semicolon ; are statements that do not perform any operation. They are often the result of a typo or a misunderstanding of the language syntax. It is a good practice to remove empty statements since they don’t add value and lead to confusion and errors.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1116",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S1118": {
+          "id": "S1118",
+          "shortDescription": "Utility classes should not have public constructors",
+          "fullDescription": "Whenever there are portions of code that are duplicated and do not depend on the state of their container class, they can be centralized inside a \"utility class\". A utility class is a class that only has static members, hence it should not be instantiated.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1118",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S1135": {
+          "id": "S1135",
+          "shortDescription": "Track uses of \"TODO\" tags",
+          "fullDescription": "Developers often use TODO tags to mark areas in the code where additional work or improvements are needed but are not implemented immediately. However, these TODO tags sometimes get overlooked or forgotten, leading to incomplete or unfinished code. This rule aims to identify and address unattended TODO tags to ensure a clean and maintainable codebase. This description explores why this is a problem and how it can be fixed to improve the overall code quality.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1135",
+          "properties": {
+            "category": "Info Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S1144": {
+          "id": "S1144",
+          "shortDescription": "Unused private types or members should be removed",
+          "fullDescription": "This rule raises an issue when a private/internal type or member is never referenced in the code.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1144",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S1172": {
+          "id": "S1172",
+          "shortDescription": "Unused method parameters should be removed",
+          "fullDescription": "A typical code smell known as unused function parameters refers to parameters declared in a function but not used anywhere within the function’s body. While this might seem harmless at first glance, it can lead to confusion and potential errors in your code. Disregarding the values passed to such parameters, the function’s behavior will be the same, but the programmer’s intention won’t be clearly expressed anymore. Therefore, removing function parameters that are not being utilized is considered best practice.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1172",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S125": {
+          "id": "S125",
+          "shortDescription": "Sections of code should not be commented out",
+          "fullDescription": "Commented-out code distracts the focus from the actual executed code. It creates a noise that increases maintenance code. And because it is never executed, it quickly becomes out of date and invalid.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-125",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S1481": {
+          "id": "S1481",
+          "shortDescription": "Unused local variables should be removed",
+          "fullDescription": "An unused local variable is a variable that has been declared but is not used anywhere in the block of code where it is defined. It is dead code, contributing to unnecessary complexity and leading to confusion when reading the code. Therefore, it should be removed from your code to maintain clarity and efficiency.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1481",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S1854": {
+          "id": "S1854",
+          "shortDescription": "Unused assignments should be removed",
+          "fullDescription": "Dead stores refer to assignments made to local variables that are subsequently never used or immediately overwritten. Such assignments are unnecessary and don’t contribute to the functionality or clarity of the code. They may even negatively impact performance. Removing them enhances code cleanliness and readability. Even if the unnecessary operations do not do any harm in terms of the program’s correctness, they are - at best - a waste of computing resources.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1854",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S2094": {
+          "id": "S2094",
+          "shortDescription": "Classes should not be empty",
+          "fullDescription": "There is no good excuse for an empty class. If it’s being used simply as a common extension point, it should be replaced with an interface. If it was stubbed in as a placeholder for future development it should be fleshed-out. In any other case, it should be eliminated.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2094",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S2325": {
+          "id": "S2325",
+          "shortDescription": "Methods and properties that don't access instance data should be static",
+          "fullDescription": "Methods and properties that don’t access instance data should be marked as static for the following reasons:",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2325",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S2930": {
+          "id": "S2930",
+          "shortDescription": "\"IDisposables\" should be disposed",
+          "fullDescription": "When writing managed code, there is no need to worry about memory allocation or deallocation as it is taken care of by the garbage collector. However, certain objects, such as Bitmap, utilize unmanaged memory for specific purposes like pointer arithmetic. These objects may have substantial unmanaged memory footprints while having minimal managed footprints. Unfortunately, the garbage collector only recognizes the small managed footprint and does not promptly reclaim the corresponding unmanaged memory (by invoking the finalizer method of Bitmap) for efficiency reasons.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2930",
+          "properties": {
+            "category": "Blocker Bug",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S2933": {
+          "id": "S2933",
+          "shortDescription": "Fields that are only assigned in the constructor should be \"readonly\"",
+          "fullDescription": "readonly fields can only be assigned in a class constructor. If a class has a field that’s not marked readonly but is only set in the constructor, it could cause confusion about the field’s intended use. To avoid confusion, such fields should be marked readonly to make their intended use explicit, and to prevent future maintainers from inadvertently changing their use.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2933",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S3260": {
+          "id": "S3260",
+          "shortDescription": "Non-derived \"private\" classes and records should be \"sealed\"",
+          "fullDescription": "Classes and records with either private or file access modifiers aren’t visible outside of their assemblies or files, so if they’re not extended inside their scope, they should be made explicitly non-extensible with the addition of the sealed keyword.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-3260",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S3261": {
+          "id": "S3261",
+          "shortDescription": "Namespaces should not be empty",
+          "fullDescription": "Namespaces with no lines of code clutter a project and should be removed.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-3261",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S3928": {
+          "id": "S3928",
+          "shortDescription": "Parameter names used into ArgumentException constructors should match an existing one ",
+          "fullDescription": "Some constructors of the ArgumentException, ArgumentNullException, ArgumentOutOfRangeException and DuplicateWaitObjectException classes must be fed with a valid parameter name. This rule raises an issue in two cases:",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-3928",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S4487": {
+          "id": "S4487",
+          "shortDescription": "Unread \"private\" fields should be removed",
+          "fullDescription": "Private fields which are written but never read are a case of \"dead store\". Changing the value of such a field is useless and most probably indicates an error in the code.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-4487",
+          "properties": {
+            "category": "Critical Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S5332": {
+          "id": "S5332",
+          "shortDescription": "Using clear-text protocols is security-sensitive",
+          "fullDescription": "Clear-text protocols such as ftp, telnet, or http lack encryption of transported data, as well as the capability to build an authenticated connection. It means that an attacker able to sniff traffic from the network can read, modify, or corrupt the transported content. These protocols are not secure as they expose applications to an extensive range of risks:",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-5332",
+          "properties": {
+            "category": "Critical Security Hotspot",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S6561": {
+          "id": "S6561",
+          "shortDescription": "Avoid using \"DateTime.Now\" for benchmarking or timing operations",
+          "fullDescription": "The rule targets the use of DateTime.Now call followed by some arithmetic operation.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-6561",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S6608": {
+          "id": "S6608",
+          "shortDescription": "Prefer indexing instead of \"Enumerable\" methods on types implementing \"IList\"",
+          "fullDescription": "Indexes in C# provide direct access to an element at a specific position within an array or collection. When compared to Enumerable methods, indexing can be more efficient for certain scenarios, such as iterating over a large collection, due to avoiding the overhead of checking the underlying collection type before accessing it.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-6608",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
