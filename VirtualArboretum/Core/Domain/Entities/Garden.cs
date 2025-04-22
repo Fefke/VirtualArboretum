@@ -17,11 +17,14 @@ public class Garden
     /// </summary>
     public HyphaeStrain PrimaryLocation { get; } // does directly reflect into DirectoryInfo Location.
 
+    public readonly Fingerprint UniqueMarker;
+
     private readonly ConcurrentDictionary<Fingerprint, Plant> _plants;
 
-    public Garden(HyphaeStrain primaryLocation, IList<Plant> plants)
+    public Garden(HyphaeStrain primaryLocation, IList<Plant> plants, Fingerprint? uniqueMarker)
     {
         PrimaryLocation = primaryLocation;
+        UniqueMarker = uniqueMarker ?? new Fingerprint();
         _plants = new(
             concurrencyLevel: -1,
             capacity: plants.Count
@@ -36,7 +39,7 @@ public class Garden
 
     public Plant AddPlant(Plant plant)
     {
-        
+
         plant.AssociateWith(PrimaryLocation);
 
         _plants.AddOrUpdate(
@@ -46,7 +49,7 @@ public class Garden
 
         return plant;
     }
-    
+
     public Plant? GetPlant(Fingerprint fingerprint)
     {
         return _plants.GetValueOrDefault(fingerprint);
