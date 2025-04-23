@@ -15,15 +15,15 @@
 
 
 ## Milestones
- 1.	⭕ Complete Core Domain Model:
+ 1.	✅ Complete Core Domain Model:
      - Finish implementing the fundamental domain entities..
-       - ⭕ Arboretum
-       - ⭕ Garden
+       - ✅ Arboretum
+       - ✅ Garden
        - ✅ Mycelium
        - ✅ Plant
      - Ensure value objects like Fingerprint and Hyphae are properly integrated
  2.	⭕  Set Up Repository Layer:
-     - ⭕ Implement IRepositories.
+     - ✅ Implement IRepositories.
      - *Define clear interfaces following DIP (Dependency Inversion Principle)*
  3.	⭕ Implement First Use Case End-to-End:
      - Focus on "Storing and retrieving files" as your first complete use case
