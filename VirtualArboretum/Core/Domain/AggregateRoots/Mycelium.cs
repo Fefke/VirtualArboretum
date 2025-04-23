@@ -29,7 +29,7 @@ public class Mycelium
         IList<Hypha> hyphae,
         ConcurrentDictionary<HyphaeStrain, HashSet<Fingerprint>> mycorrhizalAssociations)
     {
-        _mycorrhizalAssociations = mycorrhizalAssociations; 
+        _mycorrhizalAssociations = mycorrhizalAssociations;
 
         _hyphalPlexus = new(
             concurrencyLevel: -1,
@@ -40,7 +40,49 @@ public class Mycelium
         this.ExtendWith(hyphae);
     }
 
+    public Mycelium(
+        IList<HyphaeStrain> hyphaeStrains,
+        ConcurrentDictionary<HyphaeStrain, HashSet<Fingerprint>> mycorrhizalAssociations)
+    {
+        _mycorrhizalAssociations = mycorrhizalAssociations;
 
+        var initialPlexusSize = hyphaeStrains.Sum(
+            hyphaeStrain => hyphaeStrain.Value.Length
+        );
+
+        _hyphalPlexus = new(
+            concurrencyLevel: -1,
+            capacity: initialPlexusSize
+        );
+
+        this.ExtendWith(hyphaeStrains);
+    }
+
+    private Mycelium ExtendWith(IList<HyphaeStrain> hyphaeStrains)
+    {
+        hyphaeStrains.AsParallel().ForAll(
+            hyphaeStrain => this.ExtendWith(hyphaeStrain)
+            );
+
+        return this;
+    }
+
+    private Mycelium ExtendWith(HyphaeStrain hyphaeStrain)
+    {
+        hyphaeStrain.Value.AsParallel().ForAll(
+            hypha => _hyphalPlexus.AddOrUpdate(
+                hypha.Key,
+                _ => [hyphaeStrain], // add
+                (key, existingValue) =>  // update
+                {
+                    existingValue.Add(new HyphaeStrain(hypha));
+                    // does provide indicator for already present.
+                    return existingValue;
+                })
+            );
+
+        return this;
+    }
 
     private Mycelium ExtendWith(IEnumerable<Hypha> hyphae)
     {
@@ -56,14 +98,7 @@ public class Mycelium
     public Mycelium ExtendWith(Hypha hypha)
     {
         // Make sure hyphae are present.
-        this._hyphalPlexus.AddOrUpdate(
-            hypha.Key,
-            _ => [new HyphaeStrain(hypha)], // add
-            (key, existingValue) =>  // update
-            {
-                existingValue.Add(new HyphaeStrain(hypha));
-                return existingValue;
-            });
+        ExtendWith(new HyphaeStrain(hypha));
 
         return this;
     }
@@ -117,7 +152,7 @@ public class Mycelium
                 existingAssociations.Add(association);
                 return existingAssociations;
             });
-        
+
         return this;
     }
 
