@@ -58,6 +58,12 @@ public class Mycelium
         this.ExtendWith(hyphaeStrains);
     }
 
+    public Mycelium()
+        : this(
+            new List<HyphaeStrain>(),
+            new ConcurrentDictionary<HyphaeStrain, HashSet<Fingerprint>>())
+    { }
+
     private Mycelium ExtendWith(IList<HyphaeStrain> hyphaeStrains)
     {
         hyphaeStrains.AsParallel().ForAll(
@@ -158,14 +164,27 @@ public class Mycelium
 
     public Mycelium AssociateWith(IEnumerable<Hypha> hyphae, Fingerprint association)
     {
-        foreach (var hypha in hyphae)
-        {
-            this.AssociateWith(hypha, association);
-        }
+        hyphae.AsParallel().ForAll(
+            hypha => this.AssociateWith(hypha, association)
+            );
+
         return this;
     }
 
+    public Mycelium AssociateWith(HyphaeStrain hyphae, Fingerprint association)
+    {
+        return this.AssociateWith(hyphae.Value, association);
+    }
 
+    public void AssociateWith(IEnumerable<HyphaeStrain> hyphaeStrains, Fingerprint plantUniqueMarker)
+    {
+        hyphaeStrains.AsParallel().ForAll(
+            hyphaeStrain => this.AssociateWith(hyphaeStrain, plantUniqueMarker)
+            );
+    }
+
+
+    // Test Methods
     public bool ContainsAssociation(Hypha hyphae, Fingerprint association)
     {
         var containsAssociation = _mycorrhizalAssociations.TryGetValue(
@@ -186,4 +205,5 @@ public class Mycelium
             hyphae => this.ContainsAssociation(hyphae, association)
             );
     }
+
 }
