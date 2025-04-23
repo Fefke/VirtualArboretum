@@ -18,8 +18,13 @@ public class Plant
 
     public readonly Fingerprint UniqueMarker;
 
-    public List<HyphaeStrain> AssociatedHyphae;
-    // can only be set by providing Hypha, which is being serialized for key.
+    private readonly List<HyphaeStrain> _associatedHyphae;
+    // Updated property to allow internal manipulation but external read-only access
+    public ImmutableList<HyphaeStrain> AssociatedHyphae
+    {
+        get => _associatedHyphae.ToImmutableList();
+        init => _associatedHyphae = value.ToList();
+    }
 
     public ImmutableSortedDictionary<Fingerprint, Cell> Cells
     {
@@ -50,15 +55,17 @@ public class Plant
             cell => cell
             );
 
-        AssociatedHyphae = associatedHyphae
+        _associatedHyphae = associatedHyphae
                            ?? new List<HyphaeStrain>();
 
     }
 
+    
+    // Manipulate
     // TODO: Supply a Mycelium Factory for each plant, to allow a plant to subscribe to a Mycelium.
     public Plant AssociateWith(HyphaeStrain strain)
     {
-        AssociatedHyphae.Add(strain);
+        _associatedHyphae.Add(strain);
         return this;
     }
 
@@ -67,7 +74,6 @@ public class Plant
     /// while preserving a continuous naming convention (-v1 -v2 -v3 ... -vN).<br/>
     /// <b>Does not put primaryHyphae in a Mycelium!</b>
     /// </summary>
-    /// <param name="newCells"></param>
     /// <returns>Newly Cultivated Plant</returns>
     public Plant CultivateWith(
         IEnumerable<Cell> newCells,
@@ -94,7 +100,7 @@ public class Plant
         return CultivateWith(
             plant.Cells.Values,
             primaryHyphae,
-            plant.AssociatedHyphae,
+            plant._associatedHyphae,
             null
         );
     }
