@@ -1,6 +1,13 @@
-﻿namespace VirtualArboretum.Core.Application.Interfaces;
+﻿using VirtualArboretum.Core.Domain.AggregateRoots;
+using VirtualArboretum.Core.Domain.ValueObjects;
 
-public class IRepository
+namespace VirtualArboretum.Core.Application.Interfaces;
+
+public interface IRepository<T>
 {
-    
+    Task<T?> GetByFingerprintAsync(Fingerprint id);
+    Task<T?> GetByPrimaryHyphaeAsync(HyphaeStrain strain);
+
+    Task AddAsync(T candidate);
+    Task UpdateAsync(T candidate);
 }
