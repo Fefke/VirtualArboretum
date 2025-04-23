@@ -55,4 +55,9 @@ public class Garden
         return _plants.GetValueOrDefault(fingerprint);
     }
 
+    public ImmutableArray<Plant> GetPlants()
+    {
+        return _plants.Values.AsParallel().ToImmutableArray();
+    }
+
 }
