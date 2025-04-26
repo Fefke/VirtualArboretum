@@ -47,4 +47,8 @@
     <ProjectReference Include="..\VirtualArboretum\VirtualArboretum.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UnitTests\UseCases\" />
+  </ItemGroup>
+
 </Project>
