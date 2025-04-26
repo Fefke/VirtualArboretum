@@ -8,10 +8,10 @@ namespace VirtualArboretum.Core.Application.DataTransferObjects;
 /// </summary>
 /// <typeparam name="TSuccess">The type of the value returned on success.</typeparam>
 /// <typeparam name="TError">The type of the error returned on failure.</typeparam>
-public record Result<TSuccess, TError> where TError : ErrorResult<Enum> where TSuccess : class
+public record Result<TSuccess, TError> where TError : Enum
 {
     private readonly TSuccess? _value;
-    private readonly TError? _error;
+    private readonly ErrorResult<TError>? _error;
 
     /// <summary>
     /// Gets a value indicating whether the operation was successful.
@@ -34,7 +34,7 @@ public record Result<TSuccess, TError> where TError : ErrorResult<Enum> where TS
     /// otherwise you get an InvalidOperationException thrown at your face (test for success).
     /// </summary>
     /// <exception cref="InvalidOperationException">Thrown if IsSuccess is true.</exception>
-    public TError Error =>
+    public ErrorResult<TError> Error =>
         !IsSuccess ? _error!
             : throw new InvalidOperationException("Result does not contain an error value.");
 
@@ -52,7 +52,7 @@ public record Result<TSuccess, TError> where TError : ErrorResult<Enum> where TS
     /// <summary>
     /// Creates a failure result with the specified error.
     /// </summary>
-    public static Result<TSuccess, TError> Fail(TError error)
+    public static Result<TSuccess, TError> Fail(ErrorResult<TError> error)
     {
         // Optional: Add null check if TError is a reference type and null is not a valid error value
         // if (error is null) throw new ArgumentNullException(nameof(error), "Error value cannot be null.");
@@ -67,7 +67,7 @@ public record Result<TSuccess, TError> where TError : ErrorResult<Enum> where TS
         _error = default;
     }
 
-    private Result(TError error)
+    private Result(ErrorResult<TError> error)
     {
         IsSuccess = false;
         _value = default;
@@ -81,7 +81,7 @@ public record Result<TSuccess, TError> where TError : ErrorResult<Enum> where TS
     /// <param name="onSuccess">The function to execute if the result is successful.</param>
     /// <param name="onFailure">The function to execute if the result is a failure.</param>
     /// <returns>The result of the executed function.</returns>
-    public TResult Match<TResult>(Func<TSuccess, TResult> onSuccess, Func<TError, TResult> onFailure)
+    public TResult Match<TResult>(Func<TSuccess, TResult> onSuccess, Func<ErrorResult<TError>, TResult> onFailure)
     {
         return IsSuccess ? onSuccess(Value) : onFailure(Error);
     }
@@ -91,7 +91,7 @@ public record Result<TSuccess, TError> where TError : ErrorResult<Enum> where TS
     /// </summary>
     /// <param name="onSuccess">The action to execute if the result is successful.</param>
     /// <param name="onFailure">The action to execute if the result is a failure.</param>
-    public void Switch(Action<TSuccess> onSuccess, Action<TError> onFailure)
+    public void Switch(Action<TSuccess> onSuccess, Action<ErrorResult<TError>> onFailure)
     {
         if (IsSuccess)
         {
