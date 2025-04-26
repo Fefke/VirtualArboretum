@@ -12,6 +12,8 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0789601a_002Dad63_002D42cd_002Dae0c_002D1a7bda583433/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestHyphaeHierarchy" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;MSTest::6A9A3BCC-A1B9-4997-882F-017813E98938::net9.0::VirtualArboretumTests.UnitTests.Core.TestHyphaeHierarchy&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;MSTest::6A9A3BCC-A1B9-4997-882F-017813E98938::net9.0::VirtualArboretumTests.UnitTests.Infrastructure.TestHyphaSerializer.TestSerializationCycleOfHyphaeHierarchyWithValue&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;MSTest::6A9A3BCC-A1B9-4997-882F-017813E98938::net9.0::VirtualArboretumTests.UnitTests.Infrastructure.TestHyphaSerializer.TestSerializationCycleOfMultipleHyphae&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	

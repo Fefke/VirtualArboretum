@@ -7,9 +7,8 @@ using System.Collections.Immutable;
 /// </summary>
 public record PlacePlantSuccess(
     string PlantFingerprint,
-    string NewGardenFingerprint
-    //,
-    //ImmutableList<string> HyphaeStrains,
-    //string PrimaryPlantHyphae,
+    string NewGardenFingerprint,
+    string PrimaryPlantHyphae,
+    ImmutableList<string> HyphaeStrains
     //DateTimeOffset PlantedAt
 );
