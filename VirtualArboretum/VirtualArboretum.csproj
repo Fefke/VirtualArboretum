@@ -28,6 +28,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Core\Application\DataTransferObjects\InputDTOs\" />
+		<Folder Include="Core\Application\DataTransferObjects\ResultDTOs\" />
 		<Folder Include="Infrastructure\Repositories\" />
 		<Folder Include="Infrastructure\Services\Interfaces\" />
 		<Folder Include="Presentation\Views\" />
