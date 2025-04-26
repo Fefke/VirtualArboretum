@@ -14,11 +14,11 @@ public class TestHyphaSerializer
         var serializedHyphae = $"{HyphaKey.StartMarker}keyA{delimiter}keyB{delimiter}value";
 
         // Act
-        var hyphae = HyphaeSerializerService.Deserialize(serializedHyphae);
+        var hyphae = HyphaeSerializationService.Deserialize(serializedHyphae);
 
         Assert.IsNotNull(hyphae);
 
-        var newSerializedHyphae = HyphaeSerializerService.Serialize(hyphae);
+        var newSerializedHyphae = HyphaeSerializationService.Serialize(hyphae);
 
         // Assert
         Assert.AreEqual(serializedHyphae, newSerializedHyphae);

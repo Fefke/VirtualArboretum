@@ -1,18 +1,19 @@
 ﻿using System.Collections.Immutable;
 using System.Text;
+using VirtualArboretum.Core.Domain.AggregateRoots;
 using VirtualArboretum.Core.Domain.Entities;
 using VirtualArboretum.Core.Domain.Services;
 using VirtualArboretum.Core.Domain.ValueObjects;
 
 namespace VirtualArboretum.Core.Application.Services;
 
-public class HyphaeSerializerService
+public class HyphaeSerializationService
 {
     /// <summary>
     /// Deserializes a string into a hierarchy of Hyphae.<br></br>
     /// <b>Please note:</b> You have to provide a valid serialized string (according to HyphaeSerializer.Serialize(...)).
     /// </summary>
-    public static ImmutableList<Hypha> Deserialize(string serial)
+    public static HyphaeStrain Deserialize(string serial)
     {
         var serialHyphae = serial.Split(HyphaKey.StartMarker);
         var hyphae = new List<Hypha>(serialHyphae.Length);
@@ -28,7 +29,7 @@ public class HyphaeSerializerService
             hyphae.Add(hypha);
         }
 
-        return [.. hyphae];
+        return new HyphaeStrain([.. hyphae]);
     }
 
     /// <summary>
