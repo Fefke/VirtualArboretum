@@ -13,24 +13,45 @@ public class HyphaeSerializationService
     /// Deserializes a string into a hierarchy of Hyphae.<br></br>
     /// <b>Please note:</b> You have to provide a valid serialized string (according to HyphaeSerializer.Serialize(...)).
     /// </summary>
-    public static HyphaeStrain Deserialize(string serial)
+    public static ImmutableList<HyphaeStrain> Deserialize(string serialHyphaeStrains)
     {
-        var serialHyphae = serial.Split(HyphaKey.StartMarker);
-        var hyphae = new List<Hypha>(serialHyphae.Length);
+        var manyHyphae = serialHyphaeStrains.Split(HyphaKey.StartMarker);
+        var hyphae = new List<HyphaeStrain>(manyHyphae.Length);
 
-        foreach (var serialHypha in serialHyphae)
+        var errors = new StringBuilder();
+
+        foreach (var serialHyphaeStrain in manyHyphae)
         {
-            if (string.IsNullOrWhiteSpace(serialHypha))
+            if (string.IsNullOrWhiteSpace(serialHyphaeStrain))
             {
-                continue; // just overread an unpleasenties.
+                continue; // skip whitespace between hyphaeStrains & empty ones.
             }
 
-            var hypha = ParseHypha(serialHypha);
-            hyphae.Add(hypha);
+            var trimmedSerialHyphaeStrain = serialHyphaeStrain.Trim();
+            // TODO: Following is not ideal, but idc atm.
+            try
+            {
+                var hypha = ParseHypha(trimmedSerialHyphaeStrain);
+                var flatHyphae = HyphaeHierarchy.Flatten(hypha);
+                var hyphaeStrain = new HyphaeStrain(flatHyphae);
+                hyphae.Add(hyphaeStrain);
+            }
+            catch (Exception e)
+            {
+                errors.AppendLine($" - '{serialHyphaeStrain}'.");
+            }
         }
 
-        return new HyphaeStrain([.. hyphae]);
+        if (errors.Length != 0)
+        {
+            throw new ArgumentException(
+                $"The following hyphae are invalid:\n{errors}"
+                );
+        }
+
+        return [.. hyphae];
     }
+
 
     /// <summary>
     /// Parses a single Hyphae from a serialized string.
@@ -111,20 +132,51 @@ public class HyphaeSerializationService
     /// </summary>
     public static string Serialize(Hypha hyphae)
     {
-        return HyphaKey.StartMarker + HyphaeHierarchy.AsString(hyphae);
+
+        return Serialize(
+            HyphaeHierarchy.AggregateHyphae(hyphae)
+            );
+    }
+
+    public static string Serialize(HyphaeStrain hyphae)
+    {
+        return $"{HyphaKey.StartMarker}{HyphaeHierarchy.AsString(hyphae.Value)}";
     }
 
     /// <summary>
     /// Does serialize many hierarchies of a Hyphae into a single string.
     /// </summary>
-    public static string Serialize(IEnumerable<Hypha> hyphae)
+    public static string Serialize(IEnumerable<Hypha> manyHyphae)
     {
         var aggregate = new StringBuilder();
-        foreach (var hypha in hyphae)
+        foreach (var hypha in manyHyphae)
         {
             aggregate.Append(Serialize(hypha));
         }
 
         return aggregate.ToString();
+    }
+
+
+    public static string Serialize(IEnumerable<HyphaeStrain> manyHyphae)
+    {
+        var aggregate = new StringBuilder();
+        foreach (var hypha in manyHyphae)
+        {
+            aggregate.Append(Serialize(hypha));
+        }
+
+        return aggregate.ToString();
+    }
+
+    public static ImmutableList<string> SerializeEachListElement(IList<HyphaeStrain> manyHyphae)
+    {
+        var aggregate = new List<string>(manyHyphae.Count);
+        foreach (var hypha in manyHyphae)
+        {
+            aggregate.Add(Serialize(hypha));
+        }
+
+        return aggregate.ToImmutableList();
     }
 }
