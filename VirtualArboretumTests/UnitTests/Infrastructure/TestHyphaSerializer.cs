@@ -1,5 +1,5 @@
+using VirtualArboretum.Core.Application.Services;
 using VirtualArboretum.Core.Domain.ValueObjects;
-using VirtualArboretum.Infrastructure.Services;
 
 namespace VirtualArboretumTests.UnitTests.Infrastructure;
 
@@ -14,11 +14,11 @@ public class TestHyphaSerializer
         var serializedHyphae = $"{HyphaKey.StartMarker}keyA{delimiter}keyB{delimiter}value";
 
         // Act
-        var hyphae = HyphaeSerializer.Deserialize(serializedHyphae);
+        var hyphae = HyphaeSerializerService.Deserialize(serializedHyphae);
 
         Assert.IsNotNull(hyphae);
 
-        var newSerializedHyphae = HyphaeSerializer.Serialize(hyphae);
+        var newSerializedHyphae = HyphaeSerializerService.Serialize(hyphae);
 
         // Assert
         Assert.AreEqual(serializedHyphae, newSerializedHyphae);

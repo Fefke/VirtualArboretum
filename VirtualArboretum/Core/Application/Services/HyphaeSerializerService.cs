@@ -1,13 +1,12 @@
 ﻿using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.Text;
 using VirtualArboretum.Core.Domain.Entities;
 using VirtualArboretum.Core.Domain.Services;
 using VirtualArboretum.Core.Domain.ValueObjects;
 
-namespace VirtualArboretum.Infrastructure.Services;
+namespace VirtualArboretum.Core.Application.Services;
 
-public class HyphaeSerializer
+public class HyphaeSerializerService
 {
     /// <summary>
     /// Deserializes a string into a hierarchy of Hyphae.<br></br>
@@ -20,7 +19,7 @@ public class HyphaeSerializer
 
         foreach (var serialHypha in serialHyphae)
         {
-            if (String.IsNullOrWhiteSpace(serialHypha))
+            if (string.IsNullOrWhiteSpace(serialHypha))
             {
                 continue; // just overread an unpleasenties.
             }
