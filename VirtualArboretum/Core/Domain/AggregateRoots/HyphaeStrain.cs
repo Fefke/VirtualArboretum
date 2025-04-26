@@ -40,4 +40,9 @@ public class HyphaeStrain
     {
         return Value.GetHashCode();
     }
+
+    public override string ToString()
+    {
+        return HyphaeHierarchy.AsString(Value);
+    }
 }
