@@ -6,22 +6,12 @@ namespace VirtualArboretumTests.Fakes;
 
 public class FakeArboretumRepository : IArboretumRepository
 {
-    public Task<Arboretum?> GetByFingerprintAsync(Fingerprint id)
+    public Arboretum Open()
     {
         throw new NotImplementedException();
     }
 
-    public Task<Arboretum?> GetByPrimaryHyphaeAsync(HyphaeStrain strain)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task AddAsync(Arboretum candidate)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task UpdateAsync(Arboretum candidate)
+    public bool Close()
     {
         throw new NotImplementedException();
     }
