@@ -50,10 +50,16 @@ public class Garden
         return plant;
     }
 
+    public bool ContainsPlant(Fingerprint fingerprint)
+    {
+        return _plants.ContainsKey(fingerprint);
+    }
+
     public Plant? GetPlant(Fingerprint fingerprint)
     {
         return _plants.GetValueOrDefault(fingerprint);
     }
+
 
     public ImmutableArray<Plant> GetPlants()
     {
