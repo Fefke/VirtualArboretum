@@ -22,10 +22,10 @@
        - ✅ Mycelium
        - ✅ Plant
      - Ensure value objects like Fingerprint and Hyphae are properly integrated
- 2.	⭕  Set Up Repository Layer:
+ 2.	✅  Set Up Repository in Application Layer
      - ✅ Implement IRepositories.
      - *Define clear interfaces following DIP (Dependency Inversion Principle)*
- 3.	⭕ Implement First Use Case End-to-End:
+ 3.	✅ Implement First Use Case End-to-End:
      - Focus on "Storing and retrieving files" as your first complete use case
      - This will validate your architecture and help identify gaps
  4.	⭕ Add Tests for Domain Logic:
