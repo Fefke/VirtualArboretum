@@ -1,7 +1,7 @@
 using VirtualArboretum.Core.Application.Services;
 using VirtualArboretum.Core.Domain.ValueObjects;
 
-namespace VirtualArboretumTests.UnitTests.Infrastructure;
+namespace VirtualArboretumTests.UnitTests.Core;
 
 [TestClass]
 public class TestHyphaSerializer
