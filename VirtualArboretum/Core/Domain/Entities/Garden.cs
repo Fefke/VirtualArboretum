@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
-using System.Data.Common;
 using VirtualArboretum.Core.Domain.AggregateRoots;
 using VirtualArboretum.Core.Domain.ValueObjects;
 
@@ -64,6 +63,11 @@ public class Garden
     public ImmutableArray<Plant> GetPlants()
     {
         return _plants.Values.AsParallel().ToImmutableArray();
+    }
+
+    public int AmountOfPlants()
+    {
+        return _plants.Count;
     }
 
 }
