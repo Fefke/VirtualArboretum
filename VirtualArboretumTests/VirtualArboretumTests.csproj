@@ -49,7 +49,6 @@
 
   <ItemGroup>
     <Folder Include="UnitTests\Infrastructure\" />
-    <Folder Include="UnitTests\UseCases\" />
   </ItemGroup>
 
 </Project>
