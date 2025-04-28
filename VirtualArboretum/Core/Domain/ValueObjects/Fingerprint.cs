@@ -105,34 +105,6 @@ public sealed class Fingerprint : IComparable<Fingerprint>
         ];
     }
 
-
-    private const string Alphanumericals = "VA0123456789BCDEFGHIJKLMNOPQRSTU";
-
-    /// <summary>
-    /// ~~Deterministicly~~ converts the Fingerprint to a alphanumeric string.<br/>
-    /// </summary>
-    /// <exception cref="ArgumentException"></exception>
-/*    public string ToAlphanumericString()
-    {
-        var output = new StringBuilder();
-        output.Append(Alphanumericals[0]);  // V
-        output.Append(Alphanumericals[1]);  // A
-
-        var serialPattern = this.Pattern.ToByteArray();  // always 16 Byte
-
-        if (serialPattern == null)
-        {
-            throw new ArgumentException("Fingerprint must be 16 bytes long.");
-        }
-
-        foreach (var oktett in serialPattern)
-        {
-            output.Append(Alphanumericals[oktett % Alphanumericals.Length]);
-        }
-
-        return output.ToString();
-    }
-*/
     public override string ToString()
     {
         return this.Pattern.ToString();
@@ -142,6 +114,8 @@ public sealed class Fingerprint : IComparable<Fingerprint>
     {
         if (ReferenceEquals(this, other)) return 0;
         if (other is null) return 1;
-        return Pattern.CompareTo(other.Pattern);
+        // ! Have to compare extracted timestamp, as native GUID implementation is garbage.
+        return this.GetCreationDateTime()
+            .CompareTo(other.GetCreationDateTime());
     }
 }
