@@ -12,7 +12,7 @@ namespace VirtualArboretum.Core.Domain.ValueObjects;
 /// A Mycorrhiza is a symbiotic Mechanism between a fungus and a plants root system. <br/>
 /// Does provide nutritional access to all plants connected to the Mycelium and its Hyphae.
 /// </summary>
-public sealed class Fingerprint
+public sealed class Fingerprint : IComparable<Fingerprint>
 {
     public Guid Pattern { get; init; }
 
@@ -136,5 +136,12 @@ public sealed class Fingerprint
     public override string ToString()
     {
         return this.Pattern.ToString();
+    }
+
+    public int CompareTo(Fingerprint? other)
+    {
+        if (ReferenceEquals(this, other)) return 0;
+        if (other is null) return 1;
+        return Pattern.CompareTo(other.Pattern);
     }
 }
