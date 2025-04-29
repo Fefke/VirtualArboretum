@@ -88,25 +88,16 @@ public class PlantMapper
         return plant;
     }
 
-    public static ConcurrentDictionary<Fingerprint, Plant> IntoPlant(IList<PlantDto> plantTemplates)
+    public static List<Plant> IntoPlant(IList<PlantDto> plantTemplates)
     {
-        var plants = new ConcurrentDictionary<Fingerprint, Plant>(
-            capacity: plantTemplates.Count, concurrencyLevel: -1
-        );
+        var plants = new List<Plant>(plantTemplates.Count);
 
 
         foreach (var plantTemplate in plantTemplates)
         {
-            var newPlant = PlantMapper.IntoPlant(plantTemplate);
+            var newPlant = IntoPlant(plantTemplate);
             // throws Exception
-            plants.AddOrUpdate(
-                newPlant.UniqueMarker,
-                newPlant,
-                (_, presentPlant) => throw new ArgumentException(
-                    "You cannot define multiple plants with same uniqueMarker" +
-                    $" ({presentPlant.UniqueMarker})!"
-                )
-            );
+            plants.Add(newPlant);
         }
 
         return plants;
