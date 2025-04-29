@@ -15,21 +15,32 @@ public class InMemoryPlantRepository : IPlantRepository
     private readonly ConcurrentDictionary<HyphaeStrain, Fingerprint> _primaryHyphaeAssociations;
     // i.R. is like the primary location of the plant in filesystem.
 
-    public InMemoryPlantRepository(ConcurrentDictionary<Fingerprint, Plant> plants)
+    public InMemoryPlantRepository(IEnumerable<Plant> plants)
     {
-        _plants = plants;
+        var allLocalPlants = plants as Plant[] ?? plants.ToArray();
 
-        _primaryHyphaeAssociations = new ConcurrentDictionary<HyphaeStrain, Fingerprint>(
-            plants.ToDictionary(
-                kvp => kvp.Value.Name,
-                kvp => kvp.Value.UniqueMarker
+        _plants = new(
+            allLocalPlants.ToDictionary(
+                plant => plant.UniqueMarker,
+                plant => plant
+                )
+            );
+
+        _primaryHyphaeAssociations = new(
+            allLocalPlants.ToDictionary(
+                plant => plant.Name,
+                plant => plant.UniqueMarker
             )
         );
     }
 
 
     public InMemoryPlantRepository(IList<PlantDto> plantTemplates)
-    : this(PlantMapper.IntoPlant(plantTemplates))
+        : this(PlantMapper.IntoPlant(plantTemplates))
+    { }
+
+    public InMemoryPlantRepository() 
+        : this(new List<Plant>())
     { }
 
     public Task<Plant?> GetByFingerprintAsync(Fingerprint uniqueMarker)
@@ -68,7 +79,7 @@ public class InMemoryPlantRepository : IPlantRepository
     {
         if (_plants.TryUpdate(candidate.UniqueMarker, candidate, candidate))
         {
-
+            return Task.CompletedTask;
         }
 
         return Task.FromCanceled(CancellationToken.None);
