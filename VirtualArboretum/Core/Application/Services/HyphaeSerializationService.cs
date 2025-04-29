@@ -28,12 +28,9 @@ public class HyphaeSerializationService
             }
 
             var trimmedSerialHyphaeStrain = serialHyphaeStrain.Trim();
-            // TODO: Following is not ideal, but idc atm.
             try
             {
-                var hypha = ParseHypha(trimmedSerialHyphaeStrain);
-                var flatHyphae = HyphaeHierarchy.Flatten(hypha);
-                var hyphaeStrain = new HyphaeStrain(flatHyphae);
+                var hyphaeStrain = ParseHypha(trimmedSerialHyphaeStrain);
                 hyphae.Add(hyphaeStrain);
             }
             catch (Exception e)
@@ -54,11 +51,9 @@ public class HyphaeSerializationService
 
 
     /// <summary>
-    /// Parses a single Hyphae from a serialized string.
+    /// Parses a single Hyphae from a serialized string.<br/>
     /// </summary>
-    /// <param name="serialHyphae"></param>
-    /// <returns></returns>
-    private static Hypha ParseHypha(string serialHyphae)
+    private static HyphaeStrain ParseHypha(string serialHyphae)
     {
         /*
          * Can be anything after an EXTENSION_MARKER...
@@ -66,16 +61,15 @@ public class HyphaeSerializationService
          *     and read over empty elements.
          *
          *  #marker : HyphaApex is self containing ValueHypha (key=value).
-         *  #key=value : ValueHypha
-         *  #key=marker   : Hypha(HyphaApex)
-         *  #key=key=value : Hypha(ValueHypha)
+         *  #key-value : ValueHypha
+         *  #key-marker   : HyphaStrain(..., HyphaApex)
+         *  #key-key-value : Hypha(..., ValueHypha)
          *
          */
 
         var hyphaHierarchy = serialHyphae.Split(HyphaKey.ExtensionDelimiter)
             .Select(s => s.Trim()) // remove whitespaces at start/end.
             .Where(s => !string.IsNullOrEmpty(s)) // remove empty entries by acceptable: `==` failures.
-            .Reverse() // due to bottom-up (rtl) build, after ltr read in.
             .ToImmutableList();
 
         if (hyphaHierarchy.Count == 0)
@@ -88,25 +82,35 @@ public class HyphaeSerializationService
 
         if (hyphaHierarchy.Count == 1)
         {
-            // single HyphaApex
-            return new HyphaApex(hyphaHierarchy.First());
+            // single HyphaApex (just on Hypha)
+            return new(
+                new HyphaApex(hyphaHierarchy.First())
+                );
         }
-        // otherwise possible ValueType is First and hierarchy is tail.
+        // Now at least 2 hypha are present.
+        // Determine possible ValueType of last element.
+        var lastHypha = hyphaHierarchy.Last();
+        var predToLastHypha = hyphaHierarchy.TakeLast(2).First();
 
-        var mostInnerHyphaKey = hyphaHierarchy[1];
-        var serialHyphaValue = hyphaHierarchy.First();
-        var hyphaKeyHierarchy = hyphaHierarchy.RemoveRange(0, 2);
 
-        var hyphaValue = ParseHyphaType(mostInnerHyphaKey, serialHyphaValue);
+        var hyphaeValue = ParseHyphaType(predToLastHypha, lastHypha);
 
-        var hyphae = new HyphaeBuilder(hyphaValue);
+        var hyphaeBuilder = new HyphaeBuilder(hyphaeValue);
 
-        foreach (var hypha in hyphaKeyHierarchy)
+        var possibleHyphaExtensionLength = hyphaHierarchy.Count - 2;
+        var possibleHyphaExtensions = hyphaHierarchy.Take(possibleHyphaExtensionLength);
+
+        foreach (var hypha in possibleHyphaExtensions)
         {
-            hyphae.ExtendBy(new HyphaKey(hypha));
+            hyphaeBuilder.ExtendBy(
+                new HyphaKey(hypha)
+                );
+            // ? will also construct legacy inner/recursive structure.
         }
 
-        return hyphae.Build();
+        return new(
+            hyphaeBuilder.Build()
+            );
     }
 
     /// <summary>
@@ -115,7 +119,8 @@ public class HyphaeSerializationService
     /// </summary>
     public static Hypha ParseHyphaType(string hyphaKey, string hyphaValue)
     {
-
+        // TODO: Should be losely coupled thorwards HyphaType...
+        // meaning, your Hypha-Instances should implement parse, but thats overkill for now.
         if (decimal.TryParse(hyphaValue, out decimal number))
         {
             return new DecimalHypha(hyphaKey, number);
