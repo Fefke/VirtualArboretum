@@ -26,7 +26,7 @@ public class Plant
         init => _associatedHyphae = value.ToList();
     }
 
-    public ImmutableSortedDictionary<Fingerprint, Cell> Cells
+    public ImmutableDictionary<Fingerprint, Cell> Cells
     {
         get; init;
     }
@@ -35,12 +35,14 @@ public class Plant
     public Plant(
         Fingerprint uniqueMarker,
         HyphaeStrain primaryHyphae,
-        IEnumerable<Cell> cells,
-        List<HyphaeStrain>? associatedHyphae
+        IList<Cell> cells,
+        IList<HyphaeStrain>? associatedHyphae
         )
     {
+        // 1.
         UniqueMarker = uniqueMarker;
 
+        // 2.
         if (primaryHyphae.Value.Last() is not HyphaApex)
         {
             throw new ArgumentException(
@@ -50,17 +52,27 @@ public class Plant
 
         Name = primaryHyphae;
 
-        Cells = cells.ToImmutableSortedDictionary(
-            cell => cell.UniqueMarker,
-            cell => cell
-            );
+        // 3.
+        Dictionary<Fingerprint, Cell> cellsDict = new(cells.Count);
 
-        _associatedHyphae = associatedHyphae
+        foreach (var cell in cells)
+        {
+            cellsDict.Add(
+                cell.UniqueMarker,
+                cell
+            );
+        }
+
+        this.Cells = cellsDict.ToImmutableDictionary();
+
+
+        // 4.
+        _associatedHyphae = associatedHyphae?.ToList()
                            ?? new List<HyphaeStrain>();
 
     }
 
-    
+
     // Manipulate
     // TODO: Supply a Mycelium Factory for each plant, to allow a plant to subscribe to a Mycelium.
     public Plant AssociateWith(HyphaeStrain strain)
@@ -76,7 +88,7 @@ public class Plant
     /// </summary>
     /// <returns>Newly Cultivated Plant</returns>
     public Plant CultivateWith(
-        IEnumerable<Cell> newCells,
+        IList<Cell> newCells,
         HyphaeStrain? primaryHyphae, List<HyphaeStrain>? additionalAssociatedHyphae,
         Fingerprint? uniqueMarker
         )
@@ -87,22 +99,45 @@ public class Plant
         return new Plant(
             uniqueMarker,
             primaryHyphae,
-            newCells, 
+            newCells,
             additionalAssociatedHyphae
         );
     }
 
     public Plant CrossWith(
-        Plant plant,
+        Plant otherPlant,
         HyphaeStrain primaryHyphae
     )
     {
         return CultivateWith(
-            plant.Cells.Values,
+            otherPlant.Cells.Values.ToList(),
             primaryHyphae,
-            plant._associatedHyphae,
+            otherPlant._associatedHyphae,
             null
         );
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as Plant);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(UniqueMarker, _associatedHyphae, Name, Cells);
+    }
+
+    public bool Equals(Plant? other)
+    {
+        if (other == null)
+        {
+            return false;
+        }
+
+        return Name.Equals(other.Name)
+               && UniqueMarker.Equals(other.UniqueMarker)
+               && Cells.GetHashCode() == other.Cells.GetHashCode()  // should be fine.
+               && _associatedHyphae.SequenceEqual(other._associatedHyphae);
     }
 }
 
