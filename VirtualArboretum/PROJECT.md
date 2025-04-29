@@ -44,3 +44,4 @@
  - [Use ReSharper..](https://www.jetbrains.com/help/resharper/Reference__Keyboard_Shortcuts.html#tool_windows) ([Kybrd-Shortcuts?](https://www.jetbrains.com/resharper/docs/ReSharper_DefaultKeymap_VSscheme.pdf))
  - [Code-Structure Trade-offs](https://www.jamesmichaelhickey.com/how-to-structure-your-dot-net-solutions-design-and-trade-offs/)
  
+ - *Bei DTO-Instanziierung*: Unbedingt field names verwenden, sonst hast Du vielleicht noch ein dummes Ordinalitäts-Problem.
