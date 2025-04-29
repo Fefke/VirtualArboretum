@@ -4,18 +4,18 @@ namespace VirtualArboretum.Core.Domain.ValueObjects;
 
 public class CellType : ContentType
 {
-    public CellType(string name) : base(name)
+    public CellType(string mediaType) : base(mediaType)
     {
-        if (!IsOfficiallySupported())
+        if (!IsOfficiallySupported(this.MediaType))
         {
             Console.Error.WriteLine(
-                $"Warning: {name} is not an officially supported content type, " +
+                $"Warning: {mediaType} is not an officially supported content type, " +
                 $"will be handled as raw octet-stream."
             );
         }
     }
 
-    public bool IsOfficiallySupported() => this.Name switch
+    public bool IsOfficiallySupported(string mediaType) => mediaType switch
     {
         "application/json" => true,
         "application/octet-stream" => true,
