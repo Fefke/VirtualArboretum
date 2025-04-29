@@ -137,44 +137,49 @@ public class PlacePlantTest
         Assert.AreEqual(PlacePlantErrors.PlantAlreadyExists, secondResult.Error.Code);
     }
 
-    /*[TestMethod]
+    [TestMethod]
     public async Task IntoGarden_ValidPlant_AssociatesWithMycelium()
     {
-        // Arrange
-        var testGarden = CreateTestGarden("TestGarden");
-        var gardenFingerprint = testGarden.UniqueMarker;
+        // # Arrange
+        var testGarden = FakeGardenFactory.CreateRawTestGarden("TestGarden");
 
-        var gardenRepo = new InMemoryGardenRepository();
-        gardenRepo.SetupTestData(new[] { testGarden });
+        // Set up the repositories
+        var gardenRepo = new InMemoryGardenRepository([testGarden]);
+        var arboretumRepo = new InMemoryArboretumRepository([testGarden]);
+        var plantRepo = new InMemoryPlantRepository();
 
-        var arboretumRepo = new InMemoryArboretumRepository(new[] { testGarden });
+        // Create Test Plant
+        var testPlant = FakePlantFactory.CreateTestPlant(
+            "TestPlant",
+            "#this-strain-should-absolutely-be-associated" +
+            "#this-strain-should-be-associated-as-well", null, null);
+        var testPlantDto = PlantMapper.IntoDto(testPlant);
 
-        var placePlant = new PlacePlant(arboretumRepo, gardenRepo);
+        var gardenId = new GardenIdentifierInput(testGarden.UniqueMarker.ToString());
 
-        var plantDto = new PlantDto
-        {
-            Name = "TestPlant",
-            Cells = new[] { new CellDto { Content = new byte[] { 1, 2, 3 } } }
-        };
+        // Create the use case with our in-memory repositories
+        var placePlantUseCae = new PlacePlant(arboretumRepo, gardenRepo, plantRepo);
 
-        var gardenIdentifier = new GardenIdentifierInput
-        {
-            GardenFingerprint = gardenFingerprint.ToString()
-        };
+        // # Act
+        var result = await placePlantUseCae.IntoGarden(testPlantDto, gardenId);
 
-        // Act
-        var result = await placePlant.IntoGarden(plantDto, gardenIdentifier);
-
-        // Assert
+        // # Assert
         Assert.IsTrue(result.IsSuccess);
         Assert.IsNotNull(result.Value);
         Assert.AreEqual("TestPlant", result.Value.PrimaryPlantHyphae);
 
-        // Verify the arboretum was opened for mycorrhization
-        Assert.IsFalse(((InMemoryArboretumRepository)arboretumRepo).IsClosed);
+        // Verify mycorrhization via mycelium in arboretum 
+        var arboretum = arboretumRepo.Open();
 
-        // If you want to check that mycelium association happened,
-        // you would need to extend your InMemoryArboretumRepository
-        // to track that the Mycorrhizate method was called
-    }*/
+        // Plant be present by itself
+        Assert.IsTrue(arboretum.Mycelium.ContainsMycorrhization(
+            testPlant.Name, testPlant.UniqueMarker
+            ));
+
+        // Plants hyphae strains should be associated with plant.
+        Assert.IsTrue(arboretum.Mycelium.ContainsMycorrhizations(
+            testPlant.AssociatedHyphae, testPlant.UniqueMarker
+            ));
+
+    }
 }
