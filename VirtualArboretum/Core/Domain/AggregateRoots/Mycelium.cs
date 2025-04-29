@@ -157,16 +157,8 @@ public class Mycelium
 
         // 2. Associate it with fingerprint
         var strain = new HyphaeStrain(hypha);
-        _mycorrhizalAssociations.AddOrUpdate(
-            strain,
-            _ => [association],  // add
-            (_, existingAssociations) =>  // update
-            {
-                existingAssociations.Add(association);
-                return existingAssociations;
-            });
 
-        return this;
+        return AssociateWith(strain, association);
     }
 
     public Mycelium AssociateWith(IEnumerable<Hypha> hyphae, Fingerprint association)
@@ -178,9 +170,21 @@ public class Mycelium
         return this;
     }
 
-    public Mycelium AssociateWith(HyphaeStrain hyphae, Fingerprint association)
+    public Mycelium AssociateWith(HyphaeStrain strain, Fingerprint association)
     {
-        return this.AssociateWith(hyphae.Value, association);
+        _mycorrhizalAssociations.AddOrUpdate(
+            strain,
+            _ => [association],  // add
+            (_, existingAssociations) =>  // update
+            {
+                existingAssociations.Add(association);
+                return existingAssociations;
+            });
+
+        // extend plexus with each hypha & associate it with this strain.
+        ExtendWith(strain);
+
+        return this;
     }
 
     public void AssociateWith(IEnumerable<HyphaeStrain> hyphaeStrains, Fingerprint plantUniqueMarker)
@@ -195,11 +199,11 @@ public class Mycelium
     /// </summary>
     public void Mycorrhizate(Plant plant)
     {
-        // Plants identity
+        // 1. Plants identity
         this.AssociateWith(
             plant.Name, plant.UniqueMarker
         );
-        // Plants associations
+        // 2. Plants additional associations
         this.AssociateWith(
             plant.AssociatedHyphae, plant.UniqueMarker
         );
