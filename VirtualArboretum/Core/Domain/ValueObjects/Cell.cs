@@ -30,4 +30,22 @@ public class Cell
     public Cell(ReadOnlyMemory<byte> organell)
         : this(organell, new CellType("application/octet-stream"), new Fingerprint())
     { }
+
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as Cell);
+    }
+
+    public bool Equals(Cell? other)
+    {
+        return other != null
+               && UniqueMarker == other.UniqueMarker
+               && Equals(Type, other.Type)
+               && Organell.Span.SequenceEqual(other.Organell.Span);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(UniqueMarker, Type, Organell);
+    }
 }
