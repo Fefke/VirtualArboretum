@@ -8,10 +8,9 @@ namespace VirtualArboretum.Core.Domain.AggregateRoots;
 public class Arboretum
 {
     // TODO: Does read in provided user-config (req. config-class)
-
     //private HyphaeStrain primaryHyphae; // Can be home-dir or user-specified-dir i.R.
-
     private readonly ConcurrentDictionary<Fingerprint, Garden> _gardens;
+    // TODO: Is this is part of IGardenRepository alrdy?
 
     public Mycelium Mycelium { get; }
 
