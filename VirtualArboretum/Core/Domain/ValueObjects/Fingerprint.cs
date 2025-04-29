@@ -110,12 +110,30 @@ public sealed class Fingerprint : IComparable<Fingerprint>
         return this.Pattern.ToString();
     }
 
+    public override bool Equals(object? other)
+    {
+        return Equals(other as Fingerprint);
+    }
+
+    public override int GetHashCode()
+    {
+        return Pattern.GetHashCode();
+    }
+
+    public bool Equals(Fingerprint? other)
+    {
+        return other != null 
+               && other.Pattern.Equals(this.Pattern);
+    }
+
+    /// <summary>
+    /// ⚠️ If your Fingerprints are being initialized at the same time they have identical unix-timestamp!<br/>
+    /// Meaning Comparison will compare these ambiguous Fingerprints by their following (random) byte.
+    /// </summary>
     public int CompareTo(Fingerprint? other)
     {
         if (ReferenceEquals(this, other)) return 0;
         if (other is null) return 1;
-        // ! Have to compare extracted timestamp, as native GUID implementation is garbage.
-        return this.GetCreationDateTime()
-            .CompareTo(other.GetCreationDateTime());
+        return this.Pattern.CompareTo(other.Pattern);
     }
 }
