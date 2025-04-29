@@ -34,8 +34,8 @@ public class PlantMapper
             errors.AppendLine($"Your Primary Hypha is invalid: '{plantTemplate.PrimaryHyphae}'");
             throw new ArgumentException(errors.ToString());  // is fatal in this scope.
         }
-
-        var cells = new List<Cell>(plantTemplate.AssociatedHyphae.Count);
+        // TODO: WARUM vertauschen sich UniqueMarker und CellType in Cell?!
+        var cells = new List<Cell>(plantTemplate.Cells.Count);
         foreach (var cellTemplate in plantTemplate.Cells)
         {
             var newCellMarker = Fingerprint.TryCreate(cellTemplate.UniqueMarker);
@@ -119,9 +119,9 @@ public class PlantMapper
 
         List<CellDto> serialCells = plant.Cells.Select(
             cell => new CellDto(
-                cell.Value.UniqueMarker.ToString(),
-                cell.Value.Type.ToString(),
-                cell.Value.Organell
+                UniqueMarker: cell.Value.UniqueMarker.ToString(),
+                CellType: cell.Value.Type.ToString(),
+                Organell: cell.Value.Organell
                 )
             ).ToList();
 
