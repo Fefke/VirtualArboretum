@@ -50,7 +50,7 @@ public class ArboretumRepositorySpy : IArboretumRepository
         {
             _spy.MycorrhizateCallCount++;
             _spy.MycorrhizatedPlants.Add(plant);
-            base.Mycorrhizate(plant);
+            Mycelium.Mycorrhizate(plant);
         }
     }
 }
