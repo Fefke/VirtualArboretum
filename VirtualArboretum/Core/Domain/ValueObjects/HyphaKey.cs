@@ -54,26 +54,15 @@ public class HyphaKey
     }
 
 
-    public override bool Equals(object? obj)
+    public override bool Equals(object? other)
     {
-        return Equals(obj as HyphaKey);
-    }
-
-    public bool Equals(HyphaKey? other)
-    {
-        if (other is null)
+        if (other is not HyphaKey otherHyphaKey)
         {
             return false;
         }
 
-        if (ReferenceEquals(this, other))
-        {
-            // is self-referencing.
-            return true;
-        }
+        return this.Value == otherHyphaKey.Value;
 
-        
-        return this.Value == other.Value;
     }
 
     public override int GetHashCode()

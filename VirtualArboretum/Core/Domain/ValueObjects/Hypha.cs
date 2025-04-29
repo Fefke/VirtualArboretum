@@ -65,4 +65,18 @@ public class Hypha  //: IParsable<Hypha>
         return $"{Key}{HyphaKey.ExtensionDelimiter}{Value}";
     }
 
+    public override int GetHashCode()
+    {
+        return this.Key.GetHashCode();
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (other is not Hypha otherHypha)
+        {
+            return false;
+        }
+
+        return otherHypha.Key.Equals(this.Key);
+    }
 }

@@ -21,24 +21,30 @@ public class HyphaeStrain
     : this(HyphaeHierarchy.AggregateHyphae(hyphae))
     { }
 
-    public override bool Equals(object? obj)
+    public override bool Equals(object? other)
     {
-        return Equals(obj as HyphaeStrain);
-    }
-
-
-    public bool Equals(HyphaeStrain? second)
-    {
-        if (second == null)
+        if (other is not HyphaeStrain otherHyphaeStrain)
         {
             return false;
         }
 
-        return Value.SequenceEqual(second.Value);
+        return Value.SequenceEqual(otherHyphaeStrain.Value);
     }
+
     public override int GetHashCode()
     {
-        return Value.GetHashCode();
+        if (Value.IsDefaultOrEmpty)
+        {
+            return 0;
+        }
+
+        var hashCombiner = new HashCode();
+        foreach (var hypha in Value)
+        {
+            hashCombiner.Add(hypha);
+        }
+
+        return hashCombiner.ToHashCode();
     }
 
     public override string ToString()

@@ -13,12 +13,14 @@ public class Plant
     {
         // i.R. same as primary location of the plant in filesystem
         // ...relative to garden its placed in.
-        get; init;
+        get;
+        init;
     }
 
     public readonly Fingerprint UniqueMarker;
 
     private readonly List<HyphaeStrain> _associatedHyphae;
+
     // Updated property to allow internal manipulation but external read-only access
     public ImmutableList<HyphaeStrain> AssociatedHyphae
     {
@@ -26,10 +28,7 @@ public class Plant
         init => _associatedHyphae = value.ToList();
     }
 
-    public ImmutableDictionary<Fingerprint, Cell> Cells
-    {
-        get; init;
-    }
+    public ImmutableDictionary<Fingerprint, Cell> Cells { get; init; }
 
 
     public Plant(
@@ -37,7 +36,7 @@ public class Plant
         HyphaeStrain primaryHyphae,
         IList<Cell> cells,
         IList<HyphaeStrain>? associatedHyphae
-        )
+    )
     {
         // 1.
         UniqueMarker = uniqueMarker;
@@ -68,7 +67,7 @@ public class Plant
 
         // 4.
         _associatedHyphae = associatedHyphae?.ToList()
-                           ?? new List<HyphaeStrain>();
+                            ?? new List<HyphaeStrain>();
 
     }
 
@@ -91,7 +90,7 @@ public class Plant
         IList<Cell> newCells,
         HyphaeStrain? primaryHyphae, List<HyphaeStrain>? additionalAssociatedHyphae,
         Fingerprint? uniqueMarker
-        )
+    )
     {
         uniqueMarker ??= new Fingerprint();
         primaryHyphae ??= PlantNameHelper.IncrementVersion(Name);
@@ -117,9 +116,17 @@ public class Plant
         );
     }
 
-    public override bool Equals(object? obj)
+    public override bool Equals(object? other)
     {
-        return Equals(obj as Plant);
+        if (other is not Plant otherPlant)
+        {
+            return false;
+        }
+
+        return Name.Equals(otherPlant.Name)
+               && UniqueMarker.Equals(otherPlant.UniqueMarker)
+               && Cells.GetHashCode() == otherPlant.Cells.GetHashCode() // should be fine.
+               && _associatedHyphae.SequenceEqual(otherPlant._associatedHyphae);
     }
 
     public override int GetHashCode()
@@ -127,63 +134,52 @@ public class Plant
         return HashCode.Combine(UniqueMarker, _associatedHyphae, Name, Cells);
     }
 
-    public bool Equals(Plant? other)
+
+    public static class PlantNameHelper
     {
-        if (other == null)
+        private static readonly char VersionSymbol = 'v';
+
+        private static readonly Regex VersionRegex = new(
+            $@"{VersionSymbol}(\d+)$", RegexOptions.Compiled
+        ); // does check vor 'v1' or 'v134674'
+
+
+        /// <summary>
+        /// Checks if the name ends with a version pattern (-vN) and extracts the version number if present.
+        /// </summary>
+        /// <returns>The extracted version number if present, otherwise null.</returns>
+        public static int ExtractVersion(string name)
         {
-            return false;
+            if (string.IsNullOrEmpty(name))
+            {
+                return 0;
+            }
+
+            var match = VersionRegex.Match(name);
+            return match.Success ? int.Parse(match.Groups[1].Value) : 0;
         }
 
-        return Name.Equals(other.Name)
-               && UniqueMarker.Equals(other.UniqueMarker)
-               && Cells.GetHashCode() == other.Cells.GetHashCode()  // should be fine.
-               && _associatedHyphae.SequenceEqual(other._associatedHyphae);
-    }
-}
-
-public static class PlantNameHelper
-{
-    private static readonly char VersionSymbol = 'v';
-    private static readonly Regex VersionRegex = new(
-        $@"{VersionSymbol}(\d+)$", RegexOptions.Compiled
-        );  // does check vor 'v1' or 'v134674'
-
-
-    /// <summary>
-    /// Checks if the name ends with a version pattern (-vN) and extracts the version number if present.
-    /// </summary>
-    /// <returns>The extracted version number if present, otherwise null.</returns>
-    public static int ExtractVersion(string name)
-    {
-        if (string.IsNullOrEmpty(name))
+        public static HyphaeStrain IncrementVersion(HyphaeStrain strain)
         {
-            return 0;
+            var version = 0;
+
+            if (strain.Value.Last() is HyphaApex)
+            {
+                var versionHypha = (HyphaApex)strain.Value.Last();
+                version = ExtractVersion(versionHypha.Value.ToString() ?? string.Empty);
+            }
+
+            var newVersion = version + 1;
+            var newTail = new HyphaApex(
+                $"{VersionSymbol}{newVersion}"
+            );
+
+            var newStrain = strain.Value
+                .SkipLast(1)
+                .Append(newTail)
+                .ToImmutableArray();
+
+            return new HyphaeStrain(newStrain);
         }
-
-        var match = VersionRegex.Match(name);
-        return match.Success ? int.Parse(match.Groups[1].Value) : 0;
-    }
-
-    public static HyphaeStrain IncrementVersion(HyphaeStrain strain)
-    {
-        var version = 0;
-
-        if (strain.Value.Last() is HyphaApex)
-        {
-            var versionHypha = (HyphaApex)strain.Value.Last();
-            version = ExtractVersion(versionHypha.Value.ToString() ?? string.Empty);
-        }
-
-        var newVersion = version + 1;
-        var newTail = new HyphaApex(
-            $"{VersionSymbol}{newVersion}"
-        );
-
-        var newStrain = strain.Value
-            .SkipLast(1)
-            .Append(newTail)
-            .ToImmutableArray();
-
-        return new HyphaeStrain(newStrain);
     }
 }
