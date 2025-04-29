@@ -34,12 +34,17 @@
     &lt;TestId&gt;MSTest::6A9A3BCC-A1B9-4997-882F-017813E98938::net9.0::VirtualArboretumTests.UnitTests.UseCases.PlacePlantTest.IntoGardenWithoutAdditionalMycorrhization_ValidPlant_ReturnsSuccess&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=9ea4b93d_002D91bf_002D490b_002Dba8b_002D1cb3e020710b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="IntoGarden_PlantAlreadyExists_ReturnsFailure" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;MSTest::6A9A3BCC-A1B9-4997-882F-017813E98938::net9.0::VirtualArboretumTests.UnitTests.UseCases.PlacePlantTest.IntoGarden_PlantAlreadyExists_ReturnsFailure&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b5e2fee4_002Da08b_002D4270_002Db0b3_002Dd698b7326181/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="IntoGardenWithoutAdditionalMycorrhization_ValidPlant_ReturnsSuccess #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;MSTest::6A9A3BCC-A1B9-4997-882F-017813E98938::net9.0::VirtualArboretumTests.UnitTests.UseCases.PlacePlantTest.IntoGardenWithoutAdditionalMycorrhization_ValidPlant_ReturnsSuccess&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=dfdd5b95_002D5962_002D486a_002Dafd6_002Db83224526b3b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="IntoGardenWithoutAdditionalMycorrhization_ValidPlant_ReturnsSuccess #5" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=dfdd5b95_002D5962_002D486a_002Dafd6_002Db83224526b3b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="IntoGardenWithoutAdditionalMycorrhization_ValidPlant_ReturnsSuccess #5" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;MSTest::6A9A3BCC-A1B9-4997-882F-017813E98938::net9.0::VirtualArboretumTests.UnitTests.UseCases.PlacePlantTest.IntoGardenWithoutAdditionalMycorrhization_ValidPlant_ReturnsSuccess&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;MSTest::6A9A3BCC-A1B9-4997-882F-017813E98938::net9.0::VirtualArboretumTests.UnitTests.UseCases.PlacePlantTest.IntoGardenWithoutAdditionalMycorrhization_GardenNotFound_ReturnsFailure&lt;/TestId&gt;&#xD;

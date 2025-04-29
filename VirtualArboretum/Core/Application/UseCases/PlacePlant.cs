@@ -24,13 +24,18 @@ public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
 
     private readonly IArboretumRepository _arboretumRepo;
     private readonly IGardenRepository _gardenRepo;
+    private readonly IPlantRepository _plantRepo; // TODO: Store new plant in _plantRepo!
 
-    public PlacePlant(IArboretumRepository arboretumRepo, IGardenRepository gardenRepo)
+    public PlacePlant(IArboretumRepository arboretumRepo, IGardenRepository gardenRepo, IPlantRepository plantRepo)
     {
         this._arboretumRepo = arboretumRepo;
         this._gardenRepo = gardenRepo;
+        this._plantRepo = plantRepo;
     }
 
+    /// <summary>
+    /// Does store a plant into a garden, while micorrhizating it with the mycelium.
+    /// </summary>
     public async Task<Result<PlacePlantSuccess, PlacePlantErrors>> IntoGarden(
          PlantDto plant, GardenIdentifierInput gardenIdentifier)
     {
@@ -39,25 +44,45 @@ public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
 
         if (!plantPlacement.IsSuccess)
         {
-            return plantPlacement;
+            return plantPlacement;  // => fail.
         }
 
         // Plant exists in the garden - associate the with mycelium.
-        var newPlantFingerprint = plantPlacement.Value.PlantFingerprint;
+        var newPlantFingerprint = Fingerprint.TryCreate(plantPlacement.Value.PlantFingerprint);
+
+        Plant? newPlant;
         try
         {
             var activeArboretum = _arboretumRepo.Open();
-            //TODO: activeArboretum.
-            //activeArboretum.Mycorrhizate();
+            newPlant = await _plantRepo.GetByFingerprintAsync(newPlantFingerprint!);
+
+            if (newPlant == null)
+            {
+                return Fail(
+                    PlacePlantErrors.PlantCannotBeConstructed,
+                    "Internal Error. Plant not found in plant repository."
+                    );
+            }
+
+            activeArboretum.Mycelium.Mycorrhizate(newPlant);
         }
         catch (Exception e)
         {
-            return Fail(PlacePlantErrors.AssociationWithMyceliumFailed, "");
+            return Fail(PlacePlantErrors.AssociationWithMyceliumFailed, e.Message);
+            // might leak internals, due to e.Message!
         }
-        //plant.AssociatedHyphae
 
-        //return Ok(new PlacePlantSuccess(plant, garden));
-        throw new NotImplementedException();
+        // Update in PlantRepo, as associations need to be stored.
+        await _plantRepo.UpdateAsync(newPlant);
+
+        var placePlantSuccess = new PlacePlantSuccess(
+            PlantFingerprint: newPlantFingerprint!.ToString(),
+            NewGardenFingerprint: plantPlacement.Value.NewGardenFingerprint,
+            PrimaryPlantHyphae: newPlant.Name.ToString(),
+            HyphaeStrains: HyphaeSerializationService.SerializeEachListElement(newPlant.AssociatedHyphae)
+            );
+
+        return Ok(placePlantSuccess);
     }
 
     /// <summary>
@@ -106,6 +131,12 @@ public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
 
         var serialAssociatedHyphae = HyphaeSerializationService
             .SerializeEachListElement(plantModel.AssociatedHyphae);
+
+        // Store Updates in _plantRepo and _gardenRepo.
+        var plantTask = _plantRepo.AddAsync(plantModel);
+        var gardenTask = _gardenRepo.UpdateAsync(garden);
+        // Parallel execution as the operations are independent.
+        await Task.WhenAll(plantTask, gardenTask);
 
         return Ok(new(
             PlantFingerprint: plantModel.UniqueMarker.ToString(),

@@ -23,6 +23,7 @@ public class PlacePlantTest
         // Set up the repositories
         var gardenRepo = new InMemoryGardenRepository([testGarden]);
         var arboretumRepo = new InMemoryArboretumRepository([testGarden]);
+        var plantRepo = new InMemoryPlantRepository();
 
         // Create Test Plant
         var testPlant = FakePlantFactory.CreateTestPlant(
@@ -34,7 +35,7 @@ public class PlacePlantTest
         var gardenId = new GardenIdentifierInput(testGarden.UniqueMarker.ToString());
 
         // Create the use case with our in-memory repositories
-        var placePlantUseCae = new PlacePlant(arboretumRepo, gardenRepo);
+        var placePlantUseCae = new PlacePlant(arboretumRepo, gardenRepo, plantRepo);
 
         // # Act
         var result = await placePlantUseCae
@@ -64,65 +65,79 @@ public class PlacePlantTest
 
     }
 
-    /*[TestMethod]
+    [TestMethod]
     public async Task IntoGardenWithoutAdditionalMycorrhization_GardenNotFound_ReturnsFailure()
     {
         // Arrange
-        var gardenRepo = new InMemoryGardenRepository();
-        var arboretumRepo = new InMemoryArboretumRepository(Array.Empty<Garden>());
+        var gardenRepo = new InMemoryGardenRepository(
+            new List<GardenDto>() // is empty.
+            );
+        var arboretumRepo = new InMemoryArboretumRepository(
+            new List<Garden>() // is empty.
+            );
+        var plantRepo = new InMemoryPlantRepository();
 
-        var placePlant = new PlacePlant(arboretumRepo, gardenRepo);
+        // Create Test Plant
+        var testPlant = FakePlantFactory.CreateTestPlant(
+            "TestPlant",
+            "#this-strain-should-not-be-associated#neither-this-one", null, null);
 
-        var plantDto = new PlantDto
-        {
-            Name = "TestPlant",
-            Cells = new[] { new CellDto { Content = new byte[] { 1, 2, 3 } } }
-        };
+        var testPlantDto = PlantMapper.IntoDto(testPlant);
 
-        var nonExistentGardenId = new GardenIdentifierInput
-        {
-            GardenFingerprint = new Fingerprint().ToString()
-        };
+        var nonExistentGardenId = new GardenIdentifierInput(
+            new Fingerprint().ToString() // random, non-existing GardenIdentifier.
+            );
+
+        // Create the use case with our in-memory repositories
+        var placePlantUseCae = new PlacePlant(arboretumRepo, gardenRepo, plantRepo);
+
 
         // Act
-        var result = await placePlant.IntoGardenWithoutAdditionalMycorrhization(plantDto, nonExistentGardenId);
+        var result = await placePlantUseCae
+            .IntoGardenWithoutAdditionalMycorrhization(testPlantDto, nonExistentGardenId);
 
         // Assert
         Assert.IsFalse(result.IsSuccess);
-        Assert.AreEqual(PlacePlantErrors.GardenNotFound, result.Error);
+        Assert.AreEqual(PlacePlantErrors.GardenNotFound, result.Error.Code);
     }
 
     [TestMethod]
-    public async Task IntoGardenWithoutAdditionalMycorrhization_PlantAlreadyExists_ReturnsFailure()
+    public async Task IntoGarden_PlantAlreadyExists_ReturnsFailure()
     {
         // Arrange
-        var testPlant = CreateTestPlant("ExistingPlant");
-        var testGarden = CreateTestGarden("TestGarden");
-        testGarden.AddPlant(testPlant);
+        var testGarden = FakeGardenFactory.CreateRawTestGarden("TestGarden");
 
-        var gardenRepo = new InMemoryGardenRepository();
-        gardenRepo.SetupTestData(new[] { testGarden });
+        // Set up the repositories
+        var gardenRepo = new InMemoryGardenRepository([testGarden]);
+        var arboretumRepo = new InMemoryArboretumRepository([testGarden]);
+        var plantRepo = new InMemoryPlantRepository();
 
-        var arboretumRepo = new InMemoryArboretumRepository(new[] { testGarden });
-        var placePlant = new PlacePlant(arboretumRepo, gardenRepo);
+        // Create Test Plant
+        var testPlant = FakePlantFactory.CreateTestPlant(
+            "TestPlant",
+            "#this-strain-should-not-be-associated#neither-this-one", null, null);
 
-        // Create a PlantDto with the same fingerprint as the existing plant
-        var plantDto = PlantMapper.FromPlant(testPlant);
+        var testPlantDto = PlantMapper.IntoDto(testPlant);
 
-        var gardenIdentifier = new GardenIdentifierInput
-        {
-            GardenFingerprint = testGarden.UniqueMarker.ToString()
-        };
+        var gardenId = new GardenIdentifierInput(testGarden.UniqueMarker.ToString());
+
+        // Create the use case with our in-memory repositories
+        var placePlantUseCae = new PlacePlant(arboretumRepo, gardenRepo, plantRepo);
 
         // Act
-        var result = await placePlant.IntoGardenWithoutAdditionalMycorrhization(plantDto, gardenIdentifier);
+        var firstResult = await placePlantUseCae
+            .IntoGarden(testPlantDto, gardenId);
+
+        var secondResult = await placePlantUseCae
+            .IntoGarden(testPlantDto, gardenId);
 
         // Assert
-        Assert.IsFalse(result.IsSuccess);
-        Assert.AreEqual(PlacePlantErrors.PlantAlreadyExists, result.Error);
+        Assert.IsTrue(firstResult.IsSuccess);
+        Assert.IsFalse(secondResult.IsSuccess);
+        Assert.AreEqual(PlacePlantErrors.PlantAlreadyExists, secondResult.Error.Code);
     }
 
-    [TestMethod]
+    /*[TestMethod]
     public async Task IntoGarden_ValidPlant_AssociatesWithMycelium()
     {
         // Arrange
