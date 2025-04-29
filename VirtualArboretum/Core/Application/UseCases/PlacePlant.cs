@@ -64,7 +64,7 @@ public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
     /// Meaning, without associating the plant with the mycelium (besides Garden association).
     /// </summary>
     public async Task<Result<PlacePlantSuccess, PlacePlantErrors>> IntoGardenWithoutAdditionalMycorrhization(
-        PlantDto plant, GardenIdentifierInput gardenIdentifier)
+        PlantDto plantTemplate, GardenIdentifierInput gardenIdentifier)
     {
 
         Garden garden;
@@ -81,7 +81,7 @@ public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
         Plant plantModel;
         try
         {
-            plantModel = PlantMapper.IntoPlant(plant);
+            plantModel = PlantMapper.IntoPlant(plantTemplate);
         }
         catch (Exception e)
         {
@@ -108,10 +108,10 @@ public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
             .SerializeEachListElement(plantModel.AssociatedHyphae);
 
         return Ok(new(
-            plantModel.UniqueMarker.ToString(),
-            garden.PrimaryLocation.ToString(),
-            plantModel.Name.ToString(),
-            serialAssociatedHyphae
+            PlantFingerprint: plantModel.UniqueMarker.ToString(),
+            NewGardenFingerprint: garden.UniqueMarker.ToString(),
+            PrimaryPlantHyphae: plantModel.Name.ToString(),
+            HyphaeStrains: serialAssociatedHyphae
             ));
     }
 
