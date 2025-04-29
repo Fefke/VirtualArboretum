@@ -1,4 +1,5 @@
 ﻿using VirtualArboretum.Core.Domain.AggregateRoots;
+using VirtualArboretum.Core.Domain.Entities;
 using VirtualArboretum.Core.Domain.ValueObjects;
 
 namespace VirtualArboretum.Core.Application.Interfaces;
