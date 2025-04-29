@@ -1,5 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using System.Linq;
+using VirtualArboretum.Core.Domain.Entities;
 using VirtualArboretum.Core.Domain.Services;
 using VirtualArboretum.Core.Domain.ValueObjects;
 
@@ -139,6 +141,11 @@ public class Mycelium
         return this.Contains(flatHypha);
     }
 
+    public bool Contains(HyphaeStrain hyphae)
+    {
+        return this.Contains(hyphae.Value);
+    }
+
 
     public Mycelium AssociateWith(Hypha hypha, Fingerprint association)
     {
@@ -183,13 +190,32 @@ public class Mycelium
             );
     }
 
+    /// <summary>
+    /// Does associate the plant with the mycelium by all the plants HyphaeStrains (including Name).
+    /// </summary>
+    public void Mycorrhizate(Plant plant)
+    {
+        // Plants identity
+        this.AssociateWith(
+            plant.Name, plant.UniqueMarker
+        );
+        // Plants associations
+        this.AssociateWith(
+            plant.AssociatedHyphae, plant.UniqueMarker
+        );
+    }
+
 
     // Test Methods
-    public bool ContainsAssociation(Hypha hyphae, Fingerprint association)
+
+    /// <summary>
+    /// Describes whether a hyphae strain is associated to a specific Fingerprint by the mycelium already.
+    /// </summary>
+    public bool ContainsMycorrhization(HyphaeStrain hyphae, Fingerprint association)
     {
         var containsAssociation = _mycorrhizalAssociations.TryGetValue(
-            new HyphaeStrain(hyphae), out var associations
-            );
+            hyphae, out var associations
+        );
 
         if (!containsAssociation || associations == null)
         {
@@ -199,11 +225,35 @@ public class Mycelium
         return associations.Contains(association);
     }
 
-    public bool ContainsAssociations(IEnumerable<Hypha> manyHyphae, Fingerprint association)
+    /// <summary>
+    /// Describes whether a hyphae strain is associated to a specific Fingerprint by the mycelium already.
+    /// </summary>
+    public bool ContainsMycorrhization(Hypha hyphae, Fingerprint association)
+    {
+        return ContainsMycorrhization(new HyphaeStrain(hyphae), association);
+    }
+
+    // ### Multiple
+    /// <summary>
+    /// True, if all manyHyphae are associated with a Fingerprint. False if  at least one is not.
+    /// </summary>
+    public bool ContainsMycorrhizations(IEnumerable<Hypha> manyHyphae, Fingerprint association)
     {
         return manyHyphae.AsParallel().All(
-            hyphae => this.ContainsAssociation(hyphae, association)
+            hyphae => this.ContainsMycorrhization(hyphae, association)
             );
     }
+
+    /// <summary>
+    /// True, if all manyHyphae are associated with a Fingerprint. False if  at least one is not.
+    /// </summary>
+    public bool ContainsMycorrhizations(IEnumerable<HyphaeStrain> manyHyphae, Fingerprint association)
+    {
+        return manyHyphae.AsParallel().All(
+            hyphae => this.ContainsMycorrhization(hyphae, association)
+        );
+    }
+
+
 
 }

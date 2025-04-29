@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Linq;
 using VirtualArboretum.Core.Domain.Entities;
 using VirtualArboretum.Core.Domain.ValueObjects;
 
@@ -12,7 +13,7 @@ public class Arboretum
 
     private readonly ConcurrentDictionary<Fingerprint, Garden> _gardens;
 
-    private readonly Mycelium _mycelium;
+    public Mycelium Mycelium { get; }
 
     public Arboretum(IEnumerable<Garden> gardens)
     {
@@ -20,7 +21,7 @@ public class Arboretum
             garden => garden.UniqueMarker
             ));
 
-        _mycelium = new Mycelium();
+        Mycelium = new Mycelium();
         InitializeMyceliumWith(_gardens.Values);
     }
 
@@ -31,30 +32,14 @@ public class Arboretum
         gardens.AsParallel().ForAll(
             garden =>
             {
-                _mycelium.AssociateWith(
+                Mycelium.AssociateWith(
                     garden.PrimaryLocation, garden.UniqueMarker
                 );
 
                 // Associate all Plants and their hyphae
                 garden.GetPlants().AsParallel()
-                    .ForAll(Mycorrhizate);
+                    .ForAll(Mycelium.Mycorrhizate);
             });
-    }
-
-    /// <summary>
-    /// Does associate the plant with the mycelium by all the plants HyphaeStrains (including Name).
-    /// </summary>
-    /// TODO: This Method might be more appropriate in Garden, with local Mycelium. Not for now tho.
-    public void Mycorrhizate(Plant plant)
-    {
-        // Plants identity
-        _mycelium.AssociateWith(
-            plant.Name, plant.UniqueMarker
-        );
-        // Plants associations
-        _mycelium.AssociateWith(
-            plant.AssociatedHyphae, plant.UniqueMarker
-        );
     }
 
 
