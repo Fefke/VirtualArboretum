@@ -259,5 +259,30 @@ public class Mycelium
     }
 
 
+    public ImmutableList<Fingerprint> GetMycorrhization(HyphaeStrain hyphae)
+    {
+        _mycorrhizalAssociations.TryGetValue(
+            hyphae, out var associations
+        );
+        var fingerprints = associations?.ToImmutableList();
+
+        return fingerprints ?? ImmutableList<Fingerprint>.Empty;
+    }
+
+    /// <summary>
+    /// Does match all your hyphaeStrains to an ImmutableList, which might be empty!
+    /// </summary>
+    public ImmutableDictionary<HyphaeStrain, ImmutableList<Fingerprint>> GetMycorrhizations(IList<HyphaeStrain> hyphaeStrains)
+    {
+        return hyphaeStrains.AsParallel()
+            .Select(hyphaeStrain => (
+                hyphaeStrain, // Item1
+                GetMycorrhization(hyphaeStrain) // Item2
+                ))
+            .ToImmutableDictionary(
+                kve => kve.Item1,
+                kve => kve.Item2
+                );
+    }
 
 }
