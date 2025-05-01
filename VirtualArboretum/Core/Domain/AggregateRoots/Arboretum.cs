@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Immutable;
 using System.Linq;
 using VirtualArboretum.Core.Domain.Entities;
 using VirtualArboretum.Core.Domain.ValueObjects;
@@ -45,6 +46,11 @@ public class Arboretum
     {
         _gardens.TryGetValue(primaryLocation, out var garden);
         return garden;
+    }
+
+    public ICollection<HyphaeStrain> GetAllGardensPrimaryLocation()
+    {
+        return _gardens.Keys;
     }
 }
 
