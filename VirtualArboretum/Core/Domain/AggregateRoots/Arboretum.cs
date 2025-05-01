@@ -8,16 +8,15 @@ namespace VirtualArboretum.Core.Domain.AggregateRoots;
 public class Arboretum
 {
     // TODO: Does read in provided user-config (req. config-class)
-    //private HyphaeStrain primaryHyphae; // Can be home-dir or user-specified-dir i.R.
-    private readonly ConcurrentDictionary<Fingerprint, Garden> _gardens;
-    // TODO: Is this is part of IGardenRepository alrdy?
+
+    private readonly ConcurrentDictionary<HyphaeStrain, Garden> _gardens;
 
     public Mycelium Mycelium { get; }
 
     public Arboretum(IEnumerable<Garden> gardens)
     {
         _gardens = new(gardens.ToDictionary(
-            garden => garden.UniqueMarker
+            garden => garden.PrimaryLocation
             ));
 
         Mycelium = new Mycelium();
@@ -42,9 +41,9 @@ public class Arboretum
     }
 
 
-    public Garden? ViewGarden(Fingerprint uniqueMarker)
+    public Garden? ViewGarden(HyphaeStrain primaryLocation)
     {
-        _gardens.TryGetValue(uniqueMarker, out var garden);
+        _gardens.TryGetValue(primaryLocation, out var garden);
         return garden;
     }
 }
