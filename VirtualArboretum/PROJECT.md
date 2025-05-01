@@ -1,4 +1,4 @@
-﻿**##** Programming Practices
+﻿# Project Overview
 
 ## Projektmanagement
  - [x] Projektplanung
@@ -38,6 +38,11 @@
      - Maintain documentation of completed features
      - Update architectural diagrams as the project evolves
  
+
+# Ideas
+ 
+ - `.mycelium` files for each garden represented as a directory, listing all kind of associations and connecting HyphaeStrains.
+
 
 # FAQ
 
