@@ -8,6 +8,8 @@ using VirtualArboretum.Core.Application.Services;
 using VirtualArboretum.Core.Domain.Entities;
 using VirtualArboretum.Core.Domain.ValueObjects;
 
+using static VirtualArboretum.Core.Application.DataTransferObjects.ResultFactory;
+
 namespace VirtualArboretum.Core.Application.UseCases;
 
 public enum PlacePlantErrors
@@ -18,7 +20,7 @@ public enum PlacePlantErrors
     PlantCannotBeConstructed,
 }
 
-public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
+public class PlacePlant
 {
     // You require a Garden to place a plant, which has to be part of an Arboretum.
 
@@ -58,7 +60,7 @@ public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
 
             if (newPlant == null)
             {
-                return Fail(
+                return Fail<PlacePlantSuccess, PlacePlantErrors>(
                     PlacePlantErrors.PlantCannotBeConstructed,
                     "Internal Error. Plant not found in plant repository."
                     );
@@ -68,7 +70,7 @@ public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
         }
         catch (Exception e)
         {
-            return Fail(PlacePlantErrors.AssociationWithMyceliumFailed, e.Message);
+            return Fail<PlacePlantSuccess, PlacePlantErrors>(PlacePlantErrors.AssociationWithMyceliumFailed, e.Message);
             // might leak internals, due to e.Message!
         }
 
@@ -82,7 +84,7 @@ public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
             HyphaeStrains: HyphaeSerializationService.SerializeEachListElement(newPlant.AssociatedHyphae)
             );
 
-        return Ok(placePlantSuccess);
+        return Ok<PlacePlantSuccess, PlacePlantErrors>(placePlantSuccess);
     }
 
     /// <summary>
@@ -99,7 +101,7 @@ public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
         }
         catch (Exception e)
         {
-            return Fail(PlacePlantErrors.GardenNotFound, e.Message);
+            return Fail<PlacePlantSuccess, PlacePlantErrors>(PlacePlantErrors.GardenNotFound, e.Message);
         }
 
         // construct plant 
@@ -110,7 +112,7 @@ public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
         }
         catch (Exception e)
         {
-            return Fail(
+            return Fail<PlacePlantSuccess, PlacePlantErrors>(
                 PlacePlantErrors.PlantCannotBeConstructed, e.Message
             // might leak internals, most probably won't.
             );
@@ -120,7 +122,7 @@ public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
         // Check if plant already exists in the garden
         if (garden.ContainsPlant(plantModel.UniqueMarker))
         {
-            return Fail(
+            return Fail<PlacePlantSuccess, PlacePlantErrors>(
                 PlacePlantErrors.PlantAlreadyExists,
                 "Exact same Plant already exists in the garden"
             );
@@ -138,7 +140,7 @@ public class PlacePlant : AbstractUseCase<PlacePlantSuccess, PlacePlantErrors>
         // Parallel execution as the operations are independent.
         await Task.WhenAll(plantTask, gardenTask);
 
-        return Ok(new(
+        return Ok<PlacePlantSuccess, PlacePlantErrors>(new(
             PlantFingerprint: plantModel.UniqueMarker.ToString(),
             NewGardenFingerprint: garden.UniqueMarker.ToString(),
             PrimaryPlantHyphae: plantModel.Name.ToString(),
