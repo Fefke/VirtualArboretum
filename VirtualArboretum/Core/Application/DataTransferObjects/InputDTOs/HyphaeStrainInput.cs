@@ -4,6 +4,6 @@
 /// Does return matching results for PrimaryHyphae.
 /// <i>Actual implementation determines context of the associated hyphae.</i>
 /// </summary>
-public record IdentifyingHyphaeInput(
-    String PrimaryHyphae
+public record HyphaeStrainInput(
+    String HyphaeStrain
         );

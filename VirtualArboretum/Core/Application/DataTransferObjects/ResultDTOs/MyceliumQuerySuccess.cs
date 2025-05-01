@@ -9,5 +9,5 @@ namespace VirtualArboretum.Core.Application.DataTransferObjects.ResultDTOs;
 /// and each element containing the list of associated hyphae.
 /// </summary>
 public record MyceliumQuerySuccess(
-    ImmutableList<GardenWithPlantsDto> Gardens
+    ImmutableList<GardenDto> Gardens
     );
