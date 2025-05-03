@@ -2,7 +2,7 @@ using VirtualArboretum.Core.Application.DataTransferObjects.InputDTOs;
 using VirtualArboretum.Core.Application.DataTransferObjects.MappedToDomain;
 using VirtualArboretum.Core.Application.DataTransferObjects.ModelDTOs;
 using VirtualArboretum.Core.Application.UseCases;
-using VirtualArboretum.Core.Domain.Entities;
+using VirtualArboretum.Core.Domain.AggregateRoots;
 using VirtualArboretum.Core.Domain.ValueObjects;
 using VirtualArboretum.Infrastructure.Repositories.InMemory;
 using VirtualArboretumTests.Fakes;

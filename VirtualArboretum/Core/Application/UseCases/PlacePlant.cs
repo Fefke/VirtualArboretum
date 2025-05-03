@@ -5,6 +5,7 @@ using VirtualArboretum.Core.Application.DataTransferObjects.ModelDTOs;
 using VirtualArboretum.Core.Application.DataTransferObjects.ResultDTOs;
 using VirtualArboretum.Core.Application.Interfaces;
 using VirtualArboretum.Core.Application.Services;
+using VirtualArboretum.Core.Domain.AggregateRoots;
 using VirtualArboretum.Core.Domain.Entities;
 using VirtualArboretum.Core.Domain.ValueObjects;
 
