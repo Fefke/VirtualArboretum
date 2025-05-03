@@ -1,6 +1,5 @@
 ﻿using VirtualArboretum.Core.Application.Interfaces;
 using VirtualArboretum.Core.Domain.AggregateRoots;
-using VirtualArboretum.Core.Domain.Entities;
 
 namespace VirtualArboretum.Infrastructure.Repositories.InMemory;
 

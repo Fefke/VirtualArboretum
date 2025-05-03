@@ -3,7 +3,6 @@ using VirtualArboretum.Core.Application.DataTransferObjects.MappedToDomain;
 using VirtualArboretum.Core.Application.DataTransferObjects.ModelDTOs;
 using VirtualArboretum.Core.Application.Interfaces;
 using VirtualArboretum.Core.Domain.AggregateRoots;
-using VirtualArboretum.Core.Domain.Entities;
 using VirtualArboretum.Core.Domain.ValueObjects;
 
 namespace VirtualArboretum.Infrastructure.Repositories.InMemory;
