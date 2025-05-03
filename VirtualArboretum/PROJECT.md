@@ -37,7 +37,7 @@
  6.	⭕ Update Project Documentation:
      - Maintain documentation of completed features
      - Update architectural diagrams as the project evolves
- 
+ 7. A PLantBuilder might be necessary to ensure logical association of cell to Plants.
 
 # Ideas
  
