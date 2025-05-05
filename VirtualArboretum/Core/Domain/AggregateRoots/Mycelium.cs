@@ -21,7 +21,7 @@ public class Mycelium
 
     /// <summary>
     /// The Mycorrhizal Associations are the connections between hyphae of fungi,<br/>
-    /// which are identified by a HyphaeStrain that connects many <br/>
+    /// which are identified by a HyphaeStrainDto that connects many <br/>
     /// Fingerprints of plants/tools/gardens.
     /// </summary>
     /// <!-- TODO: Should be externalized in a Mycorrhizal Network, which is partializable for each garden. -->
@@ -283,6 +283,11 @@ public class Mycelium
                 kve => kve.Item1,
                 kve => kve.Item2
                 );
+    }
+
+    public ImmutableDictionary<HyphaeStrain, HashSet<Fingerprint>> GetAllMycorrhizations()
+    {
+        return _mycorrhizalAssociations.ToImmutableDictionary();
     }
 
 }

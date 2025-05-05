@@ -13,6 +13,7 @@ public class HyphaeSerializationService
     /// Deserializes a string into a hierarchy of Hyphae.<br></br>
     /// <b>Please note:</b> You have to provide a valid serialized string (according to HyphaeSerializer.Serialize(...)).
     /// </summary>
+    /// <exception cref="ArgumentException"></exception>
     public static ImmutableList<HyphaeStrain> Deserialize(string serialHyphaeStrains)
     {
         var manyHyphae = serialHyphaeStrains.Split(HyphaKey.StartMarker);
