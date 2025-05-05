@@ -85,21 +85,5 @@ public record Result<TSuccess, TError> where TError : Enum
     {
         return IsSuccess ? onSuccess(Value) : onFailure(Error);
     }
-
-    /// <summary>
-    /// Executes an action based on the result state.
-    /// </summary>
-    /// <param name="onSuccess">The action to execute if the result is successful.</param>
-    /// <param name="onFailure">The action to execute if the result is a failure.</param>
-    public void Switch(Action<TSuccess> onSuccess, Action<ErrorResult<TError>> onFailure)
-    {
-        if (IsSuccess)
-        {
-            onSuccess(Value);
-        }
-        else
-        {
-            onFailure(Error);
-        }
-    }
+    
 }
