@@ -18,7 +18,7 @@ public abstract class ResultFactory
     /// Creates a failure Result with a new ErrorResult. Types often inferred from context.
     /// </summary>
     public static Result<TSuccess, TErrorEnum> Fail<TSuccess, TErrorEnum>(
-        TErrorEnum code, string message = "", string? target = null
+        TErrorEnum code, string message = "No Error Description provided.", string? target = null
         ) where TErrorEnum : Enum
         => Result<TSuccess, TErrorEnum>.Fail(new ErrorResult<TErrorEnum>(code, message, target));
 
