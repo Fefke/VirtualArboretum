@@ -45,13 +45,17 @@ public class Plant
         if (primaryHyphae.Value.Last() is not HyphaApex)
         {
             throw new ArgumentException(
-                "HyphaeStrain must be a HyphaApex to increment version."
+                "HyphaeStrainDto must be a HyphaApex to increment version."
             );
         }
 
         Name = primaryHyphae;
 
         // 3.
+        _associatedHyphae = associatedHyphae?.ToList()
+                            ?? new List<HyphaeStrain>(cells.Count);
+        
+        // 4.
         Dictionary<Fingerprint, Cell> cellsDict = new(cells.Count);
 
         foreach (var cell in cells)
@@ -60,15 +64,11 @@ public class Plant
                 cell.UniqueMarker,
                 cell
             );
+            // & intrinsically associate with cells organell location
+            AssociateWith(cell.OrganellLocation);
         }
 
         this.Cells = cellsDict.ToImmutableDictionary();
-
-
-        // 4.
-        _associatedHyphae = associatedHyphae?.ToList()
-                            ?? new List<HyphaeStrain>();
-
     }
 
 

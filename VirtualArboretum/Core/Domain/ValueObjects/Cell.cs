@@ -1,8 +1,11 @@
-﻿namespace VirtualArboretum.Core.Domain.ValueObjects;
+﻿using VirtualArboretum.Core.Domain.AggregateRoots;
+
+namespace VirtualArboretum.Core.Domain.ValueObjects;
 
 /// <summary>
-/// A single cell, just like Jupyter-Notebook cells, can contain any kind of data,
-/// meaning just raw data, active code, results of any kind, images... you name it.
+/// A single cell does represent a reference to any kind of data (its organell),<br/>
+/// represented by its organellLocation, which should be an Extension of Plant Name:<br/>
+/// `#my-plant` -> `#my-plant-has-a-cell` (although not enforced).
 /// </summary>
 public class Cell
 {
@@ -10,25 +13,25 @@ public class Cell
     public readonly Fingerprint UniqueMarker;
 
     public CellType Type { get; }
-    public ReadOnlyMemory<byte> Organell { get; }
+    public HyphaeStrain OrganellLocation { get; }
 
-    public Cell(ReadOnlyMemory<byte> organell, CellType type, Fingerprint uniqueMarker)
+    public Cell(CellType type, HyphaeStrain organellLocation, Fingerprint uniqueMarker)
     {
         UniqueMarker = uniqueMarker;
+        OrganellLocation = organellLocation;
         Type = type;
-        Organell = organell;
     }
 
-    public Cell(ReadOnlyMemory<byte> organell, Fingerprint uniqueMarker)
-        : this(organell, new CellType("application/octet-stream"), uniqueMarker)
+    public Cell(HyphaeStrain organellLocation, Fingerprint uniqueMarker)
+        : this(new CellType("application/octet-stream"), organellLocation, uniqueMarker)
     { }
 
-    public Cell(ReadOnlyMemory<byte> organell, CellType type)
-        : this(organell, type, new Fingerprint())
+    public Cell(CellType type, HyphaeStrain organellLocation)
+        : this(type, organellLocation, new Fingerprint())
     { }
 
-    public Cell(ReadOnlyMemory<byte> organell)
-        : this(organell, new CellType("application/octet-stream"), new Fingerprint())
+    public Cell(HyphaeStrain organellLocation)
+        : this(new CellType("application/octet-stream"), organellLocation, new Fingerprint())
     { }
 
     public override bool Equals(object? obj)
@@ -39,13 +42,13 @@ public class Cell
     public bool Equals(Cell? other)
     {
         return other != null
-               && UniqueMarker == other.UniqueMarker
-               && Equals(Type, other.Type)
-               && Organell.Span.SequenceEqual(other.Organell.Span);
+               && UniqueMarker.Equals(other.UniqueMarker)
+               && Type.Equals(other.Type)
+               && OrganellLocation.Equals(other.OrganellLocation);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(UniqueMarker, Type, Organell);
+        return HashCode.Combine(UniqueMarker, Type, OrganellLocation);
     }
 }
