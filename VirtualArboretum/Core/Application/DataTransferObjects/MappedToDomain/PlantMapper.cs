@@ -29,12 +29,12 @@ public class PlantMapper
         {
             primaryHyphae = HyphaeSerializationService.Deserialize(plantTemplate.PrimaryHyphae).First();
         }
-        catch (Exception e)
+        catch (Exception)
         {
             errors.AppendLine($"Your Primary Hypha is invalid: '{plantTemplate.PrimaryHyphae}'");
             throw new ArgumentException(errors.ToString());  // is fatal in this scope.
         }
-        // TODO: WARUM vertauschen sich UniqueMarker und CellType in Cell?!
+
         var cells = new List<Cell>(plantTemplate.Cells.Count);
         foreach (var cellTemplate in plantTemplate.Cells)
         {
@@ -42,13 +42,40 @@ public class PlantMapper
 
             if (newCellMarker == null)
             {
-                errors.AppendLine($"Your provided cell does have an invalid UniqueMarker: '{cellTemplate.UniqueMarker}' continuing..");
+                errors.AppendLine(
+                    $"Your provided cell does have an invalid UniqueMarker: '{cellTemplate.UniqueMarker}' continuing..");
+                continue;
+            }
+
+            var newCellType = new CellType(cellTemplate.CellType);
+            HyphaeStrain newCellLocation;
+            try
+            {
+                var cellLocationStrains = HyphaeSerializationService
+                    .Deserialize(cellTemplate.OrganellLocation.SingleHyphaeStrain);
+
+                if (cellLocationStrains.Count != 1)
+                {
+                    errors.AppendLine(
+                        $"Your provided cell does have {cellLocationStrains.Count} OrganellLocations. " +
+                        $"Exactly one OrganellLocation is required.");
+                    continue;
+                }
+
+                newCellLocation = cellLocationStrains.First();
+
+            }
+            catch (Exception)
+            {
+                errors.AppendLine(
+                    $"Your provided cell does have an invalid OrganellLocation: " +
+                    $"'{cellTemplate.OrganellLocation.SingleHyphaeStrain}' continuing..");
                 continue;
             }
 
             var newCell = new Cell(
-                cellTemplate.Organell,
-                new CellType(cellTemplate.CellType),
+                newCellType,
+                newCellLocation,
                 newCellMarker
             );
 
@@ -63,7 +90,7 @@ public class PlantMapper
                 var newHyphaeStrain = HyphaeSerializationService.Deserialize(associatedHypha).First();
                 associatedHyphae.Add(newHyphaeStrain);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 errors.AppendLine($"Your provided Hypha is invalid: '{associatedHypha}'");
             }
@@ -108,11 +135,13 @@ public class PlantMapper
         IList<string> serialHyphae = HyphaeSerializationService
             .SerializeEachListElement(plant.AssociatedHyphae);
 
-        List<CellDto> serialCells = plant.Cells.Select(
+        var serialCells = plant.Cells.Select(
             cell => new CellDto(
                 UniqueMarker: cell.Value.UniqueMarker.ToString(),
                 CellType: cell.Value.Type.ToString(),
-                Organell: cell.Value.Organell
+                OrganellLocation: new HyphaeStrainDto(
+                    HyphaeSerializationService.Serialize(cell.Value.OrganellLocation)
+                    )
                 )
             ).ToList();
 
