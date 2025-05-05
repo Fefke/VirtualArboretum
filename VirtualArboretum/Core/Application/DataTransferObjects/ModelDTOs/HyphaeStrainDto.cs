@@ -1,9 +1,9 @@
-﻿namespace VirtualArboretum.Core.Application.DataTransferObjects.InputDTOs;
+﻿namespace VirtualArboretum.Core.Application.DataTransferObjects.ModelDTOs;
 
 /// <summary>
 /// Does return matching results for PrimaryHyphae.
 /// <i>Actual implementation determines context of the associated hyphae.</i>
 /// </summary>
-public record HyphaeStrainInput(
-    String HyphaeStrain
+public record HyphaeStrainDto(
+    string SingleHyphaeStrain
         );
