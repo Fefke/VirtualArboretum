@@ -6,10 +6,11 @@ using VirtualArboretum.Core.Application.DataTransferObjects;
 using VirtualArboretum.Core.Application.DataTransferObjects.MappedToDomain;
 using VirtualArboretum.Core.Application.DataTransferObjects.ModelDTOs;
 using VirtualArboretum.Core.Application.Interfaces;
-using VirtualArboretum.Core.Domain.AggregateRoots;
 using VirtualArboretum.Core.Domain.Entities;
 using VirtualArboretum.Core.Domain.ValueObjects;
 using static VirtualArboretum.Core.Application.DataTransferObjects.ResultFactory;
+using HyphaeStrain = VirtualArboretum.Core.Domain.AggregateRoots.HyphaeStrain;
+using VirtualArboretum.Core.Domain.AggregateRoots;
 
 namespace VirtualArboretum.Core.Application.Services;
 
@@ -17,12 +18,7 @@ public enum MyceliumQueryError
 {
     NoHyphaeQueryProvided,
     InvalidHyphaeQuery,
-    MyceliumAccessFailed,
-    GardenFilterNotFound,
     PlantLoadingFailed,
-    RepositoryError,
-    MappingFailed,
-    InconsistentData,
     UnknownError
 }
 
@@ -33,7 +29,7 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
 {
     private readonly IArboretumRepository _arboretumRepo;
     private readonly IPlantRepository _plantRepo;
-    private readonly IGardenRepository _gardenRepo;
+    private readonly Mycelium mycelium;
 
     private static char notMarker = '!';
     private static char orMarker = '|';
@@ -42,12 +38,12 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
     // Konstruktor mit Dependency Injection
     public MyceliumQueryService(
         IArboretumRepository arboretumRepo,
-        IPlantRepository plantRepo,
-        IGardenRepository gardenRepo)
+        IPlantRepository plantRepo)
     {
         _arboretumRepo = arboretumRepo ?? throw new ArgumentNullException(nameof(arboretumRepo));
         _plantRepo = plantRepo ?? throw new ArgumentNullException(nameof(plantRepo));
-        _gardenRepo = gardenRepo ?? throw new ArgumentNullException(nameof(gardenRepo));
+        mycelium = _arboretumRepo.Open().Mycelium;
+        //_gardenRepo = gardenRepo ?? throw new ArgumentNullException(nameof(gardenRepo));
     }
 
     /// <summary>
@@ -74,7 +70,7 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
 
         try
         {
-            var tasks = orBuckets.Select(FindAllInOrBucket).ToList();
+            var tasks = orBuckets.Select(FindAllInSingleOrBucket).ToList();
 
             var results = await Task.WhenAll(tasks);
 
@@ -108,7 +104,7 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
     /// All Exceptions should contain externalisable messages.
     /// Will throw Exception, if Query not parsable!
     /// </summary>
-    private async Task<Result<MyceliumQuerySuccess, MyceliumQueryError>> FindAllInOrBucket(
+    private async Task<Result<MyceliumQuerySuccess, MyceliumQueryError>> FindAllInSingleOrBucket(
         string orBucket
     )
     {
@@ -156,25 +152,54 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
             }
         }
 
-        return await QueryMycelium(plainHyphaeStrains, negatedHyphaeStrains);
+        return await QueryMyceliumIntersection(plainHyphaeStrains, negatedHyphaeStrains);
     }
 
 
     /// <summary>
     /// Queries Mycelium for all plants matching the provided hyphae strains.
     /// </summary>
-    private async Task<Result<MyceliumQuerySuccess, MyceliumQueryError>> QueryMycelium(
+    private async Task<Result<MyceliumQuerySuccess, MyceliumQueryError>> QueryMyceliumIntersection(
         List<HyphaeStrain> plainHyphaeStrains, List<HyphaeStrain> negatedHyphaeStrains)
     {
-        var arboretum = this._arboretumRepo.Open();
-        var mycelium = arboretum.Mycelium;
+        return (plainHyphaeStrains.Count, negatedHyphaeStrains.Count) switch
+        {
+            (0, 0) => Ok<MyceliumQuerySuccess, MyceliumQueryError>(
+                new MyceliumQuerySuccess(
+                    Gardens: new List<GardenDto>().ToImmutableList()
+                    )),
+            (0, _) => await QueryMyceliumNegatedAll(negatedHyphaeStrains),
+            _ => await QueryMyceliumMixedIntersection(plainHyphaeStrains, negatedHyphaeStrains)
+        };
+    }
 
+
+    /// <returns>All Plants, not being associated with provided HyphaeStrains in their Gardens.</returns>
+    private async Task<Result<MyceliumQuerySuccess, MyceliumQueryError>> QueryMyceliumNegatedAll(
+        IList<HyphaeStrain> negatedHyphaeStrains)
+    {
+        var allMycorrhizations = mycelium.GetAllMycorrhizations();
+
+        var lookupTable = new HashSet<HyphaeStrain>(negatedHyphaeStrains);
+
+        var queryResult = allMycorrhizations
+            .Where(association => !lookupTable.Contains(association.Key))
+            .SelectMany(kvp => kvp.Value.ToList())
+            .Distinct()
+            .ToList();
+
+        return await GroupPlantsIntoGardens(queryResult);
+    }
+
+    private async Task<Result<MyceliumQuerySuccess, MyceliumQueryError>> QueryMyceliumMixedIntersection(
+        IList<HyphaeStrain> plainHyphaeStrains, IList<HyphaeStrain> negatedHyphaeStrains)
+    {
         var plainFingerprintMappings = mycelium.GetMycorrhizations(plainHyphaeStrains);
 
         // now get all possible plants, to kick those out, containing one of negatedHyphaeStrains.
         var plainFingerprints = plainFingerprintMappings.AsParallel()
-            .Where(kvp => !kvp.Value.IsEmpty)
-            .SelectMany(kvp => kvp.Value)
+            .Where(association => !association.Value.IsEmpty)
+            .SelectMany(association => association.Value)
             .Distinct()  // as multiple hyphae can be associated with the same plant.
             .ToList();
 
@@ -184,33 +209,39 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
             return Ok<MyceliumQuerySuccess, MyceliumQueryError>(
                 new MyceliumQuerySuccess(
                     Gardens: new List<GardenDto>().ToImmutableList()
-                )
+            )
             );
         }
 
-        if (negatedHyphaeStrains.Count > 0)
-        {
-            var negatedFingerprintMappings = mycelium.GetMycorrhizations(negatedHyphaeStrains);
+        var negatedFingerprintMappings = mycelium.GetMycorrhizations(negatedHyphaeStrains);
 
-            var negatedFingerprints = negatedFingerprintMappings.AsParallel()
-                .Where(kvp => !kvp.Value.IsEmpty)
-                .SelectMany(kvp => kvp.Value)
-                .Distinct()
-                .ToHashSet(); // HashSet for quicker lookups.
+        var negatedFingerprints = negatedFingerprintMappings.AsParallel()
+            .Where(association => !association.Value.IsEmpty)
+            .SelectMany(association => association.Value)
+            .Distinct()
+            .ToHashSet(); // HashSet for quicker lookups.
 
-            // remove all plants, which are associated with negated hyphae.
-            plainFingerprints = plainFingerprints
-                .Where(fingerprint => !negatedFingerprints.Contains(fingerprint)) // is O(1)
-                .ToList();
-        }
+        // remove all plants, which are associated with negated hyphae.
+        plainFingerprints = plainFingerprints
+            .Where(fingerprint => !negatedFingerprints.Contains(fingerprint)) // is O(1)
+            .ToList();
 
+        return await GroupPlantsIntoGardens(plainFingerprints);
+    }
+
+
+
+    public async Task<Result<MyceliumQuerySuccess, MyceliumQueryError>> GroupPlantsIntoGardens(IList<Fingerprint> plantIdentifyingFingerprints)
+    {
+        var arboretum = _arboretumRepo.Open();
 
         var allGardenLocations = arboretum.GetAllGardensPrimaryLocation().ToImmutableHashSet();
         var selectedGardens = new ConcurrentDictionary<HyphaeStrain, GardenDto>();
 
-        // Parallelize the plant retrieval and their garden association.
-        var plantTasks = plainFingerprints.AsParallel().Select(async fingerprint =>
+        // Parallelize the plant retrieval and their garden association per plant...
+        var plantTasks = plantIdentifyingFingerprints.Select(async fingerprint =>
         {
+            // 1. Fetch Plant
             var plant = await _plantRepo.GetByFingerprintAsync(fingerprint);
             if (plant == null)
             {
@@ -219,25 +250,25 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
                     );
             }
 
-            // check for gardens plant is planted in...
-            var plantIsInGardens = plant.AssociatedHyphae
+            // 2. find all gardens this plant is planted in...
+            var plantsGardens = plant.AssociatedHyphae
                 .Where(allGardenLocations.Contains)
                 .Select(arboretum.ViewGarden)
-                .Where(garden => garden != null
-                                 && garden.ContainsPlant(plant.UniqueMarker))
+                .OfType<Garden>() // Does remove nullable annotation.
+                .Where(garden => garden.ContainsPlant(plant.UniqueMarker))
                 .ToArray();
-            // as plant might have identifying hyphae, but is not in the garden.
 
-            if (plantIsInGardens.Length == 0)
+            if (plantsGardens.Length == 0)
             {
                 throw new Exception(
                     $"Plant with fingerprint {fingerprint} is roque and not part of any garden!"
-                );
+                );  // will be caught below.
             }
 
+            // 3. Formulate as DataTransferObject
             var thisPlantDto = PlantMapper.IntoDto(plant);
 
-            plantIsInGardens.AsParallel().ForAll(garden =>
+            foreach (var garden in plantsGardens)
             {
                 if (garden == null)
                 {
@@ -245,6 +276,8 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
                         $"Cannot access Gardens of plant with fingerprint {plant.UniqueMarker}!"
                     );
                 }
+
+                // 4. Add this Plant to the selectedGardens dictionary
                 selectedGardens.AddOrUpdate(
                     garden.PrimaryLocation,
                     new GardenDto(
@@ -258,10 +291,7 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
                         return existingGarden;
                     }
                 );
-
-            });
-
-            return plant;
+            }
         });
 
         try
@@ -275,10 +305,9 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
 
             return Fail<MyceliumQuerySuccess, MyceliumQueryError>(
                 MyceliumQueryError.PlantLoadingFailed,
-                errorMessage, "Plant-Repository"
+                errorMessage, "Group Plants From Strains Into Gardens"
             );
         }
-
 
         // Return the result as a success with the valid plants
         return Ok<MyceliumQuerySuccess, MyceliumQueryError>(
@@ -288,4 +317,9 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
         );
     }
 
+    public async Task<Result<MyceliumQuerySuccess, MyceliumQueryError>> GroupPlantsIntoGardens(IList<Plant> plants)
+    {
+        var plantsFingerprints = plants.Select(plant => plant.UniqueMarker).ToList();
+        return await GroupPlantsIntoGardens(plantsFingerprints);
+    }
 }
