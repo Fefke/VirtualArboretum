@@ -27,8 +27,8 @@ public class Arboretum
         gardens.AsParallel().ForAll(
             garden =>
             {
-                Mycelium.AssociateWith(
-                    garden.PrimaryLocation, garden.UniqueMarker
+                Mycelium.AssociateWithGarden(
+                    garden.PrimaryLocation, garden
                 );
 
                 // Associate all Plants and their hyphae

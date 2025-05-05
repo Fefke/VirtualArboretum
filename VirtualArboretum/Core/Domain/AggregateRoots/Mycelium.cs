@@ -20,33 +20,26 @@ public class Mycelium
     private readonly ConcurrentDictionary<HyphaKey, HashSet<HyphaeStrain>> _hyphalPlexus;
 
     /// <summary>
-    /// The Mycorrhizal Associations are the connections between hyphae of fungi,<br/>
-    /// which are identified by a HyphaeStrainDto that connects many <br/>
-    /// Fingerprints of plants/tools/gardens.
+    /// Mycorrhizations are the connections between hyphae of fungi,<br/>
+    /// which are identified by a HyphaeStrain that connects many <br/>
+    /// Fingerprints of plants to the hyphalPlexus.
     /// </summary>
-    /// <!-- TODO: Should be externalized in a Mycorrhizal Network, which is partializable for each garden. -->
-    private readonly ConcurrentDictionary<HyphaeStrain, HashSet<Fingerprint>> _mycorrhizalAssociations;
+    private readonly ConcurrentDictionary<HyphaeStrain, HashSet<Fingerprint>> _plantMycorrhizations;
 
-    public Mycelium(
-        IList<Hypha> hyphae,
-        ConcurrentDictionary<HyphaeStrain, HashSet<Fingerprint>> mycorrhizalAssociations)
-    {
-        _mycorrhizalAssociations = mycorrhizalAssociations;
-
-        _hyphalPlexus = new(
-            concurrencyLevel: -1,
-            capacity: hyphae.Count()
-            // is larger, if not flat k-v, but not determined at this point.
-            );
-
-        this.ExtendWith(hyphae);
-    }
+    /// <summary>
+    /// Garden Associations are the hierarchical relationship between gardens and plants,<br/>
+    /// which are identified by a HyphaeStrain that connects many <br/>
+    /// Fingerprints of gardens to the hyphalPlexus.
+    /// </summary>
+    private readonly ConcurrentDictionary<HyphaeStrain, HashSet<Fingerprint>> _gardenAssociations;
 
     public Mycelium(
         IList<HyphaeStrain> hyphaeStrains,
-        ConcurrentDictionary<HyphaeStrain, HashSet<Fingerprint>> mycorrhizalAssociations)
+        ConcurrentDictionary<HyphaeStrain, HashSet<Fingerprint>> gardenAssociations,
+        ConcurrentDictionary<HyphaeStrain, HashSet<Fingerprint>> plantMycorrhizations)
     {
-        _mycorrhizalAssociations = mycorrhizalAssociations;
+        _gardenAssociations = gardenAssociations;
+        _plantMycorrhizations = plantMycorrhizations;
 
         var initialPlexusSize = hyphaeStrains.Sum(
             hyphaeStrain => hyphaeStrain.Value.Length
@@ -63,19 +56,16 @@ public class Mycelium
     public Mycelium()
         : this(
             new List<HyphaeStrain>(),
+            new ConcurrentDictionary<HyphaeStrain, HashSet<Fingerprint>>(),
             new ConcurrentDictionary<HyphaeStrain, HashSet<Fingerprint>>())
     { }
 
-    private Mycelium ExtendWith(IList<HyphaeStrain> hyphaeStrains)
+    private void ExtendWith(IList<HyphaeStrain> hyphaeStrains)
     {
-        hyphaeStrains.AsParallel().ForAll(
-            hyphaeStrain => this.ExtendWith(hyphaeStrain)
-            );
-
-        return this;
+        hyphaeStrains.AsParallel().ForAll(ExtendWith);
     }
 
-    private Mycelium ExtendWith(HyphaeStrain hyphaeStrain)
+    private void ExtendWith(HyphaeStrain hyphaeStrain)
     {
         hyphaeStrain.Value.AsParallel().ForAll(
             hypha => _hyphalPlexus.AddOrUpdate(
@@ -89,28 +79,7 @@ public class Mycelium
                 })
             );
 
-        return this;
     }
-
-    private Mycelium ExtendWith(IEnumerable<Hypha> hyphae)
-    {
-        foreach (var hypha in hyphae)
-        {
-            this.ExtendWith(hypha);
-        }
-
-        return this;
-    }
-
-
-    public Mycelium ExtendWith(Hypha hypha)
-    {
-        // Make sure hyphae are present.
-        ExtendWith(new HyphaeStrain(hypha));
-
-        return this;
-    }
-
 
     public bool Contains(ImmutableArray<Hypha> flatHyphae)
     {
@@ -135,11 +104,11 @@ public class Mycelium
         return strain.Contains(tail);
     }
 
-    public bool Contains(Hypha hypha)
+    /*public bool Contains(Hypha hypha)
     {
         var flatHypha = HyphaeHierarchy.AggregateHyphae(hypha);
         return this.Contains(flatHypha);
-    }
+    }*/
 
     public bool Contains(HyphaeStrain hyphae)
     {
@@ -147,37 +116,14 @@ public class Mycelium
     }
 
 
-    public Mycelium AssociateWith(Hypha hypha, Fingerprint association)
+    public Mycelium AssociateWithGarden(HyphaeStrain strain, Garden association)
     {
-        // 1. Make sure hypha is present
-        if (!Contains(hypha))
-        {
-            ExtendWith(hypha);
-        }
-
-        // 2. Associate it with fingerprint
-        var strain = new HyphaeStrain(hypha);
-
-        return AssociateWith(strain, association);
-    }
-
-    public Mycelium AssociateWith(IEnumerable<Hypha> hyphae, Fingerprint association)
-    {
-        hyphae.AsParallel().ForAll(
-            hypha => this.AssociateWith(hypha, association)
-            );
-
-        return this;
-    }
-
-    public Mycelium AssociateWith(HyphaeStrain strain, Fingerprint association)
-    {
-        _mycorrhizalAssociations.AddOrUpdate(
+        _gardenAssociations.AddOrUpdate(
             strain,
-            _ => [association],  // add
+            _ => [association.UniqueMarker],  // add
             (_, existingAssociations) =>  // update
             {
-                existingAssociations.Add(association);
+                existingAssociations.Add(association.UniqueMarker);
                 return existingAssociations;
             });
 
@@ -187,10 +133,10 @@ public class Mycelium
         return this;
     }
 
-    public void AssociateWith(IEnumerable<HyphaeStrain> hyphaeStrains, Fingerprint plantUniqueMarker)
+    public void AssociateWithGarden(IEnumerable<HyphaeStrain> hyphaeStrains, Garden association)
     {
         hyphaeStrains.AsParallel().ForAll(
-            hyphaeStrain => this.AssociateWith(hyphaeStrain, plantUniqueMarker)
+            hyphaeStrain => this.AssociateWithGarden(hyphaeStrain, association)
             );
     }
 
@@ -200,24 +146,42 @@ public class Mycelium
     public void Mycorrhizate(Plant plant)
     {
         // 1. Plants identity
-        this.AssociateWith(
-            plant.Name, plant.UniqueMarker
+        ExtendWith(plant.Name);
+        _plantMycorrhizations.AddOrUpdate(
+            plant.Name,
+            _ => [plant.UniqueMarker],  // add
+            (_, fingerprints) =>
+            {
+                fingerprints.Add(plant.UniqueMarker);
+                return fingerprints;
+            }
         );
+
         // 2. Plants additional associations
-        this.AssociateWith(
-            plant.AssociatedHyphae, plant.UniqueMarker
-        );
+        ExtendWith(plant.AssociatedHyphae);
+        plant.AssociatedHyphae.AsParallel().ForAll(strain =>
+        {
+            _plantMycorrhizations.AddOrUpdate(
+                strain,
+                _ => [plant.UniqueMarker],  // add
+                (_, fingerprints) =>
+                {
+                    fingerprints.Add(plant.UniqueMarker);
+                    return fingerprints;
+                }
+            );
+        });
     }
 
 
-    // Test Methods
+    // # Test Methods
 
     /// <summary>
     /// Describes whether a hyphae strain is associated to a specific Fingerprint by the mycelium already.
     /// </summary>
     public bool ContainsMycorrhization(HyphaeStrain hyphae, Fingerprint association)
     {
-        var containsAssociation = _mycorrhizalAssociations.TryGetValue(
+        var containsAssociation = _plantMycorrhizations.TryGetValue(
             hyphae, out var associations
         );
 
@@ -261,7 +225,7 @@ public class Mycelium
 
     public ImmutableList<Fingerprint> GetMycorrhization(HyphaeStrain hyphae)
     {
-        _mycorrhizalAssociations.TryGetValue(
+        _plantMycorrhizations.TryGetValue(
             hyphae, out var associations
         );
         var fingerprints = associations?.ToImmutableList();
@@ -287,7 +251,7 @@ public class Mycelium
 
     public ImmutableDictionary<HyphaeStrain, HashSet<Fingerprint>> GetAllMycorrhizations()
     {
-        return _mycorrhizalAssociations.ToImmutableDictionary();
+        return _plantMycorrhizations.ToImmutableDictionary();
     }
 
 }
