@@ -20,14 +20,6 @@ public class FakePlantFactory
         // construct cells
         var cells = new List<Cell>((int)randomCells);
 
-        for (var i = 0; i < randomCells; i++)
-        {
-            byte[] organell = new byte[(int)cellByteSize];
-            Random random = new Random();
-            random.NextBytes(organell);
-            cells.Add(new Cell(organell));
-        }
-
         // of you go...
         return new Plant(
             new Fingerprint(),
