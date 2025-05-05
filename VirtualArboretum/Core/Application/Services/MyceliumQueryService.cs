@@ -33,9 +33,8 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
 
     private static char notMarker = '!';
     private static char orMarker = '|';
-    //private static char andMarker = ' ';  // not required, as and is just a sequence of hyphae.
+    //private static char andMarker = ' ';  // not required, as AND is just a sequence of hyphae.
 
-    // Konstruktor mit Dependency Injection
     public MyceliumQueryService(
         IArboretumRepository arboretumRepo,
         IPlantRepository plantRepo)
@@ -58,7 +57,8 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
         if (string.IsNullOrWhiteSpace(hyphaeQuery.HyphaeQuery))
         {
             return Fail<MyceliumQuerySuccess, MyceliumQueryError>(
-                MyceliumQueryError.NoHyphaeQueryProvided
+                MyceliumQueryError.NoHyphaeQueryProvided,
+                "Please provide a hyphae query to be resolved to plants in gardens."
             );
         }
 
@@ -66,7 +66,7 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
             .Split(orMarker, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
             .ToList();
 
-        var resultList = new List<MyceliumQuerySuccess>();
+        var resultList = new List<MyceliumQuerySuccess>(orBuckets.Count);
 
         try
         {
@@ -92,10 +92,42 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
             );
         }
 
+        // Combine gardens from multiple OR selections
+        var combinedGardens = new Dictionary<string, GardenDto>();
+
+        // Process all gardens from all results
+        foreach (var garden in resultList.SelectMany(result => result.Gardens))
+        {
+            if (combinedGardens.TryGetValue(garden.UniqueMarker, out var existingGarden))
+            {
+                // Garden already exists, merge plants ensuring uniqueness
+                var existingPlantIds = existingGarden.Plants
+                    .Select(p => p.UniqueMarker)
+                    .ToHashSet();
+
+                // Add only plants that don't already exist in the garden
+                var newPlants = garden.Plants
+                    .Where(p => !existingPlantIds.Contains(p.UniqueMarker));
+
+                foreach (var plant in newPlants)
+                {
+                    existingGarden.Plants.Add(plant);
+                }
+            }
+            else
+            {
+                combinedGardens[garden.UniqueMarker] = new GardenDto(
+                    PrimaryLocation: garden.PrimaryLocation,
+                    UniqueMarker: garden.UniqueMarker,
+                    Plants: new List<PlantDto>(garden.Plants)
+                );
+            }
+        }
+        
         // Return successful result with aggregated data.
         return Ok<MyceliumQuerySuccess, MyceliumQueryError>(
             new MyceliumQuerySuccess(
-                Gardens: resultList.SelectMany(r => r.Gardens).ToImmutableList()
+                Gardens: combinedGardens.Values.ToImmutableList()
             )
         );
     }
@@ -118,30 +150,46 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
             );
         }
 
+        if (orBucket[0] != HyphaKey.StartMarker && orBucket[0] != notMarker)
+        {
+            return Fail<MyceliumQuerySuccess, MyceliumQueryError>(
+                MyceliumQueryError.InvalidHyphaeQuery,
+                $"Your first Hyphae is missing start marker ({HyphaKey.StartMarker}) " +
+                $"or not marker ({notMarker}), meaning its invalid."
+                );
+        }
+
         // parse orBucket containing hyphae unions and negations.
-        var negationBuckets = orBucket
+        var possibleNegationBuckets = orBucket
             .Split(
                 $"{notMarker}{HyphaKey.StartMarker}",
                 StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-            .Select(negatedHyphae => $"{HyphaKey.StartMarker}{negatedHyphae}")
-            // => reapply start marker for deserialization.
             .ToList();
+        // every element not starting with a StartMarker is to be negated now...
 
-        var negatedHyphaeStrains = new List<HyphaeStrain>(negationBuckets.Count);
+        var negatedHyphaeStrains = new List<HyphaeStrain>(possibleNegationBuckets.Count);
         var plainHyphaeStrains = new List<HyphaeStrain>(); // size not determined atm.
 
-        foreach (var negationBucket in negationBuckets)
+        foreach (var bucket in possibleNegationBuckets)
         {
-
             try
             {
-                var hyphaeStrains = HyphaeSerializationService.Deserialize(negationBucket);
-                // won't fail on empty hyphae - which is right, bcs. of ignoring whitespace.
+                if (possibleNegationBuckets.Count > 0 && bucket[0] != HyphaKey.StartMarker)
+                {
+                    // does mean, element is correctly negated...
+                    var correctedStrain = $"{HyphaKey.StartMarker}{bucket}";
+                    var hyphaeStrains = HyphaeSerializationService.Deserialize(correctedStrain);
 
-                if (hyphaeStrains.IsEmpty) continue;
-
-                negatedHyphaeStrains.Add(hyphaeStrains.First()); // first is negated.
-                plainHyphaeStrains.AddRange(hyphaeStrains.Skip(1)); // tail is "normal"
+                    if (hyphaeStrains.IsEmpty) continue;
+                    negatedHyphaeStrains.Add(hyphaeStrains.First()); // first is negated
+                    plainHyphaeStrains.AddRange(hyphaeStrains.Skip(1)); // tail is "normal"
+                }
+                else
+                {
+                    // it's the first element, meaning first couple Hyhpae-Strains are plain...
+                    var hyphaeStrains = HyphaeSerializationService.Deserialize(bucket);
+                    plainHyphaeStrains.AddRange(hyphaeStrains);
+                }
             }
             catch (Exception e)
             {
@@ -178,17 +226,35 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
     private async Task<Result<MyceliumQuerySuccess, MyceliumQueryError>> QueryMyceliumNegatedAll(
         IList<HyphaeStrain> negatedHyphaeStrains)
     {
+        var lookupTable = new HashSet<HyphaeStrain>(negatedHyphaeStrains);
         var allMycorrhizations = mycelium.GetAllMycorrhizations();
 
-        var lookupTable = new HashSet<HyphaeStrain>(negatedHyphaeStrains);
+        var resultFingerprints = allMycorrhizations
+            .SelectMany(associations => associations.Value)
+            .ToHashSet();
 
-        var queryResult = allMycorrhizations
-            .Where(association => !lookupTable.Contains(association.Key))
-            .SelectMany(kvp => kvp.Value.ToList())
-            .Distinct()
-            .ToList();
+        var filterSuccess = negatedHyphaeStrains.All(
+            strain =>
+            {
+                allMycorrhizations.TryGetValue(strain, out var filteredFingerprints);
 
-        return await GroupPlantsIntoGardens(queryResult);
+                if (filteredFingerprints == null) return false;
+
+                return filteredFingerprints.All(
+                    resultFingerprints.Remove
+                );
+            }
+            );
+
+        if (!filterSuccess)
+        {
+            return Fail<MyceliumQuerySuccess, MyceliumQueryError>(
+                MyceliumQueryError.UnknownError,
+                "For unknown reason its not possible to negate all your Mycorrhizations!"
+                );
+        }
+
+        return await GroupPlantsIntoGardens(resultFingerprints.ToList());
     }
 
     private async Task<Result<MyceliumQuerySuccess, MyceliumQueryError>> QueryMyceliumMixedIntersection(
@@ -196,16 +262,32 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
     {
         var plainFingerprintMappings = mycelium.GetMycorrhizations(plainHyphaeStrains);
 
+        // Optimization: For one association you don't have to Aggregate Fingerprints
+        var fingerprintOccurrences = new ConcurrentDictionary<Fingerprint, int>(
+            capacity: plainHyphaeStrains.Count, concurrencyLevel: -1);
+
         // now get all possible plants, to kick those out, containing one of negatedHyphaeStrains.
-        var plainFingerprints = plainFingerprintMappings.AsParallel()
+        plainFingerprintMappings.AsParallel()
             .Where(association => !association.Value.IsEmpty)
             .SelectMany(association => association.Value)
-            .Distinct()  // as multiple hyphae can be associated with the same plant.
+            .ForAll(fingerprint =>
+            {
+                fingerprintOccurrences.AddOrUpdate(
+                    fingerprint,
+                    1,
+                    (key, oldValue) => oldValue + 1
+                );
+            });
+
+        var plainFingerprints = fingerprintOccurrences.AsParallel()
+            .Where(association => association.Value == plainHyphaeStrains.Count)
+            // => does mean, plant is associated with all provided plainHyphaeStrains.
+            .Select(association => association.Key)
             .ToList();
 
         if (plainFingerprints.Count == 0)
         {
-            // no plants found, fast-return empty result.
+            // no plants found to process, fast-return empty result.
             return Ok<MyceliumQuerySuccess, MyceliumQueryError>(
                 new MyceliumQuerySuccess(
                     Gardens: new List<GardenDto>().ToImmutableList()
@@ -213,22 +295,22 @@ public class MyceliumQueryService  // <ImmutableList<GardenDto>, MyceliumQueryEr
             );
         }
 
+        // negation behaviour is different from plain behaviour,
+        // as one match does 
         var negatedFingerprintMappings = mycelium.GetMycorrhizations(negatedHyphaeStrains);
 
         var negatedFingerprints = negatedFingerprintMappings.AsParallel()
             .Where(association => !association.Value.IsEmpty)
             .SelectMany(association => association.Value)
-            .Distinct()
             .ToHashSet(); // HashSet for quicker lookups.
 
         // remove all plants, which are associated with negated hyphae.
-        plainFingerprints = plainFingerprints
+        var resultingFingerprints = plainFingerprints
             .Where(fingerprint => !negatedFingerprints.Contains(fingerprint)) // is O(1)
             .ToList();
 
-        return await GroupPlantsIntoGardens(plainFingerprints);
+        return await GroupPlantsIntoGardens(resultingFingerprints);
     }
-
 
 
     public async Task<Result<MyceliumQuerySuccess, MyceliumQueryError>> GroupPlantsIntoGardens(IList<Fingerprint> plantIdentifyingFingerprints)
