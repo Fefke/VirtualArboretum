@@ -10,3 +10,4 @@
 VirtualArboretum/VirtualArboretum.sln.DotSettings.user
 
 /VirtualArboretum/bin/Release/**
+/VirtualArboretumTests/bin/Release/**
