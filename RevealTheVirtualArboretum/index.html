@@ -129,946 +129,1854 @@
 				</small>
 			</section>
 
+
+
+
 			<section>
 				<section>
 					<h2>Einführung</h2>
-					<h3>
-						Was ist
-						<img src="images/VA-Logo.png" height="120em" alt="VA Logo"
-							style="vertical-align: middle; margin: 0 0.15em;">?
-					</h3>
 				</section>
 				<section>
-					<h3>Übersicht Applikation</h3>
+					<h3>Übersicht über die Applikation</h3>
+					<aside class="notes">
+						Hier geben wir einen kurzen Überblick darüber, was die Applikation "VirtualArboretum" macht, wie
+						sie funktioniert und welches Problem sie zu lösen versucht.
+					</aside>
+				</section>
+				<section>
+					<h4>Was macht die Applikation?</h4>
 					<ul>
-						<li>Verwaltung digitaler "Pflanzen" (Dat(ei)en) in "Gärten"</li>
-						<li>Verbindung von Pflanzen über "Hyphae" im "Mycelium" (Graph)</li>
-						<li>Zweck: Organisation, Versionierung, Verknüpfung von Daten</li>
-						<li>Zugriff: CLI und REST API</li>
-						<li>Use Cases: Anlegen von Gärten; Einlagern, Betrachten, Versionieren, Assoziieren, Suchen, Löschen von Pflanzen und Hyphen.</li>
+						<li>Pflanzen (Daten aller Art) einlagern</li>
+						<li>Lebenszyklus von Pflanzen begleiten</li>
+						<li>Strukturierte Ausgabe von Pflanzendaten</li>
+						<li>Lebenszyklus: Einlagern, Inkubieren, Reseeden, Auslesen, Vergehen</li>
 					</ul>
+					<aside class="notes">
+						Die Kernfunktion ist das Management von digitalen "Pflanzen" und deren Daten über ihren gesamten
+						Lebenszyklus hinweg. Dieser Zyklus beinhaltet verschiedene Phasen von der Erstellung bis zur
+						Archivierung.
+					</aside>
+				</section>
+				<section>
+					<h4>Wie funktioniert sie?</h4>
+					<ul>
+						<li>Interaktion über CLI (Command Line Interface)</li>
+						<li><em>Aktuell: Nur über Tests der Use-Cases</em></li>
+					</ul>
+					<aside class="notes">
+						Die Interaktion mit der Applikation ist primär für ein Command Line Interface vorgesehen.
+						Derzeit ist die Bedienung jedoch hauptsächlich durch das Ausführen von Testfällen der
+						definierten Anwendungsfälle möglich.
+					</aside>
+				</section>
+				<section>
+					<h4>Welches Problem löst sie/welchen Zweck hat sie?</h4>
+					<ul>
+						<li>Kontrolliertes Wachstum lokaler Verzeichnisstrukturen</li>
+						<li>Attributbasierte Zusammenhänge statt hierarchischer Baumstruktur</li>
+						<li><strong>Natürliche Verbindungen</strong> zwischen Belangen</li>
+						<li>Umgehung von Längenlimitierungen bei Dateinamen (255 Byte)</li>
+						<li>Strukturierte Assoziation über symbolische Links (Hyphae/Attribute)</li>
+						<li>Implizite Sichten auf Dateien (Pflanzen)</li>
+						<li>Nah am Dateisystem, minimale Abhängigkeiten von individuellen Formaten</li>
+					</ul>
+					<aside class="notes">
+						Das VirtualArboretum zielt darauf ab, die Organisation von Dateien zu revolutionieren, indem es
+						von starren hierarchischen Strukturen zu einem flexiblen, attributbasierten System übergeht.
+						Dies ermöglicht es, natürliche Beziehungen zwischen Daten herzustellen und Beschränkungen
+						traditioneller Dateisysteme, wie die Längenbegrenzung von Dateinamen, zu umgehen. Durch die
+						Verwendung von symbolischen Links, die als "Hyphae" (Attribute) fungieren, können verschiedene
+						Sichten auf die "Pflanzen" (Dateien) erzeugt werden, ohne dass proprietäre Formate benötigt
+						werden, wie es bei vielen Tagging-Engines der Fall ist.
+					</aside>
 				</section>
 				<section>
 					<h3>Starten der Applikation</h3>
-					<pre><code data-trim data-noescape class="bash">
-# Platzhalter: Beispiel Startbefehl (kurz!)
-./VirtualArboretum start
-./VirtualArboretum  # startet REST Server, wen Arboretum erkannt.
-./VirtualArboretum  # andernfalls wir Arboretum (interaktiv) erstellt.
-# oder über CLI 
-./VirtualArboretum store "doc.pdf" [with Hyphae] in "/myGarden"
-#  => erhält Standard MarkerHypha, wie #doc~PDF #va:creationDate
-./VirtualArboretum store "doc.pdf" "#work~documentation #work~until~Date" "/myGarden" 
-#  => ordnet neben Standard-Hyphae weitere zu.
-
-                    </code></pre>
+					<aside class="notes">
+						Wie wird die Applikation gestartet und welche Voraussetzungen sind nötig?
+					</aside>
+				</section>
+				<section>
+					<h4>Wie startet man die Applikation?</h4>
+					<ul>
+						<li>Aktuell: Nur über Tests von Use-Cases (Präsentations-Schicht fehlt)</li>
+						<li>Ziel-Interaktionen:
+							<ol>
+								<li>CLI: Direkte, lokale Interaktion im Terminal.</li>
+								<li>REST API: Via <code>va web</code> o.ä.</li>
+								<li><em>Dateisystem-Watcher (ähnlich git) oder Aufsatteln auf Git.</em></li>
+							</ol>
+						</li>
+					</ul>
+					<aside class="notes">
+						Momentan ist der Start der Applikation auf das Ausführen von Tests beschränkt, da die oberste
+						Präsentationsschicht noch nicht implementiert ist. Zukünftig soll die Applikation über ein CLI,
+						eine REST API oder sogar über einen Dateisystem-Watcher, der Änderungen automatisch erfasst,
+						gestartet werden können.
+					</aside>
+				</section>
+				<section>
+					<h4>Was für Voraussetzungen werden benötigt?</h4>
+					<ul>
+						<li>Nicht zwingend (Single Executable möglich)</li>
+						<li><em>Ideal: .NET Runtime vorhanden (vermeidet Auslieferung von Binaries)</em></li>
+						<li>Optional: Betrieb in Containern</li>
+						<li><em>Empfehlenswert: Container-Runtime für Inkubation mit Third-Party-Skripten
+								(Kontextabsteckung)</em></li>
+					</ul>
+					<aside class="notes">
+						Grundsätzlich kann die Applikation als einzelne ausführbare Datei ausgeliefert werden, wodurch
+						keine speziellen Voraussetzungen zwingend erforderlich sind. Dennoch ist eine vorhandene .NET
+						Runtime ideal, um die Größe der Auslieferung zu reduzieren. Für bestimmte Anwendungsfälle, wie
+						die Inkubation mit Skripten von Drittanbietern, wird der Einsatz von Containern zur
+						Kontextabgrenzung empfohlen.
+					</aside>
+				</section>
+				<section>
+					<h4>Demonstration des Vorgangs und 1 – 2 Use Cases</h4>
+					<ul>
+						<li>[x] Pflanzen mit assoziierenden Hyphae einlagern.</li>
+						<li>[x] Pflanzen nach Hyphae untersuchen und auswerten.</li>
+					</ul>
+					<aside class="notes">
+						Zwei zentrale Anwendungsfälle sind das Einlagern von Pflanzen mit zugehörigen Attributen
+						(Hyphae) und das spätere Durchsuchen und Auswerten dieser Pflanzen basierend auf ihren Hyphae.
+					</aside>
 				</section>
 				<section>
 					<h3>Technischer Überblick</h3>
-					<ul>
-						<li>Technologie 1: C# / .NET: [Begründung, z.B. Plattformübergreifend, Ökosystem]</li>
-						<li>Technologie 2: Filesystem/SQLite: [Begründung, z.B. Persistenz]</li>
-						<li>Technologie 3: ASP.NET Core (für REST): [Begründung, z.B. Web API Framework]</li>
-						<li>Technologie 4: [System.CommandLine / Spectre.Console?]: [Begründung, z.B. CLI Framework]
-						</li>
-					</ul>
+					<aside class="notes">
+						Ein Blick auf die verwendeten Technologien.
+					</aside>
 				</section>
 				<section>
-					<h3>Projektstruktur</h3>
-					<p>Aufbau orientiert an Clean Architecture / DDD:</p>
+					<h4>Nennung und Erläuterung der Technologien</h4>
 					<ul>
-						<li>Core: Domain, Application (Use Cases, DTOs)</li>
-						<li>Infrastructure: Repositories, externe Services</li>
-						<li>Presentation: CLI, REST Controller, ViewModels</li>
-						<li>(Root): Program.cs, Dockerfile</li>
+						<li><strong>C# .NET Core 9</strong> (aktuellste LTS)
+							<ul>
+								<li><em>Primär aus Eigeninteresse zur Vertiefung der Sprachkenntnisse.</em></li>
+							</ul>
+						</li>
+						<li>Ausschließlich mit <strong>System-Bibliotheken</strong> (Projektvorgabe)</li>
+						<li><strong>LINQ</strong> (aus .NET Core)
+							<ul>
+								<li>Kompakte Daten-Transformationen.</li>
+								<li><em>Einfache Parallelisierung mit PLINQ (bei `System.Collections.Concurrent`).</em>
+								</li>
+								<li><em>Äquivalent zur Stream API ab Java 8.</em></li>
+							</ul>
+						</li>
+						<li><strong>MSTest</strong>: Testing-Framework für automatische (Unit-)Tests.</li>
+						<li><strong>SonarQube</strong> & VS-Erweiterung
+							<ul>
+								<li><em>Für tiefere Einblicke in Code-Qualität und gezielte Verbesserung.</em></li>
+							</ul>
+						</li>
 					</ul>
-					<img src="image_e25139.png" alt="Projektstruktur"
-						style="max-height: 50vh; background-color: rgba(255,255,255,0.8); padding: 10px; border-radius: 5px;">
+					<aside class="notes">
+						Die Applikation basiert auf C# .NET Core 9 und verwendet ausschließlich System-Bibliotheken, wie
+						es die Projektvorgaben erfordern. LINQ wird für Datenmanipulationen eingesetzt, MSTest für die
+						Qualitätssicherung durch Unit-Tests und SonarQube zur Analyse und Verbesserung der
+						Code-Qualität. Die Wahl von C# erfolgte auch aus persönlichem Interesse an der Sprache.
+					</aside>
 				</section>
 			</section>
 
 			<section>
-				<h2>Clean Architecture</h2>
 				<section>
-					<h3>Was ist Clean Architecture für mich?</h3>
-					<p style="font-size: xx-large;">
-						Ein Schichtenmodell mit sauberen Grenzen zwischen 
-						den Schichten (Entities, Use Cases, Adapters, Frameworks),
-						sodass jede Schicht in sich und unterliegende Schichten 
-						geschlossen ist. 
-						<br>
-						Eine Grenze sollte nur mit einem Vertrag überschritten werden,
-						für die nur Tests und Entwickelnde einen Diplomatenstatus einnehmen.
-					</p>
+					<h2>Clean Architecture</h2>
 				</section>
 				<section>
-					<h3>Analyse Dependency Rule</h3>
-					<p><strong>Positiv-Beispiel:</strong> Regel eingehalten</p>
+					<h3>Was ist Clean Architecture?</h3>
 					<ul>
-						<li>Klasse: <code>Core.Domain.Entities.Plant</code></li>
-						<li>Analyse: Hängt nur von Core-Typen ab</li>
-						<li>Begründung: Keine Abhängigkeit nach außen (Infrastructure, Presentation)</li>
+						<li>Saubere Grenzen zwischen Belangen/Kontexten.</li>
+						<li>Domäne vs. Anwendung.</li>
+						<li>Anwendung vs. Anwendende.</li>
+						<li><em>Anwendung vs. Angewendetes.</em></li>
+						<li>Nur Vertragsübergabe (serialisierte Entitäten) an Grenzen (MVP).</li>
+						<li>Verweis auf externes Bild (nicht darstellbar, siehe Original-Dokument).</li>
 					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Positiv (z.B. Klassensignatur)
-namespace Core.Domain.Entities;
-public class Plant { /* ... nur innere Abhängigkeiten ... */ }
-                    </code></pre>
+					<aside class="notes">
+						Clean Architecture ist ein Software-Architekturprinzip, das auf der Trennung von Belangen durch
+						klar definierte Grenzen basiert. Die Domänenlogik ist das Herzstück und unabhängig von äußeren
+						Schichten wie der Benutzeroberfläche oder der Datenbank. An den Grenzen zwischen den Schichten
+						erfolgt die Kommunikation idealerweise nur über einfache Datenstrukturen (DTOs) oder Verträge.
+						Das Bild `![[Studere 🎓/6. Semester 🎉/🏗️ Advanced Software Engineering/{01}
+						Programmentwurf/IMG_0562.jpg]]` kann hier nicht direkt eingebettet werden.
+					</aside>
 				</section>
 				<section>
-					<h3>Analyse Dependency Rule</h3>
-					<p><strong>Negativ-Beispiel:</strong> Regel verletzt</p>
+					<h3>Analyse der Dependency Rule</h3>
+				</section>
+				<section>
+					<h4>✅ Dependency Rule: Abhängigkeiten nur nach innen.</h4>
 					<ul>
-						<li>Klasse: <code>[Platzhalter: z.B. UseCase kennt DB-Context direkt]</code></li>
-						<li>Analyse: Hängt von äußerer Schicht (Infrastructure) ab</li>
-						<li>Begründung: Verletzung der Dependency Rule</li>
+						<li><code>PlacePlant</code> UseCase: Verwendet DTOs seiner Schicht, Mapping auf Domänentypen via
+							<code>PlantMapper</code>.
+						</li>
+						<li><em><code>GardenMapper</code> in <code>InMemoryGardenRepository</code>: De-Serialisierung,
+								keine Verletzung (äußere Schicht nutzt innere Klassen).</em></li>
+						<li><em>Analyse via UML von <code>PlantMapper</code> (später).</em></li>
 					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Negativ (z.B. using Infrastructure;)
-using Infrastructure.Persistence; // Beispiel Verletzung in Core.Application
-                    </code></pre>
-					<p><em>Hinweis: Falls kein Negativ-Beispiel existiert, 2 Positiv-Beispiele zeigen.</em></p>
+					<aside class="notes">
+						Die Dependency Rule besagt, dass Abhängigkeiten immer nur von äußeren zu inneren Schichten
+						zeigen dürfen. Ein positives Beispiel ist der `PlacePlant` UseCase, der korrekterweise Data
+						Transfer Objects (DTOs) aus seiner eigenen Schicht verwendet und diese über einen `PlantMapper`
+						auf Typen der Domänenschicht abbildet und umgekehrt. Auch die Verwendung des `GardenMappers` im
+						`InMemoryGardenRepository` zur De-Serialisierung verletzt die Regel nicht, da äußere Schichten
+						(Infrastruktur) Klassen aus inneren Schichten (Anwendung, Domäne) verwenden dürfen.
+					</aside>
 				</section>
 				<section>
-					<h3>Analyse der Schichten</h3>
-					<p><strong>Beispiel 1: Domain Layer</strong></p>
+					<h4>⚠️ Dependency Rule verletzt: Abhängigkeit nach außen.</h4>
 					<ul>
-						<li>Klasse: <code>Core.Domain.ValueObjects.Hypha</code></li>
-						<li>Aufgabe: Repräsentiert Verbindung/Tag</li>
-						<li>Einordnung: Kern-Domänenkonzept, unabhängig von außen</li>
-					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Schicht 1 (z.B. Hypha)
-namespace Core.Domain.ValueObjects;
-public record Hypha { /*...*/ } // Record oft für VOs genutzt
-                    </code></pre>
-				</section>
-				<section>
-					<h3>Analyse der Schichten</h3>
-					<p><strong>Beispiel 2: Application Layer</strong></p>
-					<ul>
-						<li>Klasse: <code>Core.Application.UseCases.StorePlantUseCase</code></li>
-						<li>Aufgabe: Orchestriert Einlagerung einer Pflanze</li>
-						<li>Einordnung: Implementiert Anwendungsfall, nutzt Domain, kennt Infrastructure via Interfaces
+						<li><code>CellType</code> (Domänen-Modell):
+							<ul>
+								<li>Verwendet <code>Console.Error.WriteLine</code> zur Signalisierung nicht
+									unterstützter MediaTypes.</li>
+								<li>Domänen-Modell sollte keine direkten Konsolenausgaben machen.</li>
+								<li>Richtig: Logging Singleton via Repository in Log-Aggregator/Datei.</li>
+							</ul>
 						</li>
 					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Schicht 2 (z.B. StorePlantUseCase)
-namespace Core.Application.UseCases;
-public class StorePlantUseCase { /*...*/ }
-                    </code></pre>
+					<aside class="notes">
+						Eine Verletzung der Dependency Rule liegt im Domänen-Modell bei der Klasse `CellType` vor. Diese
+						schreibt Fehlermeldungen direkt auf `Console.Error`, was eine Abhängigkeit zur Infrastruktur
+						(Konsole) darstellt. Eine saubere Lösung wäre die Verwendung eines Logging-Mechanismus, der über
+						ein Repository-Interface angebunden ist und von der Infrastrukturschicht implementiert wird.
+					</aside>
 				</section>
 				<section>
 					<h3>Analyse der Schichten</h3>
-					<p><strong>Beispiel 3: Infrastructure Layer</strong></p>
-					<ul>
-						<li>Klasse: <code>Infrastructure.Repositories.PlantRepository</code></li>
-						<li>Aufgabe: Implementiert Datenzugriff für Plants</li>
-						<li>Einordnung: Detailimplementierung (DB/FS), abhängig von externen Bibliotheken</li>
-					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Schicht 3 (z.B. PlantRepository)
-namespace Infrastructure.Repositories;
-public class PlantRepository : Core.Application.Interfaces.IPlantRepository { /*...*/ }
-                    </code></pre>
+					<p>Jeweils 1 Klasse zu 2 unterschiedlichen Schichten.</p>
 				</section>
 				<section>
-					<h3>Analyse der Schichten</h3>
-					<p><strong>Beispiel 4: Presentation Layer</strong></p>
+					<h4>Entität in Domäne: <code>Plant</code></h4>
 					<ul>
-						<li>Klasse: <code>Presentation.Controllers.CliController</code></li>
-						<li>Aufgabe: Verarbeitet CLI-Befehle, ruft Use Cases auf</li>
-						<li>Einordnung: Benutzerschnittstelle, abhängig von Application Layer</li>
+						<li>Identifiziert Zusammenschluss aus <code>Cell</code>-Instanzen.</li>
+						<li>Ordnet Cells zwei Abstraktions-Mustern zu:
+							<ul>
+								<li>Klassisch-hierarchisch: <code>.Name</code> HyphaStrain.</li>
+								<li>Vielzahl an <code>AssociatedHyphae</code>-Strains.</li>
+							</ul>
+						</li>
+						<li>Zusammenschluss aus Werteobjekten & anderen Entitäten -> Entität.</li>
+						<li>Auch als Aggregate Root (wg. 1:N Cells Relation, Vielfältigkeit, Zentralität) einordenbar.
+						</li>
 					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Schicht 4 (z.B. CliController)
-namespace Presentation.Controllers;
-public class CliController { /*...*/ }
-                    </code></pre>
+					<aside class="notes">
+						Die `Plant`-Klasse ist eine zentrale Entität im Domänenmodell. Sie repräsentiert eine Pflanze
+						und bündelt Informationen in Form von `Cell`-Instanzen. `Plant` nutzt sowohl ein hierarchisches
+						Modell (über den `.Name` HyphaStrain) als auch ein attributbasiertes Modell (über
+						`AssociatedHyphae`). Aufgrund ihrer Rolle als Sammelpunkt für andere Werteobjekte und Entitäten
+						und ihrer zentralen Bedeutung könnte sie auch als Aggregate Root betrachtet werden.
+					</aside>
+				</section>
+				<section>
+					<h4>UseCase in Anwendung: <code>PlacePlant</code></h4>
+					<ul>
+						<li>Aufgabe: Logik zum Hinzufügen einer Pflanze in einen Garten.</li>
+						<li>Einordnung: Anwendungsschicht.
+							<ul>
+								<li>Orchestriert Domänenobjekte (<code>Plant</code>, <code>Garden</code>).</li>
+								<li>Nutzt Repositories für Persistenz.</li>
+								<li>Verwendet DTOs für Kommunikation nach außen.</li>
+								<li>Implementiert spezifischen Anwendungsfall.</li>
+							</ul>
+						</li>
+					</ul>
+					<aside class="notes">
+						Der `PlacePlant` UseCase gehört zur Anwendungsschicht. Seine Aufgabe ist es, die Geschäftslogik
+						für das Platzieren einer Pflanze in einem Garten zu kapseln. Er interagiert mit Domänenobjekten,
+						verwendet Repository-Interfaces für den Datenzugriff und kommuniziert über DTOs mit äußeren
+						Schichten. Dies ist ein typisches Beispiel für eine Klasse in der Anwendungsschicht der Clean
+						Architecture.
+					</aside>
 				</section>
 			</section>
 
 			<section>
-				<h2>SOLID</h2>
 				<section>
-					<h3>Analyse SRP</h3>
-					<p>Single Responsibility Principle: Eine Klasse, ein Grund zur Änderung.</p>
-					<p><strong>Positiv-Beispiel:</strong></p>
-					<ul>
-						<li>Klasse: <code>[Platzhalter: z.B. Infrastructure.Services.HyphaeSerializer]</code></li>
-						<li>Aufgabe: Nur Serialisierung/Deserialisierung von Hyphae</li>
-					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet SRP Positiv (z.B. Methodenname)
-public class HyphaeSerializer { Serialize(); Deserialize(); }
-                    </code></pre>
+					<h2>SOLID</h2>
 				</section>
 				<section>
-					<h3>Analyse SRP</h3>
-					<p><strong>Negativ-Beispiel:</strong></p>
-					<ul>
-						<li>Klasse: <code>[Platzhalter: z.B. PlantManager lädt, speichert UND validiert]</code></li>
-						<li>Aufgaben: Mehrere Verantwortlichkeiten</li>
-						<li>Lösungsweg: Aufteilen (z.B. Loader, Saver, Validator)</li>
-					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet SRP Negativ (z.B. Methoden)
-public class PlantManager { Load(); Save(); Validate(); /*...*/ }
-                    </code></pre>
-					<p><em>Hinweis: Falls kein Negativ-Beispiel existiert, 2 Positiv-Beispiele zeigen.</em></p>
+					<h3>Analyse Single Responsibility Principle (SRP)</h3>
 				</section>
 				<section>
-					<h3>Analyse OCP</h3>
-					<p>Open/Closed Principle: Offen für Erweiterung, geschlossen für Modifikation.</p>
-					<p><strong>Positiv-Beispiel:</strong></p>
+					<h4>Positive Beispiel-Klasse für SRP: <code>Fingerprint</code></h4>
 					<ul>
-						<li>Struktur: <code>[Platzhalter: z.B. Use Case mit Strategy für Plant-Suche]</code></li>
-						<li>Analyse: Neue Suchlogik (z.B. via Metadaten) durch neue Strategie-Klasse hinzufügbar</li>
-						<li><em>[Platzhalter für UML OCP Positiv]</em></li>
+						<li>Werteobjekt: Nur eine Aufgabe.</li>
+						<li>Wrappt eine GUID v7.</li>
+						<li>Bietet Methode zum Zugriff auf Unix-Zeitstempel der GUID (Chronologie).</li>
 					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet OCP Positiv (z.B. Interface)
-interface IPlantSearchStrategy { /*...*/ }
-                    </code></pre>
+					<aside class="notes">
+						Die Klasse `Fingerprint` ist ein gutes Beispiel für das Single Responsibility Principle. Als
+						Werteobjekt hat sie die klar definierte Aufgabe, eine GUID v7 zu kapseln und eine Methode zur
+						Extraktion des Zeitstempels bereitzustellen.
+					</aside>
 				</section>
 				<section>
-					<h3>Analyse OCP</h3>
-					<p><strong>Negativ-Beispiel:</strong></p>
+					<h4>Negative Beispiel-Klasse für SRP: <code>Mycelium</code></h4>
 					<ul>
-						<li>Struktur: <code>[Platzhalter: z.B. Methode mit switch über Hyphae-Typ]</code></li>
-						<li>Analyse: Code-Änderung nötig bei neuem Hyphae-Typ</li>
-						<li>Lösungsvorschlag: Polymorphismus / Strategy</li>
-						<li><em>[Platzhalter für UML OCP Negativ]</em></li>
-					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet OCP Negativ (z.B. switch)
-switch(hypha.Type) { case Marker: /*...*/ case Decimal: /*...*/ }
-                    </code></pre>
-					<p><em>Hinweis: Falls kein Negativ-Beispiel existiert, 2 Positiv-Beispiele zeigen.</em></p>
-				</section>
-				<section>
-					<h3>Analyse [LSP/ISP/DIP] - Ausgewählt: [Prinzip eintragen]</h3>
-					<p>[Kurze Erklärung des gewählten Prinzips]</p>
-					<p><strong>Positiv-Beispiel:</strong></p>
-					<ul>
-						<li>Klasse(n): <code>[Platzhalter: z.B. für DIP: Use Case hängt von IPlantRepository ab]</code>
+						<li>Hält Hyphal-Plexus (Hyphen-Netzwerk).</li>
+						<li>Hält Assoziationen (Strains-Plants, Strains-Gardens).</li>
+						<li>Ist "Grammatik" der Hyphae-Sprache.</li>
+						<li>Ideal: Auslagerung der Verantwortung.
+							<ul>
+								<li>Lokale Plexus in <code>Garden</code>-Instanzen.</li>
+								<li><code>MyceliumAssociations</code>-Instanz für Auflösung.</li>
+							</ul>
 						</li>
-						<li>Begründung: [Warum Prinzip erfüllt?]</li>
-						<li><em>[Platzhalter für UML Positiv]</em></li>
+						<li><em>Weitere Beispiele: <code>MyceliumQueryService</code>,
+								<code>HyphaeSerializationService</code>.</em></li>
 					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet [LSP/ISP/DIP] Positiv (kurz!)
-public class MyUseCase { private readonly IPlantRepository _repo; /*...*/ } // DIP
-                    </code></pre>
+					<aside class="notes">
+						Die Klasse `Mycelium` verletzt tendenziell das SRP, da sie mehrere Verantwortlichkeiten bündelt:
+						das Halten des Hyphen-Netzwerks, die Verwaltung von Assoziationen und die Definition der
+						"Grammatik" der Hyphae-Sprache. Eine bessere Aufteilung könnte durch die Einführung
+						spezialisierter Klassen wie `MyceliumAssociations` oder durch die Verlagerung von
+						Verantwortlichkeiten in `Garden`-Instanzen erreicht werden.
+					</aside>
 				</section>
 				<section>
-					<h3>Analyse [LSP/ISP/DIP] - Ausgewählt: [Prinzip eintragen]</h3>
-					<p><strong>Negativ-Beispiel:</strong></p>
+					<h3>Analyse Open Closed Principle (OCP)</h3>
+				</section>
+				<section>
+					<h4>Positives Beispiel für OCP: <code>Hypha</code></h4>
 					<ul>
-						<li>Klasse(n):
-							<code>[Platzhalter: z.B. für ISP: Klasse implementiert großes Interface, nutzt nur Teile]</code>
-						</li>
-						<li>Begründung: [Warum Prinzip verletzt?]</li>
-						<li>Mögliche Lösung: [Interface aufteilen]</li>
-						<li><em>[Platzhalter für UML Negativ]</em></li>
+						<li>Basis-Klasse <code>Hypha</code>: Interne "Erweiterung" eines HyphaStrains.</li>
+						<li>Spezielle Implementierungen (<code>HyphaApex</code>, <code>DecimalHypha</code>) erweitern
+							Basis-Klasse.</li>
+						<li>Keine Änderungen an Basis-Klasse nötig.</li>
 					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet [LSP/ISP/DIP] Negativ (kurz!)
-public class SpecificHandler : IBigFatInterface { /* implementiert alles, braucht nur A()... */ } // ISP?
-                    </code></pre>
-					<p><em>Hinweis: Falls kein Negativ-Beispiel existiert, 2 Positiv-Beispiele zeigen.</em></p>
+					<aside class="notes">
+						Die `Hypha`-Klassenhierarchie ist ein gutes Beispiel für das Open/Closed Principle. Die
+						Basisklasse `Hypha` ist offen für Erweiterungen durch spezialisierte Subklassen wie `HyphaApex`
+						oder `DecimalHypha`, muss aber für diese Erweiterungen selbst nicht modifiziert werden.
+					</aside>
+				</section>
+				<section>
+					<h4>OCP: Hypha Klassendiagramm - Einleitung</h4>
+					<p>Das folgende Diagramm illustriert die Struktur der <code>Hypha</code>-Basisklasse und ihrer
+						Erweiterungen, was das Open-Closed-Prinzip verdeutlicht. Neue Hypha-Typen können hinzugefügt
+						werden, ohne die <code>Hypha</code>-Basisklasse zu ändern.</p>
+				</section>
+				<section>
+					<h4>OCP: Hypha Klassendiagramm</h4>
+					<div class="mermaid">
+						classDiagram
+						%%! Basisklasse für alle Hypha-Typen im Domänenmodell.
+						class Hypha {
+						+HyphaKey Key
+						+DoesExtend() bool
+						+NextExtension() Hypha?
+						+ToString() string
+						+Equals(object other) bool
+						+GetHashCode() int
+						}
+
+						%%! Spezialisierte Hypha, die wie ein einfacher Tag funktioniert.
+						%%! Der 'Value' der Basisklasse ist hier gleich dem 'Key'.
+						class HyphaApex {
+						+ToString() string
+						}
+
+						%%! Spezialisierte Hypha, die einen Dezimalwert repräsentiert.
+						%%! Der Dezimalwert wird im 'Value' der Basisklasse gespeichert.
+						class DecimalHypha {
+						+AsDecimal() Decimal
+						}
+
+						%%! Stellt den Schlüssel (Namensteil) einer Hypha dar.
+						class HyphaKey {
+						+string Value
+						+ToString() string
+						}
+
+						%%! Vererbungsbeziehungen von der Basisklasse Hypha.
+						Hypha <|-- HyphaApex Hypha <|-- DecimalHypha %%! Assoziation: Jede Hypha hat genau einen
+							HyphaKey. Hypha "1" *-- "1" HyphaKey : hat </div>
+							<aside class="notes">
+								Dieses UML-Diagramm zeigt die `Hypha`-Basisklasse und wie `HyphaApex` sowie
+								`DecimalHypha` von ihr erben. Jede `Hypha` ist mit einem `HyphaKey` assoziiert. Dies
+								demonstriert, wie das System durch neue Hypha-Typen erweitert werden kann, ohne die
+								Kernfunktionalität von `Hypha` zu verändern.
+							</aside>
+				</section>
+				<section>
+					<h4>Negatives Beispiel für OCP: <code>ParseHyphaType</code> in
+						<code>HyphaeSerializationService</code>
+					</h4>
+					<ul>
+						<li>Parsing-Vorgang in dieser Methode.</li>
+						<li>Neue Typen (<code>DateTimeHypha</code>, <code>IpAddressHypa</code>) erfordern Änderung der
+							Methode.</li>
+						<li>Ideal:
+							<ul>
+								<li>Zwingende Implementierung von <code>IParsable</code> bei Erweiterung.</li>
+								<li><code>HyphaeSerializationService</code> nutzt Strategie-Pattern (z.B.
+									<code>ParseHyphaType</code>-Methode).
+								</li>
+								<li>Neue Implementierungen registrieren sich zentral.</li>
+							</ul>
+						</li>
+					</ul>
+					<aside class="notes">
+						Die Methode `ParseHyphaType` im `HyphaeSerializationService` verletzt das OCP. Wenn neue
+						Hypha-Typen wie `DateTimeHypha` eingeführt werden, muss diese Methode modifiziert werden, um das
+						Parsing dieser neuen Typen zu unterstützen. Eine bessere Lösung wäre die Verwendung des
+						Strategie-Patterns oder die Forderung nach einer `IParsable`-Implementierung für neue Typen, die
+						sich dann zentral registrieren.
+					</aside>
+				</section>
+				<section>
+					<h4>OCP Verletzung: HyphaeSerializationService - Einleitung</h4>
+					<p>Das Diagramm zeigt, wie die Klasse <code>HyphaeSerializationService</code> bei der Einführung
+						neuer Hypha-Typen (z.B. <code>DateTimeHypha</code>) modifiziert werden muss. Dies widerspricht
+						dem Open-Closed-Prinzip, da die Klasse nicht für Erweiterungen geschlossen ist.</p>
+				</section>
+				<section>
+					<h4>OCP Verletzung: HyphaeSerializationService</h4>
+					<div class="mermaid">
+						classDiagram
+						direction LR
+						%%! Das Service, das Hyphae parst
+						class HyphaeSerializationService {
+						+ParseHyphaType(string hyphaKey, string hyphaValue) Hypha
+						%%! --- OCP Verletzungsbereich ---
+						%%! Diese Methode muss geändert werden, um neue Typen
+						%%! wie DateTimeHypha zu unterstützen.
+						%%! interner Code (vereinfacht):
+						%%! if (decimal.TryParse(..)) { return new DecimalHypha(..) }
+						%%! else if (DateTime.TryParse(..)) { %%! <-- NEUER CODE nötig für DateTimeHypha %%! return new
+							DateTimeHypha(..) %%! <-- NEUER CODE nötig für DateTimeHypha %%! } else { return new
+							Hypha(.., HyphaApex(..)) } } %%! Basis-Hypha (oder Interface) class Hypha { <<abstract>>
+							+HyphaKey Key
+							+object Value
+							}
+
+							%%! Bestehende, spezifische Hypha-Implementierungen
+							class DecimalHypha
+							class HyphaApex
+
+							%%! Neuer, hinzuzufügender Hypha-Typ
+							class DateTimeHypha {
+							+DateTime AsDateTime()
+							}
+
+							%%! Vererbungsbeziehungen
+							Hypha <|-- DecimalHypha Hypha <|-- HyphaApex Hypha <|-- DateTimeHypha %%! Abhängigkeiten:
+								Service erstellt/verwendet die Hypha-Typen HyphaeSerializationService ..> DecimalHypha :
+								creates/uses
+								HyphaeSerializationService ..> HyphaApex : creates/uses
+								HyphaeSerializationService ..> DateTimeHypha : creates/uses (nach Modifikation!)
+					</div>
+					<aside class="notes">
+						Dieses UML-Diagramm illustriert die Verletzung des OCP durch `HyphaeSerializationService`. Die
+						Einführung eines neuen Typs wie `DateTimeHypha` erfordert eine Änderung in der
+						`ParseHyphaType`-Methode, anstatt das System durch Hinzufügen neuer, in sich geschlossener
+						Komponenten zu erweitern.
+					</aside>
+				</section>
+				<section>
+					<h3>Analyse Liskov Substitution / Interface Segregation / Dependency Inversion</h3>
+				</section>
+				<section>
+					<h4>Positives Beispiel für Dependency Inversion (DIP)</h4>
+					<ul>
+						<li>Use-Cases <code>PlacePlant</code> und <code>RetrievePlant</code>.</li>
+						<li>Verwenden ausschließlich <code>IRepository</code> Interfaces (Clean Architecture).</li>
+						<li>Abhängigkeit von Abstraktionen, nicht von konkreten Implementierungen.</li>
+					</ul>
+					<aside class="notes">
+						Die Use Cases `PlacePlant` und `RetrievePlant` demonstrieren das Dependency Inversion Principle.
+						Sie hängen von Abstraktionen (`IRepository`-Interfaces) ab, nicht von konkreten
+						Implementierungen der Repositories. Die konkreten Implementierungen werden zur Laufzeit
+						bereitgestellt (z.B. per Dependency Injection).
+					</aside>
+				</section>
+				<section>
+					<h4>Negatives Beispiel für Interface Segregation (ISP)</h4>
+					<ul>
+						<li><code>IRepository&lt;T&gt;</code>: Potenziell zu viele Abfragemethoden.</li>
+						<li>Beispiel: <code>ICellRepository</code> erbt Methoden, die für Zellen uneindeutig sein
+							könnten (z.B. <code>GetByPrimaryHyphaeAsync</code>, wenn <code>OrganellLocation</code>
+							anders angesprochen wird).</li>
+						<li>Lösung:
+							<ul>
+								<li>Aufsplitten der Repository-Zugriffe.</li>
+								<li>Ggf. Trennung nach Lese-/Schreib-Zugriffen (CQRS-ähnlich).</li>
+								<li>Überdenken der generischen Natur des Interfaces.</li>
+							</ul>
+						</li>
+					</ul>
+					<aside class="notes">
+						Das generische Interface `IRepository<T>` könnte das Interface Segregation Principle verletzen,
+							wenn es zu viele Methoden enthält, die nicht für alle Implementierungen relevant sind. Wenn
+							beispielsweise ein `ICellRepository` alle Methoden von `IRepository<Cell>` erbt, könnten
+								Methoden wie `GetByPrimaryHyphaeAsync` für Zellen keinen klaren Sinn ergeben, falls die
+								primäre Identifikation anders erfolgt. Eine Lösung wäre, spezifischere Interfaces zu
+								definieren oder Lese- und Schreiboperationen zu trennen.
+					</aside>
+				</section>
+				<section>
+					<h4>ISP Verletzung & DIP Illustration: Repository-Struktur - Einleitung</h4>
+					<p>Das folgende Diagramm zeigt die Struktur der Repository-Interfaces und -Implementierungen. Es
+						illustriert das Dependency Inversion Principle durch die Verwendung von Interfaces durch die Use
+						Cases und deutet auf eine mögliche Verletzung des Interface Segregation Principle durch das
+						generische <code>IRepository&lt;T&gt;</code> hin.</p>
+				</section>
+				<section>
+					<h4>ISP Verletzung & DIP Illustration: Repository-Struktur</h4>
+					<div class="mermaid">
+						classDiagram
+						%% Base Repository Interface
+						class IRepository~T~ {
+						<<interface>>
+							%% Definiert allgemeine Repository-Operationen
+							+GetByFingerprintAsync(Fingerprint id) Task~T?~
+							+GetByPrimaryHyphaeAsync(HyphaeStrain strain) Task~T?~
+							+AddAsync(T candidate) Task
+							+UpdateAsync(T candidate) Task
+							}
+
+							%% Specific Repository Interfaces
+							class IArboretumRepository {
+							<<interface>>
+								%% Verwaltet das Arboretum-Aggregat
+								+Open() Arboretum
+								+Close() Boolean
+								}
+
+								class ICellRepository {
+								<<interface>>
+									%% Erbt von IRepository<Cell>
+										}
+
+										class IGardenRepository {
+										<<interface>>
+											%% Erbt von IRepository<Garden>
+												}
+
+												%% class IMyceliumRepository {
+												%% <<interface>>
+													%% %% Erbt von IRepository<Mycelium>
+														%% %% Hinweis: Keine InMemory-Implementierung in den
+														bereitgestellten Dateien gefunden
+														%% }
+
+														class IPlantRepository {
+														<<interface>>
+															%% Erbt von IRepository<Plant>
+																}
+
+																%% Interface Inheritance/Realization from IRepository<T>
+																	IRepository~Cell~ <|-- ICellRepository
+																		IRepository~Garden~ <|-- IGardenRepository %%
+																		IRepository~Mycelium~ <|-- IMyceliumRepository
+																		IRepository~Plant~ <|-- IPlantRepository %%
+																		InMemory Implementations class
+																		InMemoryArboretumRepository { %% Implementiert
+																		IArboretumRepository }
+																		InMemoryArboretumRepository ..|>
+																		IArboretumRepository
+
+																		class InMemoryCellRepository {
+																		%% Implementiert ICellRepository
+																		}
+
+																		InMemoryCellRepository ..|> ICellRepository
+
+																		class InMemoryGardenRepository {
+																		%% Implementiert IGardenRepository
+																		}
+																		InMemoryGardenRepository ..|> IGardenRepository
+
+																		class InMemoryPlantRepository {
+																		%% Implementiert IPlantRepository
+																		}
+
+																		InMemoryPlantRepository ..|> IPlantRepository
+
+																		%% Use Cases and Services
+																		class PlacePlant {
+																		%% Use Case zum Platzieren einer Pflanze
+																		}
+
+																		class RetrievePlants {
+																		%% Use Case zum Abrufen von Pflanzen
+																		}
+																		class MyceliumQueryService {
+																		%% Service zur Abfrage des Myzeliums,
+																		unterstützt RetrievePlants
+																		}
+
+																		%% Dependencies from Use Cases/Services to
+																		Repository Interfaces
+																		%% Zeigt, welche Use Cases/Services welche
+																		Repository-Schnittstellen verwenden
+																		PlacePlant --> IArboretumRepository
+																		PlacePlant --> IGardenRepository
+																		PlacePlant --> IPlantRepository
+
+																		RetrievePlants --> IArboretumRepository
+																		RetrievePlants --> IPlantRepository
+
+																		MyceliumQueryService --> IArboretumRepository
+																		MyceliumQueryService --> IPlantRepository
+					</div>
+					<aside class="notes">
+						Dieses UML-Diagramm visualisiert die Repository-Struktur. Use Cases wie `PlacePlant` und
+						`RetrievePlants` hängen von `IRepository`-Interfaces ab (DIP). Die
+						`InMemory...Repository`-Klassen implementieren diese Interfaces. Das breite `IRepository<T>
+							`-Interface könnte jedoch das ISP verletzen, da nicht alle abgeleiteten Interfaces alle
+							geerbten Methoden benötigen oder sinnvoll nutzen können.
+					</aside>
 				</section>
 			</section>
 
 			<section>
-				<h2>Weitere Prinzipien</h2>
 				<section>
-					<h3>GRASP: Geringe Kopplung</h3>
-					<p>Minimierung von Abhängigkeiten.</p>
-					<ul>
-						<li>Klasse: <code>[Platzhalter: z.B. Core.Domain.Entities.Plant]</code></li>
-						<li>Aufgabe: Repräsentiert eine Pflanze</li>
-						<li>Begründung Kopplung: Hängt primär von eigenen Daten und ggf. einfachen VOs ab. Externe
-							Klassen nutzen Plant über definierte Schnittstellen/Methoden.</li>
-						<li>Aufrufer: Use Cases, Repositories (via Interface)</li>
-					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Geringe Kopplung (z.B. Signatur)
-public class Plant { /* ... interne Logik ... */ }
-                    </code></pre>
+					<h2>Weitere Prinzipien</h2>
 				</section>
 				<section>
-					<h3>GRASP: [Polymorphismus/Pure Fabrication] - Ausgewählt: [Prinzip eintragen]</h3>
-					<p>[Kurze Erklärung des gewählten Prinzips]</p>
+					<h3>General Responsibility Assignment Software Patterns (GRASP)</h3>
 					<ul>
-						<li>Klasse: <code>[Platzhalter: z.B. für Pure Fabrication: HyphaeSerializer]</code></li>
-						<li>Begründung Einsatz: [Warum hier genutzt? z.B. PF: Serialisierung gehört nicht zur
-							Hyphae-Domänenlogik -> Eigene Klasse für Kohäsion]</li>
-						<li><em>[Ggf. Platzhalter für UML]</em></li>
+						<li>Regelwerk für:
+							<ul>
+								<li>Wartbarkeit</li>
+								<li>Wiederverwendbarkeit</li>
+								<li>Verständlichkeit</li>
+							</ul>
+						</li>
+						<li>Ziele:
+							<ul>
+								<li>Geringe Kopplung (Klassenunabhängigkeit)</li>
+								<li>Hohe Kohäsion (fokussierte Verantwortung einer Klasse)</li>
+							</ul>
+						</li>
 					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Poly / PF (kurz!)
-public class HyphaeSerializer { /* ... Logik nur für Serialisierung ... */ } // Pure Fabrication
-                    </code></pre>
+					<aside class="notes">
+						GRASP sind eine Reihe von Prinzipien zur Zuweisung von Verantwortlichkeiten in
+						objektorientiertem Design. Ihr Ziel ist es, Software zu schaffen, die leichter zu warten,
+						wiederzuverwenden und zu verstehen ist, indem eine geringe Kopplung zwischen Klassen und eine
+						hohe Kohäsion innerhalb der Klassen gefördert wird.
+					</aside>
+				</section>
+				<section>
+					<h3>Analyse GRASP: Geringe Kopplung</h3>
+					<ul>
+						<li><code>GardenMapper</code>: Löst Kopplung zur Präsentations-Schicht.</li>
+						<li>Wandelt Domänen-interne <code>Garden</code>-Instanzen zu/aus DTOs.</li>
+						<li>Vermeidet direktes <code>IParsable</code> auf <code>Garden</code>-Domänenobjekt.</li>
+						<li>Statische Methoden von <code>GardenMapper</code> (<code>IntoDto</code>,
+							<code>IntoGarden</code>) nur von Use-Cases, Services, Infrastruktur
+							(<code>InMemoryGardenRepository</code>) genutzt.
+						</li>
+						<li>Beschreiben klar Konvertierungsrichtungen.</li>
+					</ul>
+					<aside class="notes">
+						Der `GardenMapper` ist ein Beispiel für geringe Kopplung. Er entkoppelt die Domänenschicht von
+						der Präsentationsschicht (oder anderen äußeren Schichten), indem er für die Konvertierung
+						zwischen `Garden`-Domänenobjekten und `GardenDto`-Datenübertragungsobjekten zuständig ist.
+						Dadurch muss das `Garden`-Objekt selbst keine Kenntnis von DTOs oder Serialisierungsdetails
+						haben. Die klar definierten, statischen Methoden des Mappers werden gezielt von den Schichten
+						verwendet, die diese Konvertierung benötigen.
+					</aside>
+				</section>
+				<section>
+					<h3>Analyse GRASP: Polymorphismus</h3>
+					<ul>
+						<li>Positives Beispiel: <code>IRepository&lt;&gt;</code> Interfaces.</li>
+						<li>Gemeinsame Signaturen, Abbildung auf spezielle Interfaces für Domänen-Modelle.</li>
+						<li>Implementierung in Präsentations-Schicht durch <code>InMemory...Repository</code>.</li>
+					</ul>
+					<aside class="notes">
+						Die Verwendung der `IRepository<>`-Interfaces ist ein Beispiel für Polymorphismus im Sinne von
+							GRASP. Use Cases arbeiten mit dem allgemeinen Interface-Typ, während zur Laufzeit
+							spezifische Implementierungen (wie die `InMemory...Repositories`) verwendet werden. Dies
+							ermöglicht Flexibilität und Austauschbarkeit der Datenzugriffsschicht.
+					</aside>
 				</section>
 				<section>
 					<h3>DRY (Don't Repeat Yourself)</h3>
-					<p>Vermeidung von Code-Duplizierung.</p>
+				</section>
+				<section>
+					<h4>Beispiel: <code>HyphaHierarchy</code> Refactoring</h4>
 					<ul>
-						<li>Commit: <code>[Platzhalter: Commit-Hash]</code></li>
-						<li>Vorher: [Beschreibung des duplizierten Codes, z.B. ähnliche Validierungslogik an 2 Stellen]
+						<li><strong>Vorher (<code>Aggregate</code>)</strong>: Nur <code>HyphaKey</code> und finalen
+							<code>Value</code> als String in <code>ImmutableArray&lt;&gt;</code> aggregieren.
 						</li>
-						<li>Nachher: [Beschreibung der Lösung, z.B. Extraktion in gemeinsame Methode/Klasse]</li>
-						<li>Auswirkung: Bessere Wartbarkeit, Konsistenz</li>
+						<li><strong>Nachher (<code>AggregateHyphae</code> / <code>AggregateHyphaeKeys</code>)</strong>:
+							<ul>
+								<li>Zuerst gesamte Hypha flach machen (<code>AggregateHyphae</code>).</li>
+								<li>Dann <code>HyphaKey</code> extrahieren (<code>AggregateHyphaeKeys</code>).</li>
+								<li>Grund: Aggregation ganzer Hyphae in <code>HyphaeStrain</code> wurde benötigt.</li>
+							</ul>
+						</li>
+						<li>Commit: <code>69467663f...</code></li>
 					</ul>
-					<pre><code data-trim data-noescape class="diff">
-# Platzhalter: Diff-Ansicht (nur die Kernänderung!)
+					<aside class="notes">
+						Ein Refactoring in der `HyphaHierarchy`-Klasse demonstriert das DRY-Prinzip. Ursprünglich gab es
+						eine Methode, die direkt `HyphaKey`-Objekte aggregierte. Da jedoch eine Aggregation der gesamten
+						`Hypha`-Objekte an anderer Stelle benötigt wurde, wurde die Logik aufgeteilt: Eine Methode
+						aggregiert nun die Hyphae selbst, und eine zweite Methode nutzt diese, um daraus die Keys zu
+						extrahieren. Dadurch wird die Logik zur Aggregation der Hyphae nicht dupliziert.
+						Achtung, die Code-Duplikation wurde nicht direkt commited, sondern direkt bereinigt.
+					</aside>
+				</section>
+				<section>
+					<h4>DRY: <code>HyphaHierarchy</code> - Vorher</h4>
+					<pre><code class="csharp" data-trim data-noescape>
+public static ImmutableArray&lt;HyphaKey&gt; Aggregate(Hypha root) {
+    return [.. AggregateSubHyphae(root, 1).Item1];
+}
+
+private static (HyphaKey[], ushort) AggregateSubHyphae(
+Hypha label, ushort depth = 0
+){
+    if (label.DoesExtend()) {
+         var (list, index) = AggregateSubHyphae(
+             label.NextExtension()!,
+             ++depth);
+        list[index] = label.Key;
+        return (list, --index);
+    }
+    // recursion basis.
+    HyphaKey[] aggregate = new HyphaKey[depth];
+    depth -= 1;
+    aggregate[depth] = label.Key;
+    depth -= 1;
+    return (aggregate, depth);
+}
+                    </code></pre>
+				</section>
+				<section>
+					<h4>DRY: <code>HyphaHierarchy</code> - Nachher</h4>
+					<pre><code class="csharp" data-trim data-noescape>
+private static (Hypha[], ushort) AggregateSubHyphae(Hypha hypha, ushort depth = 0) {
+    if (hypha.DoesExtend()) {
+        var (list, index) = AggregateSubHyphae(
+            hypha.NextExtension()!,
+            ++depth
+        );
+        list[index] = hypha;
+        return (list, --index);
+    }
+    // recursion basis.
+    Hypha[] aggregate = new Hypha[depth];
+    depth -= 1;
+    aggregate[depth] = hypha;
+    depth -= 1;
+    return (aggregate, depth);
+}
+
+public static ImmutableArray&lt;Hypha&gt; AggregateHyphae(Hypha root) {
+    return [.. AggregateSubHyphae(root, 1).Item1];
+}
+
+public static ImmutableArray&lt;HyphaKey&gt; AggregateHyphaeKeys(Hypha root) {
+    var aggregatedHypha = AggregateHyphae(root);
+    var hyphaKeys = new List&lt;HyphaKey&gt;(aggregatedHypha.Length);
+    foreach (var hypha in aggregatedHypha) {
+        hyphaKeys.Add(hypha.Key);
+    }
+    return [..hyphaKeys];
+}
                     </code></pre>
 				</section>
 			</section>
 
 			<section>
-				<h2>Testing</h2>
 				<section>
-					<h3>Unit Tests: Beispiele</h3>
-					<p>Getestete Funktionalität (Auszug):</p>
-					<ol>
-						<li>Plant Erstellung valide/invalide</li>
-						<li>Hyphae hinzufügen/suchen</li>
-						<li>Plant Versionierung ("Wachsen")</li>
-						<li>Repository Logik (mit Fakes/Mocks)</li>
-						<li>ViewModel Validierung</li>
-						<li>Use Case Logik (isoliert)</li>
-						<li>[...]</li>
-					</ol>
-					<p><em>Zeigen ausgewählter Tests im Code.</em></p>
+					<h2>Unit Tests</h2>
 				</section>
 				<section>
-					<h3>Unit Test Beispiel 1: [Name des Tests, z.B. PlantGrowthTest]</h3>
-					<p>Testet: [z.B. Korrekte Versionierung und Inhaltsänderung einer Pflanze]</p>
+					<h3>ATRIP Prinzipien</h3>
+					<ul>
+						<li><strong>A</strong>utomatic: Einsatz des MSTest-Frameworks.</li>
+						<li><strong>T</strong>horough (Gründlich):
+							<ul>
+								<li>Code-Coverage nur bedingt gegeben (ca. 40%).</li>
+								<li>Komplexere Algorithmen relativ ausführlich & vereinzelt datengetrieben getestet.
+								</li>
+								<li>Abstraktionen müssen nicht zwingend getestet werden.</li>
+							</ul>
+						</li>
+						<li><strong>R</strong>epeatable: Tests liefern konsistente Ergebnisse. (implizit durch
+							Automatisierung)</li>
+						<li><strong>I</strong>ndependent: Tests beeinflussen sich nicht gegenseitig. (implizit durch
+							Testaufbau)</li>
+						<li><strong>P</strong>rofessional:
+							<ul>
+								<li>Deskriptive Test-Methoden-Namen (z.B. Name_Zustand_Verhalten).</li>
+								<li>Datengetriebenes Testen.</li>
+								<li>Strikter AAA-Aufbau (Arrange, Act, Assert).</li>
+								<li>Schnelle Tests.</li>
+							</ul>
+						</li>
+					</ul>
+					<aside class="notes">
+						Die Unit-Tests folgen den ATRIP-Prinzipien: Sie sind automatisch (MSTest), wiederholbar und
+						unabhängig. Die Gründlichkeit (Thorough) ist mit einer Code Coverage von ca. 40%
+						verbesserungswürdig, wobei komplexe Algorithmen gut abgedeckt sind. Professionalität zeigt sich
+						in Namenskonventionen, dem AAA-Pattern und datengetriebenen Ansätzen.
+					</aside>
 				</section>
 				<section>
-					<h3>Unit Test Beispiel 1: Code - Setup</h3>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet für Test Setup (Given...)
-// z.B. Erzeugen der Plant, Mock-Repository Setup
-[Fact]
-public void GrowPlant_ShouldUpdateVersionAndContent()
+					<h3>Fakes und Mocks</h3>
+					<ul>
+						<li>Fake Factories (<code>FakeGardenFactory</code>, <code>FakePlantFactory</code>).</li>
+						<li>Keine Evaluation wie Mocks, bieten Scaffolding (Testgerüst).</li>
+						<li>Instanziieren In-Memory-Repositories individuell pro Test-Kontext.</li>
+						<li><em>Bezeichnung "Factory" ggf. nicht ideal; aktuell eher Helper. Könnten zukünftig weitere
+								Initialisierungsarten anbieten.</em></li>
+					</ul>
+					<aside class="notes">
+						Anstelle von komplexen Mocks werden "Fake Factories" verwendet. Diese dienen dem schnellen
+						Erstellen von Testdaten und der Initialisierung von In-Memory-Repositories für jeden Testlauf,
+						um die Unabhängigkeit der Tests zu gewährleisten. Sie bieten ein Gerüst (Scaffolding) und führen
+						keine Verhaltensüberprüfungen durch, wie es typische Mocks tun würden.
+					</aside>
+				</section>
+				<section>
+					<h3>Code Coverage</h3>
+					<ul>
+						<li>Nur etwa 40% Testabdeckung.</li>
+						<li>44 verschiedene Tests.</li>
+						<li>Fokus primär auf komplexere Konstrukte und Algorithmen.</li>
+					</ul>
+					<aside class="notes">
+						Die Testabdeckung liegt bei etwa 40%, trotz einer soliden Anzahl von 44 Tests. Der Schwerpunkt
+						der Tests liegt auf der Validierung komplexer Logik und Algorithmen.
+					</aside>
+				</section>
+				<section>
+					<h3>Ausgewählte Unit Tests (1/5)</h3>
+				</section>
+				<section>
+					<h4>1. <code>TestFingerprint.TestFingerprintTimestampExtraction()</code></h4>
+					<ul>
+						<li><strong>Zweck:</strong> Validiert Value Object <code>Fingerprint</code>.</li>
+						<li><strong>Testet:</strong> Korrekte Extraktion des Erstellungszeitstempels aus einer GUID v7.
+						</li>
+					</ul>
+					<pre><code class="csharp" data-trim data-noescape>
+[TestMethod]
+public void TestFingerprintTimestampExtraction()
+{
+    var timestamps = new[]
+    {
+        DateTimeOffset.FromUnixTimeSeconds(987709362),
+        DateTimeOffset.FromUnixTimeSeconds(1615676400),
+        GetRandomDateTimeOffset()
+    };
+    var fingerprints = WrapFingerprints(WrapGuids(timestamps));
+    var deserializedDateTime = new List<DateTimeOffset>(timestamps.Length);
+    foreach (var fingerprint in fingerprints)
+    {
+        deserializedDateTime.Add(fingerprint.GetCreationDateTime());
+    }
+    for (int i = 0; i < fingerprints.Length; i++)
+    {
+        Assert.AreEqual(timestamps[i], deserializedDateTime[i]);
+    }
+}
+                    </code></pre>
+					<aside class="notes">
+						Dieser Test stellt sicher, dass aus einem `Fingerprint`-Objekt (welches eine GUID v7 kapselt)
+						der korrekte Unix-Zeitstempel seiner Erstellung extrahiert werden kann.
+					</aside>
+				</section>
+				<section>
+					<h4>2. <code>TestHyphaeHierarchy.ShouldResolveTertiaryHyphaeHierarchy()</code></h4>
+					<ul>
+						<li><strong>Zweck:</strong> Validiert Domain Service <code>HyphaeHierarchy</code>.</li>
+						<li><strong>Testet:</strong> Korrekte Umwandlung einer 3-stufigen <code>Hypha</code>-Hierarchie
+							in String-Form.</li>
+					</ul>
+					<pre><code class="csharp" data-trim data-noescape>
+[TestMethod]
+public void ShouldResolveTertiaryHyphaeHierarchy()
+{
+    var delimiter = HyphaKey.ExtensionDelimiter;
+    var hyphae = BuildHyphaeOfThree();
+    var serializedHierarchy = HyphaeHierarchy.AsString(hyphae);
+    Assert.AreEqual(
+        $"Primary{delimiter}Secondary{delimiter}Tertiary",
+        serializedHierarchy
+        );
+}
+                    </code></pre>
+					<aside class="notes">
+						Dieser Test prüft, ob der Domain Service `HyphaeHierarchy` eine verschachtelte, dreistufige
+						Hypha-Struktur korrekt in ihre String-Repräsentation umwandeln kann.
+					</aside>
+				</section>
+				<section>
+					<h3>Ausgewählte Unit Tests (2/5)</h3>
+				</section>
+				<section>
+					<h4>3. <code>TestHyphaSerializer.TestSerializationCycleOfHyphaeHierarchyWithValue()</code></h4>
+					<ul>
+						<li><strong>Zweck:</strong> Validiert Application Service
+							<code>HyphaeSerializationService</code>.
+						</li>
+						<li><strong>Testet:</strong> Korrekten Roundtrip (Serialisierung -> Deserialisierung ->
+							Serialisierung) für einen <code>HyphaeStrain</code>.</li>
+					</ul>
+					<pre><code class="csharp" data-trim data-noescape>
+[TestMethod]
+public void TestSerializationCycleOfHyphaeHierarchyWithValue()
 {
     // Arrange
-    var initialPlant = new Plant(/*...*/);
-    var mockRepo = new Mock<IPlantRepository>();
-    mockRepo.Setup(/*...*/);
-    var useCase = new GrowPlantUseCase(mockRepo.Object);
-    byte[] newContent = /*...*/;
-    string newVersion = "v2";
-
-    // ... Fortsetzung auf nächster Folie
-                    </code></pre>
-				</section>
-				<section>
-					<h3>Unit Test Beispiel 1: Code - Execution</h3>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet für Test Execution (When...)
-    // ... Fortsetzung von vorheriger Folie
-
+    var delimiter = HyphaKey.ExtensionDelimiter;
+    var serializedHyphae = $"{HyphaKey.StartMarker}keyA{delimiter}keyB{delimiter}value";
     // Act
-    var updatedPlant = useCase.Grow(initialPlant.Id, newContent, newVersion);
-
-    // ... Fortsetzung auf nächster Folie
-                    </code></pre>
-				</section>
-				<section>
-					<h3>Unit Test Beispiel 1: Code - Assertion</h3>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet für Test Assertion (Then...)
-    // ... Fortsetzung von vorheriger Folie
-
+    var hyphae = HyphaeSerializationService.Deserialize(serializedHyphae).First();
+    var newSerializedHyphae = HyphaeSerializationService.Serialize(hyphae);
     // Assert
-    Assert.NotNull(updatedPlant);
-    Assert.Equal(newVersion, updatedPlant.Version);
-    // Optional: Verify Repository-Aufrufe
-    mockRepo.Verify(r => r.Save(It.Is<Plant>(p => p.Version == newVersion)), Times.Once);
+    Assert.IsNotNull(hyphae);
+    Assert.AreEqual(serializedHyphae, newSerializedHyphae);
 }
                     </code></pre>
-				</section>
-
-				<section>
-					<h3>Unit Test Beispiel 2: [Name des Tests, z.B. HyphaeSearchTest]</h3>
-					<p>Testet: [z.B. Korrekte Filterung von Plants basierend auf Hyphae]</p>
-				</section>
-				<section>
-					<h3>Unit Test Beispiel 2: Code - Setup</h3>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet für Test Setup (Given...)
-// z.B. Erzeugen mehrerer Plants mit verschiedenen Hyphae, Mock-Repo Setup
-                    </code></pre>
+					<aside class="notes">
+						Hier wird der Serialisierungs- und Deserialisierungsprozess für einen HyphaeStrain getestet. Ein
+						String wird deserialisiert, das resultierende Objekt wieder serialisiert, und das Ergebnis muss
+						dem ursprünglichen String entsprechen.
+					</aside>
 				</section>
 				<section>
-					<h3>Unit Test Beispiel 2: Code - Execution</h3>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet für Test Execution (When...)
-// z.B. Aufruf des Such-Use-Cases
-                    </code></pre>
-				</section>
-				<section>
-					<h3>Unit Test Beispiel 2: Code - Assertion</h3>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet für Test Assertion (Then...)
-// z.B. Überprüfung, ob korrekte Plants gefunden wurden
-                    </code></pre>
-				</section>
-
-
-				<section>
-					<h3>ATRIP: Automatic</h3>
+					<h4>4. <code>PlacePlantTest.IntoGarden_ValidPlant_AssociatesWithMycelium()</code></h4>
 					<ul>
-						<li>Realisierung: .NET Test Framework (xUnit/NUnit/MSTest), `dotnet test`</li>
-						<li>Ausführung: Automatisch bei Build / in CI Pipeline (z.B. GitHub Actions, Azure DevOps)</li>
-						<li>Ergebnis: Schnelles Feedback</li>
+						<li><strong>Zweck:</strong> Validiert Use Case <code>PlacePlant</code> (Erfolgsfall +
+							Seiteneffekt).</li>
+						<li><strong>Testet:</strong> Korrektes Platzieren einer <code>Plant</code> im
+							<code>Garden</code> UND korrekte Verbindung mit <code>Mycelium</code>.
+						</li>
 					</ul>
-				</section>
-				<section>
-					<h3>ATRIP: Thorough</h3>
-					<ul>
-						<li>Tool: [z.B. Coverlet, AltCover]</li>
-						<li>Coverage: [Platzhalter: XX% Line / YY% Branch] - via `dotnet test --collect:"XPlat Code
-							Coverage"`</li>
-						<li>Analyse: [z.B. Kernlogik gut abgedeckt, wo sind Lücken?]</li>
-						<li><em>Zeigen des Coverage Reports (z.B. ReportGenerator HTML).</em></li>
-					</ul>
-				</section>
-				<section>
-					<h3>ATRIP: Professional</h3>
-					<p>Beispiel für professionellen Test:</p>
-					<ul>
-						<li>Test: <code>[Platzhalter: TestClassName.TestMethodName]</code></li>
-						<li>Aspekte: Klare Benennung (Given/When/Then), spezifische Assertions (FluentAssertions?), gute
-							Isolation (Mocks/Fakes), testet *ein* Verhalten.</li>
-					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet professioneller Test (kurz!)
-// Fokus auf Lesbarkeit, klare Assertions
-result.Should().NotBeNull();
-result.Version.Should().Be("v2");
-                    </code></pre>
-				</section>
-				<section>
-					<h3>Manuelle Fakes/Mocks (Unit Testing)</h3>
-					<p><strong>Beispiel: InMemoryRepository</strong></p>
-					<ul>
-						<li>Typ: Fake (simuliert Verhalten mit In-Memory Zustand)</li>
-						<li>Zweck: Testen von Use Cases ohne echte DB</li>
-						<li>Implementierung: Nutzt `List<T>` oder `Dictionary<TKey, TValue>` intern</li>
-					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Fake Implementierung (kurz!)
-public class InMemoryPlantRepo : IPlantRepository { private List<Plant> _plants; /*...*/ }
-                    </code></pre>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Fake Nutzung (kurz!)
-var fakeRepo = new InMemoryPlantRepo();
-var useCase = new MyUseCase(fakeRepo);
-                    </code></pre>
-				</section>
-				<section>
-					<h3>Integrationstests: API/CLI Mocks</h3>
-					<p>Simulation von Benutzerinteraktionen:</p>
-					<ul>
-						<li>Testen das Zusammenspiel von Presentation, Application und (gemockter) Infrastructure</li>
-						<li>Mocking an der Grenze zur "Außenwelt" (echte DB/FS wird ersetzt)</li>
-					</ul>
-				</section>
-				<section>
-					<h3>Integrationstest: Mock für REST API User</h3>
-					<p>Simuliert HTTP-Anfragen an die laufende Anwendung (TestServer).</p>
-				</section>
-				<section>
-					<h3>REST Mock: Code - Test Setup</h3>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet REST Test Setup
-// z.B. WebApplicationFactory konfigurieren, Mock-Services registrieren
-public class RestApiIntegrationTests : IClassFixture<WebApplicationFactory<Program>> {
-    private readonly HttpClient _client;
-    public RestApiIntegrationTests(WebApplicationFactory<Program> factory) {
-        _client = factory.WithWebHostBuilder(builder => {
-            builder.ConfigureTestServices(services => {
-                // Ersetze echte Services durch Mocks
-                services.AddScoped<IPlantRepository, MockPlantRepository>();
-            });
-        }).CreateClient();
-    }
-    // ... Tests ...
+					<pre><code class="csharp" data-trim data-noescape>
+[TestMethod]
+public async Task IntoGarden_ValidPlant_AssociatesWithMycelium()
+{
+    // # Arrange
+    var testGarden = FakeGardenFactory.CreateRawTestGarden("TestGarden");
+    var gardenRepo = new InMemoryGardenRepository([testGarden]);
+    var arboretumRepo = new InMemoryArboretumRepository([testGarden]);
+    var plantRepo = new InMemoryPlantRepository();
+    var testPlant = FakePlantFactory.CreateTestPlant(
+        "TestPlant",
+        "#this-strain-should-absolutely-be-associated" +
+        "#this-strain-should-be-associated-as-well", null, null);
+    var testPlantDto = PlantMapper.IntoDto(testPlant);
+    var gardenId = new GardenIdentifierInput(testGarden.UniqueMarker.ToString());
+    var placePlantUseCae = new PlacePlant(arboretumRepo, gardenRepo, plantRepo);
+    // # Act
+    var result = await placePlantUseCae.IntoGarden(testPlantDto, gardenId);
+    // # Assert
+    Assert.IsTrue(result.IsSuccess);
+    Assert.IsNotNull(result.Value);
+    Assert.AreEqual("#TestPlant", result.Value.PrimaryPlantHyphae);
+    var arboretum = arboretumRepo.Open();
+    Assert.IsTrue(arboretum.Mycelium.ContainsMycorrhization(
+        testPlant.Name, testPlant.UniqueMarker));
+    Assert.IsTrue(arboretum.Mycelium.ContainsMycorrhizations(
+        testPlant.AssociatedHyphae, testPlant.UniqueMarker));
 }
                     </code></pre>
+					<aside class="notes">
+						Dieser Testfall für den `PlacePlant`-Use-Case prüft nicht nur, ob eine Pflanze erfolgreich einem
+						Garten hinzugefügt wird, sondern auch den wichtigen Seiteneffekt, dass die Pflanze korrekt mit
+						dem globalen Mycelium-Netzwerk verbunden wird.
+					</aside>
 				</section>
 				<section>
-					<h3>REST Mock: Code - Test Execution</h3>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet REST Test Execution
-    [Fact]
-    public async Task GetPlant_ReturnsOk() {
-        // Arrange (evtl. Mock-Setup)
-        // Act
-        var response = await _client.GetAsync("/api/plants/some-id");
-        // Assert
-        response.EnsureSuccessStatusCode(); // Status Code 200-299
-        // ...
-    }
-                    </code></pre>
+					<h3>Ausgewählte Unit Tests (3/5)</h3>
 				</section>
 				<section>
-					<h3>REST Mock: Code - Test Assertion</h3>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet REST Test Assertion
-    [Fact]
-    public async Task GetPlant_ReturnsCorrectPlant() {
-         // Arrange
-         var expectedPlantDto = /*...*/;
-         // Act
-         var response = await _client.GetAsync("/api/plants/some-id");
-         // Assert
-         response.EnsureSuccessStatusCode();
-         var actualPlant = await response.Content.ReadFromJsonAsync<PlantDto>();
-         actualPlant.Should().BeEquivalentTo(expectedPlantDto); // FluentAssertions
-    }
-                    </code></pre>
-				</section>
-
-				<section>
-					<h3>Integrationstest: Mock für CLI User</h3>
-					<p>Simuliert Aufrufe der CLI-Anwendung und prüft Output/ExitCode.</p>
-				</section>
-				<section>
-					<h3>CLI Mock: Code - Test Setup</h3>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet CLI Test Setup
-// Evtl. Test-Fixture, die CLI-Prozess startet oder Main-Methode aufruft
-// und I/O umleitet (StringWriter/Reader für Konsole)
-// Dependency Injection für Mocks konfigurieren (falls möglich)
-
-public class CliIntegrationTests {
-    private async Task<CliResult> RunCliCommand(string args) {
-        // Logik zum Ausführen des CLI Befehls (z.B. via Process.Start
-        // oder direkter Aufruf der Main-Methode mit DI-Setup für Mocks)
-        // und Abfangen von Output/ExitCode
-        /* ... */
-        return new CliResult { Output = "...", ExitCode = 0 };
-    }
-    // ... Tests ...
+					<h4>5.
+						<code>RetrievePlantsTest.GetPlantByFingerprintAsync_ExistingPlant_ReturnsSuccessWithPlantInGarden()</code>
+					</h4>
+					<ul>
+						<li><strong>Zweck:</strong> Validiert Use Case <code>RetrievePlants</code> (Erfolgsfall, Single
+							Item).</li>
+						<li><strong>Testet:</strong> Korrektes Auffinden und Zurückgeben einer einzelnen
+							<code>Plant</code> (im Kontext ihres <code>Garden</code> DTOs) via <code>Fingerprint</code>.
+						</li>
+					</ul>
+					<pre><code class="csharp" data-trim data-noescape>
+[TestMethod]
+public async Task GetPlantByFingerprintAsync_ExistingPlant_ReturnsSuccessWithPlantInGarden()
+{
+    // Arrange
+    var plant1 = FakePlantFactory.CreateTestPlant("PlantA", "#HyphaA", 0, 0);
+    var garden1 = FakeGardenFactory.CreateRawTestGarden("Garden1");
+    garden1.AddPlant(plant1);
+    var retrievePlantsUseCase = SetupRepositoriesAndUseCase(
+        initialPlants: [plant1], initialGardens: [garden1]);
+    var input = new PlantIdentifierInput(plant1.UniqueMarker.ToString());
+    // Act
+    var result = await retrievePlantsUseCase.GetPlantByFingerprintAsync(input);
+    // Assert
+    IsTrue(result.IsSuccess); IsNotNull(result.Value);
+    AreEqual(1, result.Value.MatchingGardens.Count, "Should find the plant in one garden.");
+    var gardenDto = result.Value.MatchingGardens[0];
+    AreEqual(garden1.UniqueMarker.ToString(), gardenDto.UniqueMarker);
+    AreEqual(1, gardenDto.Plants.Count);
+    AreEqual(plant1.UniqueMarker.ToString(), gardenDto.Plants[0].UniqueMarker);
 }
-struct CliResult { public string Output; public int ExitCode; }
-
                     </code></pre>
+					<aside class="notes">
+						Dieser Test stellt sicher, dass der `RetrievePlants`-Use-Case eine existierende Pflanze anhand
+						ihres Fingerprints korrekt findet und als DTO im Kontext ihres Gartens zurückgibt.
+					</aside>
 				</section>
 				<section>
-					<h3>CLI Mock: Code - Test Execution</h3>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet CLI Test Execution
-    [Fact]
-    public async Task StoreCommand_Success() {
-        // Arrange
-        string command = "store --garden /test --file test.txt";
-        // Mock-Setup für IPlantRepository etc.
-
-        // Act
-        var result = await RunCliCommand(command);
-
-        // Assert
-        Assert.Equal(0, result.ExitCode);
-        // ...
-    }
+					<h4>6.
+						<code>RetrievePlantsTest.GetAllAsync_WhenGardensAndPlantsExist_ReturnsSuccessWithAllGardensAndPlants()</code>
+					</h4>
+					<ul>
+						<li><strong>Zweck:</strong> Validiert Use Case <code>RetrievePlants</code> (Erfolgsfall,
+							Multiple Items).</li>
+						<li><strong>Testet:</strong> Korrektes Zurückgeben aller <code>Gardens</code> mit ihren
+							<code>Plants</code> als DTOs bei komplexerem Setup.
+						</li>
+					</ul>
+					<pre><code class="csharp" data-trim data-noescape>
+[TestMethod]
+public async Task GetAllAsync_WhenGardensAndPlantsExist_ReturnsSuccessWithAllGardensAndPlants()
+{
+    // Arrange
+    var plant1 = FakePlantFactory.CreateTestPlant("PlantA", "#HyphaA", 0, 0);
+    var plant2 = FakePlantFactory.CreateTestPlant("PlantB", "#HyphaB", 0, 0);
+    var garden1 = FakeGardenFactory.CreateRawTestGarden("Garden1"); garden1.AddPlant(plant1);
+    var garden2 = FakeGardenFactory.CreateRawTestGarden("Garden2"); garden2.AddPlant(plant2);
+    var retrievePlantsUseCase = SetupRepositoriesAndUseCase(
+        initialPlants: [plant1, plant2], initialGardens: [garden1, garden2]);
+    // Act
+    var result = await retrievePlantsUseCase.GetAllAsync();
+    // Assert
+    IsTrue(result.IsSuccess); IsNotNull(result.Value);
+    AreEqual(2, result.Value.MatchingGardens.Count, "Should return two gardens.");
+    var garden1Dto = result.Value.MatchingGardens.FirstOrDefault(g => g.PrimaryLocation == garden1.PrimaryLocation.ToString());
+    IsNotNull(garden1Dto); AreEqual(1, garden1Dto.Plants.Count); AreEqual(plant1.Name.ToString(), garden1Dto.Plants[0].PrimaryHyphae);
+    // ... similar asserts for garden2Dto
+}
                     </code></pre>
+					<aside class="notes">
+						Dieser Test validiert, dass der `RetrievePlants`-Use-Case bei einem Setup mit mehreren Gärten
+						und Pflanzen alle diese Entitäten korrekt als DTOs zurückgibt.
+					</aside>
 				</section>
 				<section>
-					<h3>CLI Mock: Code - Test Assertion</h3>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet CLI Test Assertion
-    [Fact]
-    public async Task StoreCommand_OutputsSuccessMessage() {
-        // Arrange
-        string command = "store --garden /test --file test.txt";
-         // Mock-Setup
-
-        // Act
-        var result = await RunCliCommand(command);
-
-        // Assert
-        Assert.Equal(0, result.ExitCode);
-        Assert.Contains("Plant stored successfully", result.Output);
-        // Evtl. Mock Verification
-    }
+					<h3>Ausgewählte Unit Tests (4/5)</h3>
+				</section>
+				<section>
+					<h4>7. <code>PlacePlantTest.IntoGarden_PlantAlreadyExists_ReturnsFailure()</code></h4>
+					<ul>
+						<li><strong>Zweck:</strong> Validiert Use Case <code>PlacePlant</code> (Fehlerfall,
+							Geschäftsregel).</li>
+						<li><strong>Testet:</strong> Korrekte Fehlerbehandlung (via <code>Result</code> Pattern), wenn
+							<code>Plant</code> doppelt hinzugefügt wird.
+						</li>
+					</ul>
+					<pre><code class="csharp" data-trim data-noescape>
+[TestMethod]
+public async Task IntoGarden_PlantAlreadyExists_ReturnsFailure()
+{
+    // Arrange
+    var testGarden = FakeGardenFactory.CreateRawTestGarden("TestGarden");
+    var gardenRepo = new InMemoryGardenRepository([testGarden]);
+    var arboretumRepo = new InMemoryArboretumRepository([testGarden]);
+    var plantRepo = new InMemoryPlantRepository();
+    var testPlant = FakePlantFactory.CreateTestPlant("TestPlant", "...", null, null);
+    var testPlantDto = PlantMapper.IntoDto(testPlant);
+    var gardenId = new GardenIdentifierInput(testGarden.UniqueMarker.ToString());
+    var placePlantUseCae = new PlacePlant(arboretumRepo, gardenRepo, plantRepo);
+    // Act
+    var firstResult = await placePlantUseCae.IntoGarden(testPlantDto, gardenId);
+    var secondResult = await placePlantUseCae.IntoGarden(testPlantDto, gardenId);
+    // Assert
+    Assert.IsTrue(firstResult.IsSuccess);
+    Assert.IsFalse(secondResult.IsSuccess);
+    Assert.AreEqual(PlacePlantErrors.PlantAlreadyExists, secondResult.Error.Code);
+}
                     </code></pre>
+					<aside class="notes">
+						Dieser Test prüft eine Geschäftsregel: Eine Pflanze darf nicht doppelt in einen Garten eingefügt
+						werden. Es wird erwartet, dass der zweite Versuch fehlschlägt und einen entsprechenden
+						Fehlercode über das `Result`-Pattern zurückgibt.
+					</aside>
+				</section>
+				<section>
+					<h4>8.
+						<code>RetrievePlantsTest.ByPrimaryHyphaeAsync_NonExistingPlant_ReturnsFailurePlantNotFound()</code>
+					</h4>
+					<ul>
+						<li><strong>Zweck:</strong> Validiert Use Case <code>RetrievePlants</code> (Fehlerfall, "Not
+							Found").</li>
+						<li><strong>Testet:</strong> Korrekte Fehlerbehandlung, wenn <code>Plant</code> über nicht
+							existierenden primären <code>HyphaeStrain</code> gesucht wird.</li>
+					</ul>
+					<pre><code class="csharp" data-trim data-noescape>
+[TestMethod]
+public async Task ByPrimaryHyphaeAsync_NonExistingPlant_ReturnsFailurePlantNotFound()
+{
+    // Arrange
+    var retrievePlantsUseCase = SetupRepositoriesAndUseCase();
+    var input = new HyphaeStrainDto("#NonExistentPlant");
+    // Act
+    var result = await retrievePlantsUseCase.ByPrimaryHyphaeAsync(input);
+    // Assert
+    IsFalse(result.IsSuccess);
+    AreEqual(RetrievePlantsError.PlantNotFound, result.Error.Code);
+}
+                    </code></pre>
+					<aside class="notes">
+						Dieser Testfall stellt sicher, dass der `RetrievePlants`-Use-Case korrekt mit der Situation
+						umgeht, in der eine Pflanze anhand eines primären HyphaeStrains gesucht wird, der nicht
+						existiert. Es wird ein Fehlschlag mit dem Fehlercode "PlantNotFound" erwartet.
+					</aside>
+				</section>
+				<section>
+					<h3>Ausgewählte Unit Tests (5/5)</h3>
+				</section>
+				<section>
+					<h4>9.
+						<code>PlacePlantTest.IntoGardenWithoutAdditionalMycorrhization_ValidPlant_ReturnsSuccess()</code>
+					</h4>
+					<ul>
+						<li><strong>Zweck:</strong> Validiert spezielle Variante des <code>PlacePlant</code>-Use-Cases.
+						</li>
+						<li><strong>Testet:</strong> Erfolgreiches Hinzufügen einer <code>Plant</code> zum
+							<code>Garden</code>, ohne zusätzliche Verbindung zum globalen <code>Mycelium</code> (außer
+							Garten-Assoziation).
+						</li>
+					</ul>
+					<pre><code class="csharp" data-trim data-noescape>
+[TestMethod]
+public async Task IntoGardenWithoutAdditionalMycorrhization_ValidPlant_ReturnsSuccess()
+{
+    // # Arrange
+    var testGarden = FakeGardenFactory.CreateRawTestGarden("TestGarden");
+    var gardenRepo = new InMemoryGardenRepository([testGarden]); /* ... */
+    var testPlant = FakePlantFactory.CreateTestPlant("TestPlant", "...", null, null);
+    var placePlantUseCae = new PlacePlant(/*...*/);
+    // # Act
+    var result = await placePlantUseCae
+        .IntoGardenWithoutAdditionalMycorrhization(PlantMapper.IntoDto(testPlant), new GardenIdentifierInput(testGarden.UniqueMarker.ToString()));
+    // # Assert
+    Assert.IsTrue(result.IsSuccess); /* ... */
+    var arboretum = arboretumRepo.Open();
+    Assert.IsFalse(arboretum.Mycelium.ContainsMycorrhization(testPlant.Name, testPlant.UniqueMarker));
+    Assert.IsFalse(arboretum.Mycelium.ContainsMycorrhizations(testPlant.AssociatedHyphae, testPlant.UniqueMarker));
+}
+                    </code></pre>
+					<aside class="notes">
+						Dieser Testfall prüft eine spezielle Funktionalität des `PlacePlant`-Use-Cases: das Hinzufügen
+						einer Pflanze zu einem Garten, wobei explizit keine weiteren Assoziationen im globalen Mycelium
+						für diese Pflanze erstellt werden, abgesehen von der Zugehörigkeit zum Garten selbst.
+					</aside>
+				</section>
+				<section>
+					<h4>10. <code>RetrievePlantsTest.ByMyceliumQuery_VariousScenarios_ReturnsExpectedResult()</code>
+					</h4>
+					<ul>
+						<li><strong>Zweck:</strong> Validiert Use Case <code>RetrievePlants</code> (Datengetriebener
+							Test).</li>
+						<li><strong>Testet:</strong> Mehrere Query-Szenarien (AND/OR/NOT) effizient gegen erwartete
+							Ergebnisse (Erfolg/Fehler, Anzahl Treffer).</li>
+					</ul>
+					<pre><code class="csharp" data-trim data-noescape>
+[DataTestMethod]
+[DynamicData(nameof(GetMyceliumQueryTestCases), DynamicDataSourceType.Method)]
+public async Task ByMyceliumQuery_VariousScenarios_ReturnsExpectedResult(MyceliumQueryTestCase testCase)
+{
+    // Arrange
+    var retrievePlantsUseCase = SetupForMyceliumQueryTests();
+    var input = new QueryMyceliumInput(testCase.HyphaeQuery);
+    // Act
+    var result = await retrievePlantsUseCase.ByMyceliumQuery(input);
+    // Assert
+    AreEqual(testCase.ExpectedSuccess, result.IsSuccess, ...);
+    if (testCase.ExpectedSuccess)
+    {
+        IsNotNull(result.Value, ...);
+        AreEqual(testCase.ExpectedGardenCount, result.Value.MatchingGardens.Count, ...);
+        // ... more asserts for plant counts and specific cases
+    }
+    else { /* Assert error details */ }
+}
+                    </code></pre>
+					<aside class="notes">
+						Dies ist ein datengetriebener Test, der verschiedene Abfrageszenarien für das Mycelium (mit
+						AND-, OR- und NOT-Logik) testet. Durch die Verwendung von `DynamicData` können mehrere Testfälle
+						mit unterschiedlichen Eingaben und erwarteten Ergebnissen effizient durchlaufen werden.
+					</aside>
 				</section>
 			</section>
 
 			<section>
-				<h2>Domain Driven Design</h2>
 				<section>
-					<h3>Ubiquitous Language</h3>
-					<ol>
-						<li><strong>Plant:</strong> Datei + Metadaten (Kern-Entität)</li>
-						<li><strong>Garden:</strong> Verzeichnis/Sammlung von Plants (Aggregat)</li>
-						<li><strong>Hyphae:</strong> Verbindung/Kante/Marker (Value Object/Entity?)</li>
-						<li><strong>Mycelium:</strong> Gesamtgraph der Verbindungen (Aggregat/Entity?)</li>
-						<li><strong>Cell:</strong> Kleinste Einheit einer Plant? (Entity)</li>
-						<li><strong>ToolShed / Tool:</strong> Verwaltung von Werkzeugen? (Aggregat/Entity)</li>
-						<li><em>(Weitere: Grow, Store, Branch, Tree, Incubator, IndexCard ...)</em></li>
-					</ol>
-				</section>
-
-				<section>
-					<h3>Entities</h3>
-					<p>Objekte mit eindeutiger Identität und Lebenszyklus.</p>
+					<h2>Domain Driven Design (DDD)</h2>
 				</section>
 				<section>
-					<h4>Entity: Plant</h4>
+					<h3>Ubiquitous Language (Allgegenwärtige Sprache) - Teil 1</h3>
 					<ul>
-						<li>Kernobjekt, repräsentiert eine Datei mit Metadaten und Versionen.</li>
-						<li>Identität ist wichtig, auch wenn sich Attribute ändern ("Wachsen").</li>
+						<li><strong>Arboretum:</strong> Gesamtsystem; enthält <code>Gardens</code>, zentrales
+							<code>Mycelium</code>.
+						</li>
+						<li><strong>Garden:</strong> (Aggregat) Container/Namespace für <code>Plants</code>;
+							<code>Fingerprint</code>, <code>PrimaryLocation</code> (<code>HyphaeStrain</code>).
+							Verwaltet <code>Plants</code>.
+						</li>
+						<li><strong>Plant:</strong> (Entität) Zentrale Info-Einheit (z.B. Datei);
+							<code>Fingerprint</code>, <code>Name</code> (<code>HyphaeStrain</code>),
+							<code>AssociatedHyphae</code>, besteht aus <code>Cells</code>.
+						</li>
+						<li><strong>Cell:</strong> (Wertobjekt/Entität) Kleinste Dateneinheit einer <code>Plant</code>;
+							verweist via <code>OrganellLocation</code> (<code>HyphaeStrain</code>) auf Daten;
+							<code>Fingerprint</code>, <code>CellType</code>.
+						</li>
 					</ul>
+					<aside class="notes">
+						Die Ubiquitous Language ist ein Kernkonzept des DDD und bezeichnet eine gemeinsame Sprache, die
+						von allen Teammitgliedern (Entwickler, Fachexperten) verwendet wird.
+						Das Arboretum ist das Wurzelelement. Gärten sind Aggregate Roots, die Pflanzen enthalten.
+						Pflanzen sind Entitäten mit Zellen.
+					</aside>
 				</section>
 				<section>
-					<h4>Entity: Plant - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Plant.cs (Signatur, ID)
-public class Plant { public PlantId Id { get; private set; } /*...*/ }
-                </code></pre>
-				</section>
-				<section>
-					<h4>Entity: Mycelium</h4>
+					<h3>Ubiquitous Language (Allgegenwärtige Sprache) - Teil 2</h3>
 					<ul>
-						<li>Verwaltet die Gesamtheit der Hyphae (Verbindungen).</li>
-						<li>Hat eine Identität und einen Zustand (die Menge der Hyphae).</li>
+						<li><strong>Mycelium:</strong> (Aggregat/Domain Service) Zentrales Beziehungsnetzwerk; verbindet
+							<code>Plants</code> (<code>Mycorrhization</code>) & <code>Gardens</code>
+							(<code>Association</code>) über <code>HyphaeStrains</code>; ermöglicht <code>Queries</code>.
+						</li>
+						<li><strong>Hypha:</strong> (Wertobjekt) Atomarer Baustein einer Beziehung/eines Attributs
+							(<code>HyphaKey</code> + Wert); kann hierarchisch sein.</li>
+						<li><strong>HyphaeStrain:</strong> (Wertobjekt) Spezifische, unveränderliche Sequenz von
+							<code>Hypha</code>-Objekten; repräsentiert Attributpfad/Beziehungsschlüssel.
+						</li>
+						<li><strong>HyphaKey:</strong> (Wertobjekt) Reiner Schlüssel/Bezeichner-Teil einer
+							<code>Hypha</code>.
+						</li>
+						<li><strong>HyphaApex:</strong> (Wertobjekt) Atomare <code>Hypha</code>, nur
+							<code>HyphaKey</code> (wie Tag).
+						</li>
 					</ul>
+					<aside class="notes">
+						Das Mycelium ist das Kernnetzwerk. Hyphae, HyphaeStrains, HyphaKeys und HyphaApex sind Bausteine
+						für Attribute und Beziehungen.
+					</aside>
 				</section>
 				<section>
-					<h4>Entity: Mycelium - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Mycelium.cs (Signatur, ID?)
-public class Mycelium { public MyceliumId Id { get; } /*...*/ }
-                </code></pre>
-				</section>
-				<section>
-					<h4>Entity: Tree</h4>
+					<h3>Ubiquitous Language (Allgegenwärtige Sprache) - Teil 3</h3>
 					<ul>
-						<li>Spezielle Struktur oder Typ von Plant? Bildet Hierarchie?</li>
-						<li>Hat Identität und Zustand (Branches, Cells).</li>
+						<li><strong>Fingerprint:</strong> (Wertobjekt) Eindeutiger, zeitbasierter Identifikator (GUID
+							v7) für <code>Plant</code>, <code>Garden</code>, <code>Cell</code>.</li>
+						<li><strong>Mycorrhization / Mycorrhizate:</strong> (Domänenverb/-nomen) Prozess/Zustand der
+							Verbindung einer <code>Plant</code> mit <code>Mycelium</code> via
+							<code>HyphaeStrains</code>.
+						</li>
+						<li><strong>Association:</strong> (Domänennomen) Allgemeine Verbindung im <code>Mycelium</code>
+							(z.B. Garden &lt;-&gt; HyphaeStrain).</li>
+						<li><strong>Query:</strong> (Anwendungs-/Domänenaufgabe) Anfrage an <code>Mycelium</code> zum
+							Finden von Elementen basierend auf <code>HyphaeStrain</code>-Kriterien (AND/OR/NOT).</li>
+						<li><strong>Cultivate / Cross:</strong> (Domänenverben) Aktionen auf <code>Plants</code> zur
+							Erzeugung neuer Versionen/Kombinationen.</li>
+						<li><strong>PhenotypedPlant:</strong> (Memento) Unveränderlicher Schnappschuss des Zustands
+							einer <code>Plant</code>.</li>
 					</ul>
+					<aside class="notes">
+						Fingerprints dienen der Identifikation. Mycorrhization und Association beschreiben Verbindungen.
+						Queries dienen der Suche. Cultivate und Cross sind Domänenaktionen, PhenotypedPlant ein
+						Zustandssnapshot.
+					</aside>
 				</section>
-				<section>
-					<h4>Entity: Tree - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Tree.cs (Signatur, ID)
-public class Tree { public TreeId Id { get; } /*...*/ }
-                </code></pre>
-				</section>
-				<section>
-					<h4>Entity: Branch</h4>
-					<ul>
-						<li>Teil eines Tree, hat eigene Identität innerhalb des Trees.</li>
-					</ul>
-				</section>
-				<section>
-					<h4>Entity: Branch - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Branch.cs (Signatur, ID)
-public class Branch { public BranchId Id { get; } /*...*/ }
-                </code></pre>
-				</section>
-				<section>
-					<h4>Entity: Cell</h4>
-					<ul>
-						<li>Kleinste Einheit innerhalb einer Plant oder Branch?</li>
-						<li>Hat Identität und eigenen Zustand/Daten.</li>
-					</ul>
-				</section>
-				<section>
-					<h4>Entity: Cell - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Cell.cs (Signatur, ID)
-public class Cell { public CellId Id { get; } /*...*/ }
-                </code></pre>
-				</section>
-				<section>
-					<h4>Entity: Incubator</h4>
-					<ul>
-						<li>Verantwortlich für den "Wachstums"-Prozess?</li>
-						<li>Hat Identität und verfolgt den Zustand eines Wachstumsvorgangs.</li>
-					</ul>
-				</section>
-				<section>
-					<h4>Entity: Incubator - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Incubator.cs (Signatur, ID)
-public class Incubator { public IncubatorId Id { get; } /*...*/ }
-                </code></pre>
-				</section>
-				<section>
-					<h4>Entity: IndexCard</h4>
-					<ul>
-						<li>Metadaten-Karte, assoziiert mit Plant/Garden?</li>
-						<li>Hat Identität und eigene Attribute.</li>
-					</ul>
-				</section>
-				<section>
-					<h4>Entity: IndexCard - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.IndexCard.cs (Signatur, ID)
-public class IndexCard { public IndexCardId Id { get; } /*...*/ }
-                </code></pre>
-				</section>
-				<section>
-					<h4>Entity: ToolShed</h4>
-					<ul>
-						<li>Container für Werkzeuge (Tools).</li>
-						<li>Hat Identität und verwaltet eine Sammlung von Tools.</li>
-					</ul>
-				</section>
-				<section>
-					<h4>Entity: ToolShed - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.ToolShed.cs (Signatur, ID)
-public class ToolShed { public ToolShedId Id { get; } /*...*/ }
-                </code></pre>
-				</section>
-				<section>
-					<h4>Entity: Tool</h4>
-					<ul>
-						<li>Ein Werkzeug innerhalb des ToolSheds.</li>
-						<li>Hat Identität und spezifische Eigenschaften/Funktionen.</li>
-					</ul>
-				</section>
-				<section>
-					<h4>Entity: Tool - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.Entities.Tool.cs (Signatur, ID)
-public class Tool { public ToolId Id { get; } /*...*/ }
-                </code></pre>
-				</section>
-
-
-				<section>
-					<h3>Value Objects</h3>
-					<p>Definiert durch Attribute, keine Identität, immutable.</p>
-				</section>
-				<section>
-					<h4>Value Object: Hypha / DecimalHypha / MarkerHypha</h4>
-					<ul>
-						<li>Repräsentieren Verbindungen oder Tags.</li>
-						<li>Identität unwichtig, nur die Art/der Wert der Verbindung zählt.</li>
-						<li>Unveränderlich (immutable). `DecimalHypha`, `MarkerHypha` als spezifische Typen.</li>
-					</ul>
-				</section>
-				<section>
-					<h4>Value Object: Hypha - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.ValueObjects.Hypha.cs (record?)
-public record Hypha (HyphaKey Key, /*...*/); // Oder Basisklasse
-public record DecimalHypha(HyphaKey Key, decimal Value) : Hypha(Key);
-public record MarkerHypha(HyphaKey Key) : Hypha(Key);
-                </code></pre>
-				</section>
-				<section>
-					<h4>Value Object: HyphaKey</h4>
-					<ul>
-						<li>Identifiziert den Typ oder Namen einer Hypha eindeutig.</li>
-						<li>Ist selbst ein Wertobjekt (z.B. ein String oder komplexerer Typ).</li>
-					</ul>
-				</section>
-				<section>
-					<h4>Value Object: HyphaKey - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Core.Domain.ValueObjects.HyphaKey.cs (record?)
-public record HyphaKey(string Value);
-                </code></pre>
-				</section>
-
-
-				<section>
-					<h3>Aggregates</h3>
-					<p>Cluster von Objekten als Konsistenzeinheit mit Aggregate Root (AR).</p>
-				</section>
-				<section>
-					<h4>Aggregat: Garden (AR) &gt; Plant</h4>
-					<ul>
-						<li>`Garden` ist der AR.</li>
-						<li>Verwaltet eine Liste von `PlantId`s (Referenzen).</li>
-						<li>Stellt Konsistenz sicher (z.B. keine doppelten Namen im Garten). Zugriff auf Plants im
-							Garden läuft über den `Garden` AR.</li>
-					</ul>
-				</section>
-				<section>
-					<h4>Aggregat: Garden - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Code für Garden Aggregate Root (Ausschnitt)
-public class Garden // Aggregate Root
-{
-    public GardenId Id { get; }
-    private readonly List<PlantId> _plantIds = new();
-    public void AddPlant(PlantId plantId) { /* Regelprüfung... */ _plantIds.Add(plantId); }
-}
-                </code></pre>
-				</section>
-				<section>
-					<h4>Aggregat: Plant (AR) &gt; Cell</h4>
-					<ul>
-						<li>Falls `Cell`s nur im Kontext einer `Plant` existieren: `Plant` ist der AR.</li>
-						<li>Verwaltet `Cell`-Objekte oder IDs.</li>
-						<li>Stellt Konsistenz der Cells sicher.</li>
-					</ul>
-				</section>
-				<section>
-					<h4>Aggregat: Plant - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Code für Plant Aggregate Root (Ausschnitt)
-public class Plant // Aggregate Root
-{
-    public PlantId Id { get; }
-    private readonly List<Cell> _cells = new(); // Direkte Referenzen, wenn Teil des Aggregats
-    public void AddCell(Cell cell) { /* Regelprüfung... */ _cells.Add(cell); }
-}
-                </code></pre>
-				</section>
-				<section>
-					<h4>Aggregat: ToolShed (AR) &gt; Tool</h4>
-					<ul>
-						<li>`ToolShed` ist der AR.</li>
-						<li>Verwaltet eine Sammlung von `Tool`-Objekten oder IDs.</li>
-						<li>Stellt Konsistenz sicher (z.B. unique Tool-Namen im Shed).</li>
-					</ul>
-				</section>
-				<section>
-					<h4>Aggregat: ToolShed - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Code für ToolShed Aggregate Root (Ausschnitt)
-public class ToolShed // Aggregate Root
-{
-    public ToolShedId Id { get; }
-    private readonly List<Tool> _tools = new();
-    public void AddTool(Tool tool) { /* Regelprüfung... */ _tools.Add(tool); }
-}
-                </code></pre>
-				</section>
-				<section>
-					<h4>Aggregat: Mycelium (AR?)</h4>
-					<ul>
-						<li>Könnte ein Aggregat sein, das `Hyphae` verwaltet.</li>
-						<li>AR wäre `Mycelium`, stellt Konsistenz des Graphen sicher.</li>
-					</ul>
-				</section>
-				<section>
-					<h4>Aggregat: Mycelium - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Platzhalter: Code für Mycelium Aggregate Root (Ausschnitt)
-public class Mycelium // Aggregate Root?
-{
-    public MyceliumId Id { get; }
-    private readonly List<Hypha> _hyphae = new(); // Oder komplexere Struktur
-    public void AddHypha(Hypha hypha) { /* Regelprüfung... */ _hyphae.Add(hypha); }
-}
-                </code></pre>
-				</section>
-				<section>
-					<h4>Aggregat: Arboretum (Boundary?)</h4>
-					<ul>
-						<li>Das gesamte System/der Bounded Context.</li>
-						<li>Enthält die Aggregate `Garden`, `Mycelium`, `ToolShed`.</li>
-						<li>Kein typischer Aggregate Root, eher der Kontext.</li>
-					</ul>
-				</section>
-				<section>
-					<h4>Aggregat: Arboretum - Code</h4>
-					<pre><code data-trim data-noescape class="csharp">// Kein direkter Code für den Kontext selbst, eher die Struktur der Assemblies/Namespaces
-// VirtualArboretum (Solution)
-// -> Core.Domain (enthält alle Aggregate Roots, Entities, VOs)
-                </code></pre>
-				</section>
-
 				<section>
 					<h3>Repositories</h3>
 					<ul>
-						<li>Beschreibung: Abstraktion für Persistenzzugriff auf Aggregate Roots.</li>
-						<li>Einsatz: `IPlantRepository`, `IGardenRepository`, `IToolShedRepository`, etc.</li>
-						<li>Implementierung: In `Infrastructure.Repositories`.</li>
+						<li>Abstraktionsschicht für Datenzugriff (z.B. <code>IPlantRepository</code>,
+							<code>IGardenRepository</code>).
+						</li>
+						<li>Entkoppeln Details des Datenzugriffs (Speichern, Laden, etc.) von Anwendungslogik.</li>
+						<li>Use Cases & Services (<code>PlacePlant</code>, <code>RetrievePlants</code>,
+							<code>MyceliumQueryService</code>) interagieren nur mit Interfaces.
+						</li>
+						<li>Konkrete Implementierungen (<code>InMemory...</code>) via Dependency Injection.</li>
 					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Repository Interface
-namespace Core.Application.Interfaces;
-public interface IPlantRepository { Task<Plant?> GetByIdAsync(PlantId id); Task SaveAsync(Plant plant); }
-                    </code></pre>
+					<aside class="notes">
+						Repositories, wie `IPlantRepository` und `IGardenRepository`, dienen als Abstraktionsschicht, um
+						die Details des Datenzugriffs (z. B. Speichern, Laden, Aktualisieren von `Plants` oder
+						`Gardens`) von der restlichen Anwendungslogik zu entkoppeln. Die Use Cases und Services
+						interagieren ausschließlich mit diesen Interfaces und erhalten die konkreten
+						Repository-Implementierungen (aktuell die `InMemory...`-Versionen) über Dependency Injection im
+						Konstruktor. Dies fördert die Testbarkeit und Flexibilität des Systems.
+					</aside>
 				</section>
 			</section>
 
 			<section>
-				<h2>Refactoring</h2>
 				<section>
-					<h3>Code Smells</h3>
-					<p><strong>Smell 1: [Name, z.B. Lange Methode]</strong></p>
-					<ul>
-						<li>Problem: Methode zu lang/komplex.</li>
-						<li>Lösung: [z.B. Extract Method].</li>
-					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Smell 1 (Vorher/Nachher - kurz!)
-                    </code></pre>
+					<h2>Refactoring</h2>
 				</section>
 				<section>
-					<h3>Code Smells</h3>
-					<p><strong>Smell 2: [Name, z.B. Feature Envy]</strong></p>
-					<ul>
-						<li>Problem: Methode nutzt Daten anderer Klasse intensiv.</li>
-						<li>Lösung: [z.B. Move Method].</li>
-					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Smell 2 (Vorher/Nachher - kurz!)
-                    </code></pre>
+					<h3>Code Smells - Identifikation</h3>
 				</section>
 				<section>
-					<h3>Beispiele für Refactorings</h3>
-					<p><strong>Refactoring 1: [Name, z.B. Introduce Parameter Object]</strong></p>
+					<h4>Shotgun Surgery: <code>HyphaeStrain</code></h4>
 					<ul>
-						<li>Anwendung/Begründung: [z.B. Lange Parameterliste ersetzt].</li>
-						<li>Commit: <code>[Platzhalter: Commit-Hash]</code></li>
-						<li><em>[Platzhalter für UML Vorher/Nachher]</em></li>
+						<li>Klasse zieht sich durch Domänen- und Applikations-Schicht.</li>
+						<li>Änderung führt zu vielen Folgeänderungen (bedingt "by Design").</li>
+						<li>Bionik: Hyphe als Übertragungsnetz.</li>
+						<li>Zukünftige Features (Nährstoff-/Info-Austausch): Spezielle Kindklassen erstellen.</li>
 					</ul>
+					<aside class="notes">
+						Die Klasse `HyphaeStrain` ist ein Kandidat für "Shotgun Surgery". Aufgrund ihrer zentralen Rolle
+						als Übertragungsmechanismus (analog zu Hyphen in der Natur) sind Änderungen an ihr oft mit
+						Anpassungen an vielen Stellen im Code verbunden. Dies ist teilweise designbedingt. Für
+						zukünftige Erweiterungen sollten spezialisierte Kindklassen in Betracht gezogen werden, um die
+						Auswirkungen von Änderungen zu begrenzen.
+					</aside>
 				</section>
 				<section>
-					<h3>Beispiele für Refactorings</h3>
-					<p><strong>Refactoring 2: [Name, z.B. Replace Magic String/Number]</strong></p>
+					<h4>Bloater: <code>MyceliumQueryService</code></h4>
 					<ul>
-						<li>Anwendung/Begründung: [z.B. Wert durch Konstante ersetzt].</li>
-						<li>Commit: <code>[Platzhalter: Commit-Hash]</code></li>
-						<li><em>[Platzhalter für UML Vorher/Nachher (evtl. nicht nötig)]</em></li>
+						<li>Zu große Klasse, viele Methoden, wenig übersichtlich.</li>
+						<li>Wird vorerst nicht bereinigt (funktional).</li>
+						<li>Ideale Erweiterung der Sprache: Vollständiger Compiler-Prozess.
+							<ul>
+								<li>Lexer-, Parser-, SemanticAnalysis-, Optimization-, CodeGeneration-Klassen.</li>
+								<li>Dediziertes Objektmodell (<code>Query</code>, <code>AndCriteria</code>, etc.).</li>
+							</ul>
+						</li>
 					</ul>
+					<aside class="notes">
+						Der `MyceliumQueryService` ist ein "Bloater" – eine zu große Klasse mit zu vielen
+						Verantwortlichkeiten, was die Übersichtlichkeit und Wartbarkeit erschwert. Obwohl funktional,
+						wäre eine zukünftige Aufteilung in spezialisierte Komponenten eines Compiler-Prozesses (Lexer,
+						Parser etc.) mit einem eigenen Objektmodell für Queries ideal.
+					</aside>
+				</section>
+				<section>
+					<h4>Feature Envy (& Method-Bloat): <code>GroupPlantsIntoGardens</code></h4>
+					<ul>
+						<li>Methode in <code>MyceliumQueryService</code>.</li>
+						<li>Sollte in <code>GardenResultMapper</code> (o.ä.) ausgelagert werden.</li>
+						<li>Grund: Starke Kopplung an <code>Garden</code>, <code>Plant</code>, deren DTOs (nicht primär
+							Bloating).</li>
+						<li>Ideal: Beziehung <code>Plant</code> -> <code>Garden</code> (invers) bereits in Domäne
+							auflösen.
+							<ul>
+								<li>Z.B. Garden-Assoziationen in <code>Plant</code>-Instanz (wie in
+									<code>Mycelium</code>) gesondert behandeln.
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<aside class="notes">
+						Die Methode `GroupPlantsIntoGardens` im `MyceliumQueryService` zeigt "Feature Envy", da sie
+						stark auf Daten und Logik anderer Klassen (insbesondere `Garden` und `Plant` sowie deren DTOs)
+						zugreift. Eine Auslagerung in eine dedizierte Mapper-Klasse wäre sinnvoll. Langfristig könnte
+						die inverse Beziehung von Pflanze zu Garten direkt im Domänenmodell abgebildet werden.
+					</aside>
+				</section>
+				<section>
+					<h3>1. Refactoring: <code>Mycelium</code>-Klasse</h3>
+				</section>
+				<section>
+					<h4>Problem & Ziel</h4>
+					<ul>
+						<li><code>Mycelium</code> stark angeschwollen (ca. 300 Zeilen).</li>
+						<li>Übernimmt vermehrt Aufgaben zu Assoziation & Mycorrhization.</li>
+						<li>Problem: Trennbarkeit von Pflanzen und Gärten (beide mit Fingerprints identifiziert).</li>
+						<li>Refactoring-Ziel: Eindeutigkeit herstellen (nur <code>Plant</code>-Instanzen können
+							mycorrhiziert werden).</li>
+						<li>Streichen ungenutzter Methoden -> kompaktere Klasse.</li>
+					</ul>
+					<aside class="notes">
+						Die `Mycelium`-Klasse war zu groß geworden und hatte Probleme mit der eindeutigen Unterscheidung
+						von Pflanzen- und Garten-Assoziationen, da beide über Fingerprints identifiziert wurden. Ziel
+						des Refactorings war es, klarzustellen, dass nur Pflanzen "mycorrhiziert" werden können, und
+						ungenutzte Methoden zu entfernen, um die Klasse zu verkleinern.
+					</aside>
+				</section>
+				<section>
+					<h4>Ergebnis & Ausblick</h4>
+					<ul>
+						<li>API blieb gleich, abhängige Klassen unverändert.</li>
+						<li>Korrigierte Erwartungshaltung: <code>GetMycorrhization(s)</code> gibt nur
+							<code>Plant</code>-Fingerprints zurück.
+						</li>
+						<li><em>Auslagerung in <code>MyceliumAssociation</code>-Klasse: Wäre keine reine
+								Refactoring-Maßnahme (API-Änderung), aber zukünftig sinnvoll.</em></li>
+						<li>Commits: <code>6e0dc69...</code>, <code>92cb4a9...</code></li>
+					</ul>
+					<aside class="notes">
+						Das Refactoring konnte ohne API-Änderungen durchgeführt werden. Die Methoden
+						`GetMycorrhization(s)` liefern nun erwartungsgemäß nur Fingerprints von Pflanzen. Eine
+						weitergehende Zerlegung in eine `MyceliumAssociation`-Klasse wäre ein größerer Schritt und kein
+						reines Refactoring gewesen, bleibt aber eine Option für die Zukunft.
+					</aside>
+				</section>
+				<section>
+					<h4>Refactoring <code>Mycelium</code>: UML Vorher - Einleitung</h4>
+					<p>Das ursprüngliche Klassendiagramm von <code>Mycelium</code> zeigt eine breite API mit Methoden
+						für allgemeine Assoziationen und spezifische Mykorrhizierungen, was zu Unklarheiten führen
+						konnte.</p>
+				</section>
+				<section>
+					<h4>Refactoring <code>Mycelium</code>: UML Vorher</h4>
+					<div class="mermaid">
+						classDiagram
+						%% Core Mycelium Class with Fields
+						class Mycelium {
+						- _hyphalPlexus: ConcurrentDictionary~HyphaKey, HashSet HyphaeStrain ~
+						- _mycorrhizalAssociations: ConcurrentDictionary~HyphaeStrain, HashSet Fingerprint ~
+						+ Mycelium(IList~Hypha~ hyphae, ConcurrentDictionary~HyphaeStrain, HashSet Fingerprint ~
+						mycorrhizalAssociations)
+						+ Mycelium(IList~HyphaeStrain~ hyphaeStrains, ConcurrentDictionary~HyphaeStrain, HashSet
+						Fingerprint ~ mycorrhizalAssociations)
+						+ Mycelium()
+						- ExtendWith(IList~HyphaeStrain~ hyphaeStrains) Mycelium
+						- ExtendWith(HyphaeStrain hyphaeStrain) Mycelium
+						- ExtendWith(IEnumerable~Hypha~ hyphae) Mycelium
+						+ ExtendWith(Hypha hypha) Mycelium
+						+ Contains(ImmutableArray~Hypha~ flatHyphae) bool
+						+ Contains(Hypha hypha) bool
+						+ Contains(HyphaeStrain hyphae) bool
+						+ AssociateWith(Hypha hypha, Fingerprint association) Mycelium
+						+ AssociateWith(IEnumerable~Hypha~ hyphae, Fingerprint association) Mycelium
+						+ AssociateWith(HyphaeStrain strain, Fingerprint association) Mycelium
+						+ AssociateWith(IEnumerable~HyphaeStrain~ hyphaeStrains, Fingerprint plantUniqueMarker) void
+						+ Mycorrhizate(Plant plant) void
+						+ ContainsMycorrhization(HyphaeStrain hyphae, Fingerprint association) bool
+						+ ContainsMycorrhization(Hypha hyphae, Fingerprint association) bool
+						+ ContainsMycorrhizations(IEnumerable~Hypha~ manyHyphae, Fingerprint association) bool
+						+ ContainsMycorrhizations(IEnumerable~HyphaeStrain~ manyHyphae, Fingerprint association) bool
+						+ GetMycorrhization(HyphaeStrain hyphae) ImmutableList~Fingerprint~
+						+ GetMycorrhizations(IList~HyphaeStrain~ hyphaeStrains) ImmutableDictionary~HyphaeStrain,
+						ImmutableList~Fingerprint~~
+						+ GetAllMycorrhizations() ImmutableDictionary~HyphaeStrain, HashSet~Fingerprint~~
+						}
+						%% Classes/Types Mycelium Directly Depends On
+						class HyphaeStrain { <<Aggregate Root>> }
+							class Fingerprint { <<Value Object>> }
+								class Plant { <<Entity>> }
+									Mycelium --> HyphaeStrain : uses
+									Mycelium --> Fingerprint : uses
+									Mycelium --> Plant : uses in methods
+					</div>
+					<aside class="notes">UML des `Mycelium` vor dem Refactoring. Es zeigt eine Vielzahl von Methoden zur
+						Assoziation und Mykorrhizierung, die teilweise generisch mit Fingerprints arbeiten.</aside>
+				</section>
+				<section>
+					<h4>Refactoring <code>Mycelium</code>: UML Nachher - Einleitung</h4>
+					<p>Das refaktorierte Klassendiagramm von <code>Mycelium</code> zeigt eine klarere Trennung zwischen
+						Pflanzen-Mykorrhizierungen und Garten-Assoziationen sowie eine reduzierte API.</p>
+				</section>
+				<section>
+					<h4>Refactoring <code>Mycelium</code>: UML Nachher</h4>
+					<div class="mermaid">
+						classDiagram
+						    direction LR
+						
+						    class MyceliumQueryService {
+						        -IArboretumRepository _arboretumRepo
+						        -IPlantRepository _plantRepo
+						        
+						        +FindAllByHyphaeQueryAsync(QueryMyceliumInput) Task~Result~MyceliumQuerySuccess, MyceliumQueryError~~
+						        +GroupPlantsIntoGardens(IList~Fingerprint~) Task~Result~MyceliumQuerySuccess, MyceliumQueryError~~
+						        -MapParserErrorToServiceError(MyceliumQueryParserError) MyceliumQueryError
+						    }
+						
+						    class HyphaeQueryParser {
+						        %% Private Konstanten/statische Felder sind konzeptionell Teil der Klasse
+						        -OR_MARKER : char
+						        -NOT_MARKER : char
+						        -HYPHAE_START_MARKER : char
+						        +Parse(string query) Result~IHyphaeQueryExpression, MyceliumQueryParserError~
+						        -ParseAndGroup(sring andGroupString) Result~IHyphaeQueryExpression, MyceliumQueryParserError~
+						        -TokenizeAndGroup(string groupString) List~TermToken~
+						    }
+						    %% Der private Record TermToken innerhalb von HyphaeQueryParser
+						    class TermToken {
+						        <<record>>
+						        +Term : string
+						        +IsNegated : bool
+						    }
+						
+						  
+						    class MyceliumContext {
+						        +Mycelium Mycelium
+						    }
+						  
+						    class IHyphaeQueryExpression {
+						        <<interface>>
+						        +Interpret(MyceliumContext context) ImmutableList~Fingerprint~
+						    }
+						  
+						    class TerminalHyphaeExpression {
+						        -HyphaeStrain _strain
+						        +Interpret(MyceliumContext context) ImmutableList~Fingerprint~
+						    }
+						  
+						    class AndExpression {
+						        -IHyphaeQueryExpression _left
+						        -IHyphaeQueryExpression _right
+						        +Interpret(MyceliumContext context) ImmutableList~Fingerprint~
+						    }
+						  
+						    class OrExpression {
+						        -IHyphaeQueryExpression _left
+						        -IHyphaeQueryExpression _right
+						        +Interpret(MyceliumContext context) ImmutableList~Fingerprint~
+						    }
+						  
+						    class NotExpression {
+						        -IHyphaeQueryExpression _expression
+						        +Interpret(MyceliumContext context) ImmutableList~Fingerprint~
+						    }
+						  
+						    %% Externe, aber direkt relevante Klassen (nur Namen)
+						    class QueryMyceliumInput
+						    class MyceliumQuerySuccess
+						    class MyceliumQueryError
+						    class MyceliumQueryParserError
+						    class Fingerprint
+						    class Mycelium
+						    class HyphaeStrain
+						    class IArboretumRepository
+						    class IPlantRepository
+						    class HyphaeSerializationService
+						  
+						    %% Beziehungen
+						    MyceliumQueryService ..> HyphaeQueryParser : uses
+						    MyceliumQueryService ..> MyceliumContext : creates
+						    MyceliumQueryService ..> Mycelium : uses (to create context)
+						    MyceliumQueryService ..> IArboretumRepository : uses
+						    MyceliumQueryService ..> IPlantRepository : uses
+						    MyceliumQueryService ..> QueryMyceliumInput : receives
+						    MyceliumQueryService ..> MyceliumQuerySuccess : returns
+						    MyceliumQueryService ..> MyceliumQueryError : returns
+						  
+						    HyphaeQueryParser ..> IHyphaeQueryExpression : creates
+						    HyphaeQueryParser ..> TerminalHyphaeExpression : creates
+						    HyphaeQueryParser ..> AndExpression : creates
+						    HyphaeQueryParser ..> OrExpression : creates
+						    HyphaeQueryParser ..> NotExpression : creates
+						    HyphaeQueryParser ..> TermToken : uses (creates instances of private record)
+						    HyphaeQueryParser ..> HyphaeSerializationService : uses
+						    HyphaeQueryParser ..> MyceliumQueryParserError : returns
+						
+						  
+						    IHyphaeQueryExpression <|.. TerminalHyphaeExpression
+						    IHyphaeQueryExpression <|.. AndExpression
+						    IHyphaeQueryExpression <|.. OrExpression
+						    IHyphaeQueryExpression <|.. NotExpression
+						  
+						    TerminalHyphaeExpression ..> MyceliumContext : uses
+						    TerminalHyphaeExpression ..> HyphaeStrain : uses
+						    AndExpression ..> MyceliumContext : uses
+						    AndExpression o-- IHyphaeQueryExpression : aggregates (left)
+						    AndExpression o-- IHyphaeQueryExpression : aggregates (right)
+						    OrExpression ..> MyceliumContext : uses
+						    OrExpression o-- IHyphaeQueryExpression : aggregates (left)
+						    OrExpression o-- IHyphaeQueryExpression : aggregates (right)
+						    NotExpression ..> MyceliumContext : uses
+						    NotExpression o-- IHyphaeQueryExpression : aggregates
+						  
+						    MyceliumContext ..> Mycelium : uses
+						  
+						    %% Weitere Relationen zu externen Klassen (vereinfacht)
+						    TerminalHyphaeExpression ..> Fingerprint : returns via Interpret
+						    AndExpression ..> Fingerprint : returns via Interpret
+						    OrExpression ..> Fingerprint : returns via Interpret
+						    NotExpression ..> Fingerprint : returns via Interpret
+					</div>
+					<aside class="notes">UML des `Mycelium` nach dem Refactoring. Interne Datenstrukturen sind nun
+						spezifischer (`_plantMycorrhizations`, `_gardenAssociations`), und die API ist fokussierter. Die
+						Methode `AssociateWithGarden` wurde eingeführt, und Methoden wie `GetMycorrhization` beziehen
+						sich nun eindeutig auf Pflanzen.</aside>
+				</section>
+				<section>
+					<h3>2. Refactoring: <code>MyceliumQueryService</code> Zerlegung</h3>
+				</section>
+				<section>
+					<h4>Problem & Ziel</h4>
+					<ul>
+						<li><code>MyceliumQueryService</code> ist ein Bloater.</li>
+						<li>Ziel: Parser-Logik (3 Schritte) extrahieren, Service vereinfachen.</li>
+						<li>Ansatz (Bottom-Up):
+							<ol>
+								<li>Sprachkonstrukt definieren (<code>Or</code>, <code>And</code>, <code>Not</code>
+									Ausdrücke).</li>
+								<li>Zusammenführen in <code>HyphaeQueryParser</code>.</li>
+								<li>Beibehaltung der semantischen Bearbeitungs-Reihenfolge.</li>
+							</ol>
+						</li>
+					</ul>
+					<aside class="notes">
+						Der `MyceliumQueryService` war zu groß und komplex. Ziel des Refactorings war es, die
+						Parser-Logik für die Query-Sprache in eine eigene Komponente (`HyphaeQueryParser`) auszulagern.
+						Dies erfolgte durch die Definition der einzelnen Sprachausdrücke (AND, OR, NOT) und deren
+						Verarbeitung im neuen Parser, wobei die bestehende Logik beibehalten wurde.
+					</aside>
+				</section>
+				<section>
+					<h4>Refactoring <code>MyceliumQueryService</code>: UML Vorher - Einleitung</h4>
+					<p>Das ursprüngliche Diagramm des <code>MyceliumQueryService</code> zeigt eine Klasse mit vielen
+						internen Parsing- und Query-Methoden, was auf eine hohe Komplexität und mehrere
+						Verantwortlichkeiten hindeutet.</p>
+				</section>
+				<section>
+					<h4>Refactoring <code>MyceliumQueryService</code>: UML Vorher</h4>
+					<div class="mermaid">
+						classDiagram
+						%% The Service being described
+						class MyceliumQueryService {
+						<<Service>>
+							%% Fields representing dependencies
+							- _arboretumRepo IArboretumRepository
+							- _plantRepo IPlantRepository
+							- mycelium Mycelium %% Instance obtained via _arboretumRepo
+							#Key Public Methods:
+							+ FindAllByHyphaeQueryAsync(QueryMyceliumInput hyphaeQuery) Task
+							Result~MyceliumQuerySuccess, MyceliumQueryError~
+							+ GroupPlantsIntoGardens(IList~Fingerprint~ plantIdentifyingFingerprints) Task
+							Result~MyceliumQuerySuccess, MyceliumQueryError~
+							# Private Methods
+							- FindAllInSingleOrBucket(string orBucket) Task Result~...~
+							- QueryMyceliumIntersection(plainHyphae, negatedHyphae) Task Result~...~
+							- QueryMyceliumNegatedAll(IList~HyphaeStrain~ negated) Task Result~...~
+							- QueryMyceliumMixedIntersection(plainHyphae, negatedHyphae) Task Result~...~
+							}
+							%% Interfaces the Service Depends On
+							class IArboretumRepository { <<interface>> }
+								class IPlantRepository { <<interface>> }
+									class Mycelium { <<Aggregate Root>> }
+										class QueryMyceliumInput { <<DTO>> }
+											MyceliumQueryService --> IArboretumRepository : uses
+											MyceliumQueryService --> IPlantRepository : uses
+											MyceliumQueryService --> Mycelium : uses methods of
+											MyceliumQueryService --> QueryMyceliumInput : input
+					</div>
+					<aside class="notes">UML des `MyceliumQueryService` vor der Zerlegung. Die Klasse enthält sowohl die
+						öffentliche API als auch die komplexe interne Logik zur Verarbeitung von Query-Strings.</aside>
+				</section>
+				<section>
+					<h4>Refactoring <code>MyceliumQueryService</code>: UML Nachher - Einleitung</h4>
+					<p>Nach dem Refactoring wurde die Parsing-Logik in den <code>HyphaeQueryParser</code> und ein System
+						von Ausdrucksklassen ausgelagert. Der <code>MyceliumQueryService</code> ist nun schlanker und
+						delegiert die Parsing-Aufgaben.</p>
+					<p>Commit: <code>4f9b678...</code> (⚠️ 2 Tests failen bewusst).</p>
+				</section>
+				<section>
+					<h4>Refactoring <code>MyceliumQueryService</code>: UML Nachher</h4>
+					<div class="mermaid">
+						classDiagram
+						direction LR
+						class MyceliumQueryService {
+						-IArboretumRepository _arboretumRepo
+						-IPlantRepository _plantRepo
+						+FindAllByHyphaeQueryAsync(QueryMyceliumInput) Task~Result~MyceliumQuerySuccess,
+						MyceliumQueryError~~
+						+GroupPlantsIntoGardens(IList~Fingerprint~) Task~Result~MyceliumQuerySuccess,
+						MyceliumQueryError~~
+						-MapParserErrorToServiceError(MyceliumQueryParserError) MyceliumQueryError
+						}
+						class HyphaeQueryParser {
+						+Parse(string query) Result~IHyphaeQueryExpression, MyceliumQueryParserError~
+						-ParseAndGroup(sring andGroupString) Result~IHyphaeQueryExpression, MyceliumQueryParserError~
+						-TokenizeAndGroup(string groupString) List~TermToken~
+						}
+						class TermToken { <<record>> }
+							class MyceliumContext { +Mycelium Mycelium }
+							class IHyphaeQueryExpression { <<interface>> +Interpret(MyceliumContext context)
+								ImmutableList~Fingerprint~ }
+								class TerminalHyphaeExpression { +Interpret(MyceliumContext context)
+								ImmutableList~Fingerprint~ }
+								class AndExpression { +Interpret(MyceliumContext context) ImmutableList~Fingerprint~ }
+								class OrExpression { +Interpret(MyceliumContext context) ImmutableList~Fingerprint~ }
+								class NotExpression { +Interpret(MyceliumContext context) ImmutableList~Fingerprint~ }
+								class QueryMyceliumInput
+								class Mycelium
+								class Fingerprint
+
+								MyceliumQueryService ..> HyphaeQueryParser : uses
+								MyceliumQueryService ..> MyceliumContext : creates
+								HyphaeQueryParser ..> IHyphaeQueryExpression : creates
+								IHyphaeQueryExpression <|.. TerminalHyphaeExpression IHyphaeQueryExpression <|..
+									AndExpression IHyphaeQueryExpression <|.. OrExpression IHyphaeQueryExpression <|..
+									NotExpression AndExpression o-- IHyphaeQueryExpression OrExpression o--
+									IHyphaeQueryExpression NotExpression o-- IHyphaeQueryExpression MyceliumContext ..>
+									Mycelium : uses
+					</div>
+					<aside class="notes">UML des `MyceliumQueryService` nach der Zerlegung. Die Parsing-Logik ist nun im
+						`HyphaeQueryParser` und den `IHyphaeQueryExpression`-Implementierungen gekapselt. Der Service
+						selbst ist einfacher und delegiert die Query-Analyse. Zwei Tests schlagen nach diesem
+						Refactoring bewusst fehl, da sie vorher leere Ergebnisse lieferten, was nun als Fehler
+						interpretiert wird.</aside>
 				</section>
 			</section>
 
 			<section>
-				<h2>Entwurfsmuster</h2>
 				<section>
-					<h3>Entwurfsmuster: [Name, z.B. Repository]</h3>
-					<ul>
-						<li>Einsatz: Abstraktion des Datenzugriffs für Aggregate Roots (Plant, Garden etc.).</li>
-						<li>Begründung: Entkopplung Domain von Infrastructure, Testbarkeit.</li>
-						<li><em>[Platzhalter für UML-Diagramm]</em></li>
-					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Repository (Interface schon gezeigt)
-                    </code></pre>
+					<h2>Entwurfsmuster</h2>
 				</section>
 				<section>
-					<h3>Entwurfsmuster: [Name, z.B. Strategy]</h3>
-					<ul>
-						<li>Einsatz: [z.B. Unterschiedliche Suchlogiken für Plants].</li>
-						<li>Begründung: [z.B. Flexibilität, OCP].</li>
-						<li><em>[Platzhalter für UML-Diagramm]</em></li>
-					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Strategy Pattern (kurz!)
-                    </code></pre>
+					<h3>Builder: <code>HyphaeBuilder</code> - Einleitung</h3>
+					<p>Der <code>HyphaeBuilder</code> ist ein Beispiel für das Builder-Entwurfsmuster. Er ermöglicht die
+						schrittweise Konstruktion komplexer, hierarchischer <code>Hypha</code>-Objekte. Dies verbessert
+						die Lesbarkeit und vereinfacht die Erstellung von Hypha-Strukturen im Vergleich zu einem
+						Konstruktor mit vielen Parametern.</p>
 				</section>
 				<section>
-					<h3>Entwurfsmuster: [Name, z.B. Builder]</h3>
-					<ul>
-						<li>Einsatz: [z.B. Komplexe Erzeugung von Plant-Objekten, siehe HyphaeBuilder?].</li>
-						<li>Begründung: [z.B. Entkopplung der Konstruktion von der Repräsentation].</li>
-						<li><em>[Platzhalter für UML-Diagramm]</em></li>
-					</ul>
-					<pre><code data-trim data-noescape class="csharp">
-// Platzhalter: Code-Snippet Builder Pattern (kurz!)
-                    </code></pre>
+					<h3>Builder: <code>HyphaeBuilder</code></h3>
+					<div class="mermaid">
+						classDiagram
+						class HyphaeBuilder {
+						-List~HyphaKey~ _hyphaeStrain
+						-Hypha _root
+						+HyphaeBuilder(Hypha root, List~HyphaKey~?)
+						+ExtendBy(HyphaKey) HyphaeBuilder
+						+ExtendBy(Hypha) HyphaeBuilder
+						+Build() Hypha
+						}
+						class Hypha {
+						+Key: HyphaKey
+						+Value: object
+						+NextExtension() Hypha?
+						+DoesExtend() bool
+						}
+						class HyphaKey {
+						+Value: string
+						}
+						class HyphaeSerializationService {
+						<<static>> +Deserialize(string) ImmutableList~HyphaeStrain~
+							<<static>> -ParseHypha(string) HyphaeStrain
+								<<static>> +Serialize(Hypha) string
+									}
+									HyphaeBuilder ..> Hypha : builds
+									HyphaeBuilder ..> HyphaKey : uses
+									HyphaeSerializationService ..> HyphaeBuilder : uses (within ParseHypha)
+					</div>
+					<aside class="notes">
+						Der `HyphaeBuilder` wird verwendet, um komplexe, möglicherweise hierarchische `Hypha`-Objekte
+						schrittweise zu erstellen. Er wird beispielsweise vom `HyphaeSerializationService` beim
+						Deserialisieren von Hypha-Strings genutzt. Das Builder-Pattern hilft, den Konstruktionsprozess
+						von der Repräsentation des Objekts zu trennen.
+					</aside>
+				</section>
+				<section>
+					<h3>Data Mapper: <code>PlantMapper</code> - Einleitung</h3>
+					<p>Der <code>PlantMapper</code> (und analog <code>GardenMapper</code>) implementiert das Data
+						Mapper-Muster. Er ist verantwortlich für die Übertragung von Daten zwischen Domänenobjekten
+						(z.B. <code>Plant</code>) und Datenübertragungsobjekten (DTOs, z.B. <code>PlantDto</code>). Dies
+						entkoppelt die Domänenschicht von der Datenrepräsentation in anderen Schichten.</p>
+				</section>
+				<section>
+					<h3>Data Mapper: <code>PlantMapper</code></h3>
+					<div class="mermaid">
+						classDiagram
+						direction LR
+						class PlantMapper {
+						<<static>>
+							+IntoPlant(PlantDto plantTemplate) Plant
+							+IntoDto(Plant plant) PlantDto
+							}
+							class Plant { <<Domain Entity>> }
+								class PlantDto { <<Data Transfer Object>> }
+									class Cell { }
+									class CellDto { }
+									class HyphaeStrain { }
+									class HyphaeSerializationService { <<static>> }
+										class GardenMapper { <<static>> }
+											class PlacePlant { <<Use Case>> }
+												class RetrievePlants { <<Use Case>> }
+													class MyceliumQueryService { <<Service>> }
+
+														PlantMapper ..> Plant : creates/uses
+														PlantMapper ..> PlantDto : creates/uses
+														PlantMapper ..> HyphaeSerializationService : uses
+														GardenMapper ..> PlantMapper : uses
+														PlacePlant ..> PlantMapper : uses (IntoPlant)
+														RetrievePlants ..> PlantMapper : uses (IntoDto)
+														MyceliumQueryService ..> PlantMapper : uses (IntoDto)
+					</div>
+					<aside class="notes">
+						Der `PlantMapper` ist eine statische Klasse, die Methoden zur Konvertierung zwischen
+						`Plant`-Domänenobjekten und `PlantDto`-Objekten bereitstellt. Dieses Muster wird von Use Cases
+						(<code>PlacePlant</code>, <code>RetrievePlants</code>) und Services
+						(<code>MyceliumQueryService</code>) genutzt, um Daten zwischen Schichten zu bewegen, ohne dass
+						die Domänenobjekte Kenntnis von den DTOs haben müssen. Der `GardenMapper` nutzt intern ebenfalls
+						den `PlantMapper`.
+					</aside>
+				</section>
+				<section>
+					<h3>Result Pattern: <code>Result&lt;TSuccess, TError&gt;</code> - Einleitung</h3>
+					<p>Das <code>Result&lt;TSuccess, TError&gt;</code>-Muster wird für eine explizite Fehlerbehandlung
+						in der Anwendungsschicht eingesetzt. Anstatt Ausnahmen für erwartbare Fehler zu werfen, geben
+						Methoden ein <code>Result</code>-Objekt zurück, das entweder einen Erfolgswert
+						(<code>TSuccess</code>) oder ein Fehlerobjekt (<code>TError</code>) enthält. Dies macht den
+						Kontrollfluss klarer und zwingt den Aufrufer, beide Fälle zu behandeln.</p>
+				</section>
+				<section>
+					<h3>Result Pattern: <code>Result&lt;TSuccess, TError&gt;</code></h3>
+					<div class="mermaid">
+						classDiagram
+						class Result~TSuccess, TErrorEnum~ {
+						#_value: TSuccess?
+						#_error: ErrorResult~TErrorEnum~?
+						+IsSuccess: bool
+						+Value: TSuccess
+						+Error: ErrorResult~TErrorEnum~
+						+Ok(value) Result~TSuccess, TErrorEnum~$
+						+Fail(error) Result~TSuccess, TErrorEnum~$
+						+Match~TResult~(onSuccess, onFailure) TResult
+						}
+						note for Result "Generic record for operation outcomes"
+						class ErrorResult~TErrorEnum~ {
+						<<record>>
+							+Code: TErrorEnum
+							+Message: string
+							+Target: string?
+							}
+							class ResultFactory {
+							<<static>>
+								+Ok~TSuccess, TErrorEnum~(value) Result
+								+Fail~TSuccess, TErrorEnum~(code, message, ?target) Result
+								}
+								Result~TSuccess, TErrorEnum~ o-- "1" ErrorResult~TErrorEnum~ : contains (on failure)
+								ResultFactory ..> Result~TSuccess, TErrorEnum~ : creates
+
+								%% --- Example Usage ---
+								class PlacePlant {
+								<<Use Case>>
+									+IntoGarden(...) Task~Result~PlacePlantSuccess, PlacePlantErrors~~
+									}
+									class PlacePlantSuccess { <<record>> }
+										class PlacePlantErrors { <<enumeration>> PlantAlreadyExists, GardenNotFound }
+											PlacePlant ..> Result~PlacePlantSuccess, PlacePlantErrors~ : returns
+											Result~PlacePlantSuccess, PlacePlantErrors~ o-- "1" PlacePlantSuccess :
+											contains (on success)
+											ErrorResult~TErrorEnum~ ..> PlacePlantErrors : uses (as TErrorEnum)
+					</div>
+					<aside class="notes">
+						Das `Result`-Pattern kapselt das Ergebnis einer Operation. Es kann entweder einen Erfolgswert
+						vom Typ `TSuccess` oder ein `ErrorResult` (mit einem Enum-Code `TErrorEnum` und einer Nachricht)
+						enthalten. Use Cases wie `PlacePlant` geben `Task<Result<...>>` zurück. Dies ermöglicht eine
+							funktionale Fehlerbehandlung ohne Exceptions für erwartete Fehlschläge und macht den Erfolg
+							oder Misserfolg einer Operation explizit. Eine `ResultFactory` hilft bei der Erstellung von
+							`Result`-Instanzen.
+					</aside>
 				</section>
 			</section>
 
 			<section>
-				<h2>Fragen?</h2>
-				<p>Vielen Dank!</p>
+				<h2>Vielen Dank!</h2>
+				<p>Weitere Fragen?</p>
 			</section>
 
 		</div>
@@ -1078,6 +1986,8 @@ public interface IPlantRepository { Task<Plant?> GetByIdAsync(PlantId id); Task 
 	<script src="plugin/notes/notes.js"></script>
 	<script src="plugin/markdown/markdown.js"></script>
 	<script src="plugin/highlight/highlight.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/reveal.js-mermaid-plugin@11.4.1/plugin/mermaid/mermaid.js"></script>
+
 	<script>
 		// More info about initialization & config:
 		// - https://revealjs.com/config/
@@ -1091,7 +2001,7 @@ public interface IPlantRepository { Task<Plant?> GetByIdAsync(PlantId id); Task 
 			// Standard navigation (allows vertical slides)
 			navigationMode: 'default',
 
-			plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+			plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMermaid]
 		});
 	</script>
 </body>
