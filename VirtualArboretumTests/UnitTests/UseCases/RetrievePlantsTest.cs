@@ -282,7 +282,6 @@ public class RetrievePlantsTest
             new("#non-existent", true, null, 0, 0, "Query: No match"),
             new("#--color------blue--", true, null, 2, 2, "Query: Simple color-blue match"),
             // => is recoverable input error, as we don't care about hyphae closeness (yet).
-            new("###", true, null, 0, 0, "Query: Empty Hyphae return empty result"),
 
             // AND Logic
             new("#HyphaA #color-red", true, null, 1, 1, "Query: AND HyphaA AND color-red"),
@@ -299,7 +298,6 @@ public class RetrievePlantsTest
             // NOT Logic
             new("#HyphaA !#color-red", true, null, 1, 1, "Query: NOT HyphaA AND NOT color-red"),
             new("!#HyphaA", true, null, 2, 2, "Query: NOT HyphaA, does match any plant not having HyphaA"),
-            new("!#", true, null, 0, 0, "Query: Does match no plants, as nothing is specified."),
 
             // Combined Logic
             new("#HyphaA !#color-red | #HyphaC", true, null, 1, 2, "Query: Combined OR/NOT"),
@@ -311,7 +309,9 @@ public class RetrievePlantsTest
             new("--#", false, RetrievePlantsError.InvalidInput, 0, 0, "Query: Invalid Syntax"),
             new("#--", false, RetrievePlantsError.InvalidInput, 0, 0, "Query: Invalid Syntax, one shall not connect voids."),
             new("i-want-to-be-a-hyphae-strain", false, RetrievePlantsError.InvalidInput, 0, 0,
-                "Query: Invalid Syntax, as Hyphae input not explicitly stated.")
+                "Query: Invalid Syntax, as Hyphae input not explicitly stated."),
+            new("###", false, RetrievePlantsError.InvalidInput, 0, 0, "Query: Invalid Syntax, no Hyphae to select provided."),
+            new("!#", false, RetrievePlantsError.InvalidInput, 0, 0, "Query: Invalid Syntax, no Hyphae to negate provided."),
         };
 
         return testCases.Select(tc => new object[] { tc });
