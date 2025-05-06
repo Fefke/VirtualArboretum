@@ -116,7 +116,8 @@ public class Mycelium
     }
 
 
-    public Mycelium AssociateWithGarden(HyphaeStrain strain, Garden association)
+    // # Garden Associations
+    public void AssociateWithGarden(HyphaeStrain strain, Garden association)
     {
         _gardenAssociations.AddOrUpdate(
             strain,
@@ -130,7 +131,6 @@ public class Mycelium
         // extend plexus with each hypha & associate it with this strain.
         ExtendWith(strain);
 
-        return this;
     }
 
     public void AssociateWithGarden(IEnumerable<HyphaeStrain> hyphaeStrains, Garden association)
@@ -139,6 +139,17 @@ public class Mycelium
             hyphaeStrain => this.AssociateWithGarden(hyphaeStrain, association)
             );
     }
+
+
+    public HashSet<Fingerprint>? GetGardenAssociation(HyphaeStrain hyphae)
+    {
+        _gardenAssociations.TryGetValue(
+            hyphae, out var associations
+        );
+
+        return associations;
+    }
+
 
     /// <summary>
     /// Does associate the plant with the mycelium by all the plants HyphaeStrains (including Name).
