@@ -12,9 +12,7 @@
   &lt;Assembly Path="C:\Users\Felix\.nuget\packages\mstest.testframework\3.6.1\lib\net8.0\Microsoft.VisualStudio.TestPlatform.TestFramework.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=071d5a28_002D695d_002D4b9e_002D9020_002Df743bba1a4cd/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ByMyceliumQuery_VariousScenarios_ReturnsExpectedResult #6" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;MSTest::6A9A3BCC-A1B9-4997-882F-017813E98938::net9.0::VirtualArboretumTests.UnitTests.UseCases.RetrievePlantsTest&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
+  &lt;Project Location="C:\Users\Felix\OneDrive - student.dhbw-karlsruhe.de\Stu-di-um\6. Semester - Adv.SWE - VA\VirtualArboretumTests" Presentation="&amp;lt;VirtualArboretumTests&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	
 	
