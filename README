@@ -1,0 +1,1459 @@
+# Virtual Arboretum Protokoll
+
+---
+## ⛲ **Einführung** 
+
+---
+**Was** macht die Applikation?
+- Pflanzen (Daten aller Art) in Gärten einlagern und sie untereinander mit *Hyphen* verknüpfen.
+- Pflanzen nach Garten > Pflanze hierarchisch ausgeben.
+- Pflanzen über Mycelium-Query selektieren und ebenfalls in Garden > Pflanzen Hierarchie ausgeben.
+---
+**Wie** soll sie funktionieren?
+- Über ein CLI wird mit der Applikation interagiert.
+	- *Aktuell jedoch nur über Tests der Use-Cases.*
+---
+Welches Problem löst sie/welchen Zweck hat sie?
+- Lässt eine lokale Verzeichnisstruktur frei wachsen und erfasst attributbasierte Zusammenhänge, wodurch neben klassischer Hierarchie **natürliche Verbindungen** entstehen können.
+---
+Welches Problem löst sie/welchen Zweck hat sie?
+- *Limitierungen in Datei-Namen bzgl. der Länge (255 Byte) sollen mithilfe strukturierter Assoziation über symbolic links mit verschiedenen Hyphae (Attributen) assoziiert werden.* 
+- *All das, so nah wie möglich am Dateisystem, damit keine großen Abhängigkeiten durch individuelle Formate entstehe, wo diese gar nicht benötigt werden (wie das mit anderen Tagging-Enginges häufig der Fall ist).*
+---
+**Wie** startet man die Applikation?
+- Aktuell leider nur über Tests von Use-Cases, da äußerste Präsentations-Schicht noch nicht angeschlossen ist.
+	 - Ziel ist jedoch über...
+		1. CLI mittels direkter, lokaler Interaktion in Terminal.
+		2. REST API/WebUI zum Einlagern von Webseiten.
+		3. *Dateisystem-Watcher wie in git registrieren und Änderungen einlagern.*
+---
+Was für **Voraussetzungen** werden benötigt?
+ - Keine, da Single Executable Veröffentlichung möglich.
+ - *Idealerweise ist .NET Runtime dennoch vorhanden, da sonst dessen Binaries ausgeteilt werden müssen.*
+- Kann bei Bedarf in Container betrieben werden.
+---
+ **Demonstration zweier Usecases**
+- `PlacePlant`: Pflanzen mit assoziierenden Hyphae einlagern.
+- `RetrievePlant`: Pflanzen nach Hyphae Query selektieren und auswerten.
+---
+### 🗺️ Technischer Überblick 
+
+---
+- **C# .NET Core 9** (aktuellste LTS)
+	- *Primär aus Eigeninteresse heraus, um die Sprache kennenzulerenen.*
+- Ausschließlich mit **System-Bibliotheken**, da Projektvorgabe.
+- **LINQ** (aus .NET Core) für verschiedene Daten-Transformations-Aufgaben 
+	- *Äquivalent zu Stream API ab Java 8.*
+- **MSTest**, Testing-Framework zum Durchführen automatischer (Unit-)Tests.
+- **SonarQube** und dessen **Erweiterung in VS** *für tiefere Einblicke in die Code-Qualität* .
+
+---
+## 🧹 **Clean Architecture**
+---
+Was ist Clean Architecture?  
+- Eine saubere Architektur zeichnet sich durch saubere Grenzen zwischen ihren Ebenen aus.
+- Eine saubere Grenze von der..
+	- ..Domäne gegenüber der Anwendung.
+	- ..Anwendung gegenüber Anwendenden.
+	- ..*Anwendung gegenüber Angewendetem.*
+- *Diese Grenzen dürfen von außen nach innen relativ frei überschritten werden und von innen nach außen nur über Verträge.*
+
+---
+<img src="Studere 🎓/6. Semester 🎉/🏗️ Advanced Software Engineering/{01} Programmentwurf/{01} Project/IMG_0562.jpg" alt="Clean Architecture" width="70%">
+
+---
+### **Analyse der Dependency Rule**
+---
+ **✅ Dependency Rule**: Abhängigkeiten dürfen nur i.R. innerer Schichten zeigen.
+- `PlacePlant` UseCase, verwendet richtig DTOs aus seiner Schicht und lässt diese über `PlantMapper` auf Typen aus Domäne abbilden und vice versa.
+---
+⚠️ **Dependency Rule verletzt**: Abhängigkeit zeigt nach außen: `CellType`.
+- Verwendet (als einziges) in Domänen-Modell den `Console.Error.WriteLine`,
+  um zu signalisieren, dass ein MediaType nicht offiziell unterstützt wird.
+- *Lösung bspw. ein Logging-Singleton, der  Fehler über ein Repository in Log-Aggregator o. Datei schreibt || Verlargerung in Applikations-Schicht mit dortigem `Result<>`.*
+---
+### 🔎 Analyse der Schichten
+---
+**Entität** in Domäne: `Plant`
+- Identifiziert  Zusammenschluss aus `cells` und ordnet diese zwei Abstraktions-Mustern zu: 
+	1. Hierarchischen Modell über den `.Name` HyphaStrain 
+	2. Attribute-basiert über eine Vielzahl an `AssociatedHyphae` -Strains.
+- Zusammenschluss aus verschiedenen Werteobjekten und anderen Entitäten und Eigenständigkeit über Lebenszyklus, deshalb handelt es sich um eine Entität.
+---
+- **UseCase** in : `PlacePlant`
+	- Bietet verschiedene Methoden, die `PlantDto` und `GardenDto`  verorten und ggf. Mycchorization durchführen. 
+	- Ist in Clean-Architecture eindeutig Teil der Applikations-Schicht und von Nöten um "sicher" mit internas zu interagieren und diese zu persistieren.
+---
+## 🪨 **SOLID**
+---
+### 🔎 Analyse **Single Responsibility Principle**
+---
+**positive Beispiel-Klasse** für SRP: `Fingerprint`.
+- Hat als Werteobjekt nur eine Aufgabe: GUID v7 wrappen.
+- Und zusätzlich eine Methode anzubieten, die Unix-Zeitstempel für Chronologie zugänglich macht.
+---
+**negative Beispiel-Klasse** für SRP: `Mycelium` 
+- Hält Hyphal-Plexus (Hyphen-Netzwerk), sowie Assoziationen zwischen Strains und Plants, sowie Strains und Gardens und ist "Grammatik" der Hyphae-Sprache.
+- Idealerweise wird Verantwortung weiter ausgelagert
+	- In lokale Plexus innerhalb von `Garden`-Instanzen.
+	- In eine `MyceliumAssociations`-Instanz, die Assoziationen übernehmen. 
+
+---
+### 🔎 Analyse **Open Closed Principle**
+---
+✅ **positive Beispiel** für OCP: Die Basis-Klasse `Hypha`.
+- Die für sich selbst als interne "Erweiterung" eines HyphaStrains verwendet werden kann. 
+- Spezielle Implementierungen wie der `HyphaApex`, ein einfacher textuelles Ende eines Strains oder eine `DecimalHypha` erweitern entsprechend die Basis-Klasse.
+---
+
+```mermaid
+classDiagram
+    %%! Basisklasse für alle Hypha-Typen im Domänenmodell.
+    class Hypha {
+        +HyphaKey Key
+        +DoesExtend() bool
+        +NextExtension() Hypha?
+        +ToString() string
+        +Equals(object other) bool
+        +GetHashCode() int
+    }
+  
+    %%! Spezialisierte Hypha, die wie ein einfacher Tag funktioniert.
+    %%! Der 'Value' der Basisklasse ist hier gleich dem 'Key'.
+    class HyphaApex {
+         +ToString() string
+    }
+  
+    %%! Spezialisierte Hypha, die einen Dezimalwert repräsentiert.
+    %%! Der Dezimalwert wird im 'Value' der Basisklasse gespeichert.
+    class DecimalHypha {
+        +AsDecimal() Decimal
+    }
+  
+    %%! Stellt den Schlüssel (Namensteil) einer Hypha dar.
+    class HyphaKey {
+      +string Value
+      +ToString() string
+    }
+
+
+    %%! Vererbungsbeziehungen von der Basisklasse Hypha.
+    Hypha <|-- HyphaApex
+    Hypha <|-- DecimalHypha
+
+  
+    %%! Assoziation: Jede Hypha hat genau einen HyphaKey.
+    Hypha "1" *-- "1" HyphaKey : hat
+```
+---
+
+⚠️ **negatives Beispiel** für OCP: `ParseHyphaType(hyphaKey, hyphaValue)`.
+- OCP wird verletzt, weil Parsing-Vorgang hier ohne Compiler-Warnung vorgenommen werden mus.
+- Werden nun `DateTimeHypha` oder `IpAddressHypa` hinzugefügt, müsste auch daran gedacht werden, die Serialisierung hier vorzunehmen.
+- Idealerweise wird bei Erweiterung gefordert, dass `IParsable` o.ä. implementiert wird, das von `HyphaeSerializationService` über ein Strategie-Pattern angesprochen wird.
+
+---
+
+```mermaid
+classDiagram
+    direction TB
+
+    class HyphaeSerializationService {
+        +ParseHyphaType(string hyphaKey, string hyphaValue) Hypha
+        ...
+    }
+  
+    %%! Basis-Hypha (oder Interface)
+    class Hypha {
+        <<abstract>>
+        +HyphaKey Key
+        +object Value
+    }
+  
+    %%! Bestehende, spezifische Hypha-Implementierungen
+    class DecimalHypha
+    class HyphaApex
+  
+    %%! Neuer, hinzuzufügender Hypha-Typ
+    class DateTimeHypha {
+        +DateTime AsDateTime()
+    }
+  
+    %%! Vererbungsbeziehungen
+    Hypha <|-- DecimalHypha
+    Hypha <|-- HyphaApex
+    Hypha <|-- DateTimeHypha
+  
+    %%! Abhängigkeiten: Service erstellt/verwendet die Hypha-Typen
+    HyphaeSerializationService ..> DecimalHypha : creates/uses
+    HyphaeSerializationService ..> HyphaApex : creates/uses
+    HyphaeSerializationService ..> DateTimeHypha : creates/uses (nach Modifikation!)
+```
+
+---
+
+### 🔎 Analyse **Interface Segragation**- und **Dependency Inversion**-Prinzipien
+
+---
+
+**Positive Beispiel-Klassen für Dependency Inversion**: Die beiden Use-Cases `PlacePlant` und `RetrievePlant`. 
+- Beide verwenden im Sinne der Clean Architecture ausschließlich `IRepository` Interfaces zum Ein- und Auslagern verschiedener Entitäten verwenden.
+- *Nächstes UML zeigt  Relation auf.*
+
+---
+
+**negatives Beispiel für Interface Segregation** kann `IRepository<T>` sein.
+ - Bietet wom. zu viele Varianten zum Abfragen an.
+ - Bei Erweiterung um bspw. das `ICellRepository` führt das zu Uneindeutigkeiten, wenn bspw. die `OrganellLocation` von dem Repository dennoch als `GetByPrimaryHyphaeAsync` angesprochen wird.
+	- *Repository-Zugriffe aufgesplittet und ggf. sogar soweit zerlegt werden, dass sie nach Lese-/Schreib-Zugriffen abgegrenzt sind.*
+	
+---
+
+```mermaid
+classDiagram
+    %% Base Repository Interface
+    class IRepository~T~ {
+        <<interface>>
+        %% Definiert allgemeine Repository-Operationen
+        +GetByFingerprintAsync(Fingerprint id) Task~T?~
+        +GetByPrimaryHyphaeAsync(HyphaeStrain strain) Task~T?~
+        +AddAsync(T candidate) Task
+        +UpdateAsync(T candidate) Task
+    }
+
+    %% Specific Repository Interfaces
+    class IArboretumRepository {
+        <<interface>>
+        %% Verwaltet das Arboretum-Aggregat
+        +Open() Arboretum
+        +Close() Boolean
+    }
+
+    class ICellRepository {
+        <<interface>>
+        %% Erbt von IRepository<Cell>
+    }
+    
+    class IGardenRepository {
+        <<interface>>
+        %% Erbt von IRepository<Garden>
+    }
+    
+    %% class IMyceliumRepository {
+    %%     <<interface>>
+    %%     %% Erbt von IRepository<Mycelium>
+    %%     %% Hinweis: Keine InMemory-Implementierung in den bereitgestellten Dateien gefunden
+    %% }
+
+    class IPlantRepository {
+        <<interface>>
+        %% Erbt von IRepository<Plant>
+    }
+
+    %% Interface Inheritance/Realization from IRepository<T>
+    IRepository~Cell~ <|-- ICellRepository
+    IRepository~Garden~ <|-- IGardenRepository
+    %% IRepository~Mycelium~ <|-- IMyceliumRepository
+    IRepository~Plant~ <|-- IPlantRepository
+  
+    %% InMemory Implementations
+    class InMemoryArboretumRepository {
+        %% Implementiert IArboretumRepository
+    }
+    InMemoryArboretumRepository ..|> IArboretumRepository
+
+    class InMemoryCellRepository {
+        %% Implementiert ICellRepository
+    }
+    
+    InMemoryCellRepository ..|> ICellRepository
+
+    class InMemoryGardenRepository {
+        %% Implementiert IGardenRepository
+    }
+    InMemoryGardenRepository ..|> IGardenRepository
+
+
+    class InMemoryPlantRepository {
+        %% Implementiert IPlantRepository
+    }
+
+    InMemoryPlantRepository ..|> IPlantRepository  
+
+    %% Use Cases and Services
+    class PlacePlant {
+        %% Use Case zum Platzieren einer Pflanze
+    }
+
+    class RetrievePlants {
+        %% Use Case zum Abrufen von Pflanzen
+    }
+    class MyceliumQueryService {
+        %% Service zur Abfrage des Myzeliums, unterstützt RetrievePlants
+    }
+
+
+    %% Dependencies from Use Cases/Services to Repository Interfaces
+    %% Zeigt, welche Use Cases/Services welche Repository-Schnittstellen verwenden
+    PlacePlant --> IArboretumRepository
+    PlacePlant --> IGardenRepository
+    PlacePlant --> IPlantRepository
+
+
+    RetrievePlants --> IArboretumRepository
+    RetrievePlants --> IPlantRepository
+
+    MyceliumQueryService --> IArboretumRepository
+    MyceliumQueryService --> IPlantRepository
+```
+
+---
+## **Weitere Prinzipien**
+
+---
+
+Was sind **General Responsibility Assignment Software Patterns**?
+- Ein Regelwerk, dass die **Wartbarkeit**, **Wiederverwendbarkeit** und **Verständlichkeit** sichert, indem eine **geringe Kopplung** Klassen möglichst unabhängig voneinander macht und eine **hohe Kohäsion** die Verantwortung einer Klasse fokussiert.
+
+---
+### 🔎 Analyse **GRASP**: **Geringe Kopplung**
+
+---
+
+`GardenMapper` löst die Kopplung hin zur Präsentations-Schicht.
+ - `Garden`-Instanzen aus und zu DTOs gewandelt werden, anstatt direkt `IParsable` auf einem `Garden`-Domänenobjekt aufzusatteln. 
+ - Statische `GardenMapper` Methoden werden nur von Use-Cases, Services und der Infrastruktur-Schicht in `InMemoryGardenRepository` verwendet und beschreiben beiden Konvertierungsrichtungen: `IntoDto(Garden)` und `IntoGarden(GardenDto)`.
+
+---
+
+### 🔎 Analyse **GRASP: Polymorphismus** 
+
+---
+
+**positives Beispiel** für Polymorphismus: Die `IRepository<>` Interfaces,
+  - die zunächst gemeinsame Signaturen verwenden und auf spezielle Interfaces für konkrete Domänen-Modelle abbilden
+  - um schließlich in der Infrastruktur-Schicht von `InMemory...Repository` implementiert zu werden.
+
+---
+### 🔁 **DRY** 
+---
+- `HyphaHierarchy`
+	- **War**: Einfach HyphaKey und finalen Value als String in `ImmutableArray<>` aggregieren.
+	- **Ist Nun:** Erst gesammte Hypha flach machen, dann HyphaKey extrahieren, weil Aggregation ganzer Hyphae in HyphaeStrain gebraucht ist.
+	- Commit: 69467663fb3a2f2bcfbfa8c4351220be6ebf8ce7
+---
+**vorher**:
+```csharp
+public static ImmutableArray<HyphaKey> Aggregate(Hypha root) {
+    return [.. AggregateSubHyphae(root, 1).Item1];
+}
+
+private static (HyphaKey[], ushort) AggregateSubHyphae(
+Hypha label, ushort depth = 0
+){
+    if (label.DoesExtend()) {
+        var (list, index) = AggregateSubHyphae(
+            label.NextExtension()!,
+            ++depth);
+        list[index] = label.Key;
+        return (list, --index);
+    }
+	// recursion basis.
+    HyphaKey[] aggregate = new HyphaKey[depth];
+    depth -= 1;
+    aggregate[depth] = label.Key;
+    depth -= 1;
+    return (aggregate, depth);
+}
+
+// ..Dasselbe für vollständige Hypha..
+```
+
+---
+
+**nachher**:
+```csharp
+private static (Hypha[], ushort) AggregateSubHyphae(Hypha hypha, ushort depth = 0) {
+    if (hypha.DoesExtend()) {
+        var (list, index) = AggregateSubHyphae(
+            hypha.NextExtension()!,
+            ++depth
+        );
+        list[index] = hypha;
+        return (list, --index);
+    }
+    // recursion basis.
+    Hypha[] aggregate = new Hypha[depth];
+    depth -= 1;
+    aggregate[depth] = hypha;
+    depth -= 1;
+    return (aggregate, depth);
+}
+
+public static ImmutableArray<Hypha> AggregateHyphae(Hypha root) {
+    return [.. AggregateSubHyphae(root, 1).Item1];
+}
+
+public static ImmutableArray<HyphaKey> AggregateHyphaeKeys(Hypha root) {
+    var aggregatedHypha = AggregateHyphae(root);
+    var hyphaKeys = new List<HyphaKey>(aggregatedHypha.Length);
+    foreach (var hypha in aggregatedHypha) {
+        hyphaKeys.Add(hypha.Key);
+    }
+    return [..hyphaKeys];
+}
+```
+*Achtung, Code-Duplikation nicht direkt commitet! Dennoch vorher/nacher Sicht möglich.* 
+
+---
+## **Unit Tests** 
+
+---
+### ATRIP
+---
+
+- ATRIP: **Automatic** wird mit dem Einsatz des MSTest-Frameworks.
+- ATRIP: **Thorough** steht für eine hohe Code-Coverage, die nur bedingt gegeben ist (~40% in 44 verschiedenen Tests). 
+	- Alle komplexeren Algorithmen relativ ausführlich aund vereinzelt data-driven getestet.
+	- *Bei Abstraktionen muss nicht getestet werden.*
+
+---
+
+- ATRIP: **Professional**
+	- Deskriptive Test-Methoden-Namen nach C# Best-Practices 
+		- *zumindest aktuellere nach Name_Zustand_Verhalten*.
+	- Datengetriebenes Testen.
+	- Strikt nach **AAA** aufgebaut.
+	- Schnelle und parallelisierbare Tests.
+
+---
+### 🎭 **Fakes** und Mocks
+
+---
+Fake Factories, die anders als Mocks keine Evaluation und lediglich Scuffholding anbieten,
+um In-Memory-Repositories für jeden Test-Kontext individuell zu instanziieren.
+`FakeGardenFactory`, `FakePlantFactory`.
+ 
+---
+ 
+ *Factory ist aktuell nicht zwingend angebrachte Bezeichnung, da nur zwischengeschaltene Helper hin zu InMemoryRepos, können i.Zkt. allerdings weitere Initialisierungsarten anbieten.*
+
+---
+### ### 1. `TestFingerprint.TestFingerprint` `TimestampExtraction()`
+- **Zweck:** Validiert Value Object `Fingerprint`.
+- **Testet:** Korrekte Extraktion des Erstellungszeitstempels aus einer GUID v7.
+
+---
+
+```csharp
+var timestamps = new[]
+{
+    DateTimeOffset.FromUnixTimeSeconds(987709362),
+    DateTimeOffset.FromUnixTimeSeconds(1615676400),
+    GetRandomDateTimeOffset()
+};
+
+var fingerprints = WrapFingerprints(WrapGuids(timestamps));
+
+var deserializedDateTime = new List<DateTimeOffset>(timestamps.Length);
+
+foreach (var fingerprint in fingerprints)
+{
+    deserializedDateTime.Add(fingerprint.GetCreationDateTime());
+}
+
+for (int i = 0; i < fingerprints.Length; i++)
+{
+	Assert.AreEqual(timestamps[i], deserializedDateTime[i]);
+}
+```
+
+---
+### 2. `TestHyphaeHierarchy.ShouldResolve` `TertiaryHyphaeHierarchy()`
+- **Zweck:** Validiert Domain Service `HyphaeHierarchy`.
+- **Testet:** Korrekte Umwandlung einer 3-stufigen `Hypha`-Hierarchie in String-Form.
+
+---
+
+```csharp
+var delimiter = HyphaKey.ExtensionDelimiter;
+var hyphae = BuildHyphaeOfThree();
+
+var serializedHierarchy = HyphaeHierarchy.AsString(hyphae);
+
+Assert.AreEqual(
+    $"Primary{delimiter}Secondary{delimiter}Tertiary",
+    serializedHierarchy
+    );
+```
+
+---
+### 3. `TestHyphaSerializer.TestSerializationCycle` `OfHyphaeHierarchyWithValue()`
+- **Zweck:** Validiert Application Service `HyphaeSerializationService`.
+- **Testet:** Korrekten Roundtrip (Serialisierung -> Deserialisierung -> Serialisierung) für einen `HyphaeStrain`.
+
+---
+
+```csharp
+// Arrange
+var delimiter = HyphaKey.ExtensionDelimiter;
+var serializedHyphae = $"{HyphaKey.StartMarker}keyA{delimiter}keyB{delimiter}value";
+
+// Act
+var hyphae = HyphaeSerializationService.Deserialize(serializedHyphae).First();
+var newSerializedHyphae = HyphaeSerializationService.Serialize(hyphae);
+
+// Assert
+Assert.IsNotNull(hyphae);
+Assert.AreEqual(serializedHyphae, newSerializedHyphae);
+```
+
+---
+### 4. `PlacePlantTest.IntoGarden` `_ValidPlant_AssociatesWithMycelium()`
+- **Zweck:** Validiert Use Case `PlacePlant` (Erfolgsfall + Seiteneffekt).
+- **Testet:** Korrektes Platzieren einer `Plant` im `Garden` UND die anschließende, korrekte Verbindung mit dem `Mycelium`.
+
+---
+
+```csharp
+// # Arrange
+var testGarden = FakeGardenFactory.CreateRawTestGarden("TestGarden");
+
+// Set up the repositories
+var gardenRepo = new InMemoryGardenRepository([testGarden]);
+var arboretumRepo = new InMemoryArboretumRepository([testGarden]);
+var plantRepo = new InMemoryPlantRepository();
+
+// Create Test Plant
+var testPlant = FakePlantFactory.CreateTestPlant(
+    "TestPlant",
+    "#this-strain-should-absolutely-be-associated" +
+    "#this-strain-should-be-associated-as-well", null, null);
+var testPlantDto = PlantMapper.IntoDto(testPlant);
+
+var gardenId = new GardenIdentifierInput(testGarden.UniqueMarker.ToString());
+
+// Create the use case with our in-memory repositories
+var placePlantUseCae = new PlacePlant(arboretumRepo, gardenRepo, plantRepo);
+
+// # Act
+var result = await placePlantUseCae.IntoGarden(testPlantDto, gardenId);
+
+// # Assert
+Assert.IsTrue(result.IsSuccess);
+Assert.IsNotNull(result.Value);
+Assert.AreEqual("#TestPlant", result.Value.PrimaryPlantHyphae); // Korrigiert gemäss Factory-Logik
+
+// Verify mycorrhization via mycelium in arboretum
+var arboretum = arboretumRepo.Open();
+
+// Plant be present by itself
+Assert.IsTrue(arboretum.Mycelium.ContainsMycorrhization(
+    testPlant.Name, testPlant.UniqueMarker
+    ));
+
+// Plants hyphae strains should be associated with plant.
+Assert.IsTrue(arboretum.Mycelium.ContainsMycorrhizations(
+    testPlant.AssociatedHyphae, testPlant.UniqueMarker
+    ));
+```
+---
+### 5. `RetrievePlantsTest.GetPlantByFingerprintAsync_ExistingPlant` `_ReturnsSuccessWithPlantInGarden()`
+- **Zweck:** Validiert Use Case `RetrievePlants` (Erfolgsfall, Single Item).
+- **Testet:** Korrektes Auffinden und Zurückgeben einer einzelnen `Plant` (im Kontext ihres `Garden` DTOs) via `Fingerprint`.
+
+---
+
+```csharp
+// Arrange
+var plant1 = FakePlantFactory.CreateTestPlant("PlantA", "#HyphaA", 0, 0);
+var garden1 = FakeGardenFactory.CreateRawTestGarden("Garden1");
+garden1.AddPlant(plant1);
+
+var retrievePlantsUseCase = SetupRepositoriesAndUseCase(
+	initialPlants: [plant1],
+    initialGardens: [garden1]);
+
+var input = new PlantIdentifierInput(plant1.UniqueMarker.ToString());
+
+// Act
+var result = await retrievePlantsUseCase.GetPlantByFingerprintAsync(input);
+
+// Assert
+IsTrue(result.IsSuccess);
+IsNotNull(result.Value);
+AreEqual(1, result.Value.MatchingGardens.Count, "Should find the plant in one garden.");
+var gardenDto = result.Value.MatchingGardens[0];
+AreEqual(garden1.UniqueMarker.ToString(), gardenDto.UniqueMarker);
+AreEqual(1, gardenDto.Plants.Count);
+AreEqual(plant1.UniqueMarker.ToString(), gardenDto.Plants[0].UniqueMarker);
+```
+
+---
+### 6. `RetrievePlantsTest.GetAllAsync_WhenGardensAndPlantsExist` `_ReturnsSuccessWithAllGardensAndPlants()`
+- **Zweck:** Validiert Use Case `RetrievePlants` (Erfolgsfall, Multiple Items).
+- **Testet:** Korrektes Zurückgeben aller `Gardens` mit ihren jeweiligen `Plants` als DTOs bei einem komplexeren Setup.
+---
+
+```csharp
+// Arrange: Setup with specific test data
+var plant1 = FakePlantFactory.CreateTestPlant("PlantA", "#HyphaA", 0, 0);
+var plant2 = FakePlantFactory.CreateTestPlant("PlantB", "#HyphaB", 0, 0);
+var garden1 = FakeGardenFactory.CreateRawTestGarden("Garden1");
+garden1.AddPlant(plant1); // Add plant to garden
+var garden2 = FakeGardenFactory.CreateRawTestGarden("Garden2");
+garden2.AddPlant(plant2); // Add plant to garden
+
+    // Important: Repos need the final state of gardens/plants
+var retrievePlantsUseCase = SetupRepositoriesAndUseCase(
+    initialPlants: [plant1, plant2],
+    initialGardens: [garden1, garden2]);
+
+// Act
+var result = await retrievePlantsUseCase.GetAllAsync();
+
+// Assert
+IsTrue(result.IsSuccess);
+IsNotNull(result.Value);
+AreEqual(2, result.Value.MatchingGardens.Count, "Should return two gardens.");
+
+var garden1Dto = result.Value.MatchingGardens
+    .FirstOrDefault(g => g.PrimaryLocation == garden1.PrimaryLocation.ToString());
+IsNotNull(garden1Dto);
+AreEqual(1, garden1Dto.Plants.Count);
+AreEqual(plant1.Name.ToString(), garden1Dto.Plants[0].PrimaryHyphae);
+
+var garden2Dto = result.Value.MatchingGardens
+        .FirstOrDefault(g => g.PrimaryLocation == garden2.PrimaryLocation.ToString());
+    IsNotNull(garden2Dto);
+    AreEqual(1, garden2Dto.Plants.Count);
+    AreEqual(plant2.Name.ToString(), garden2Dto.Plants[0].PrimaryHyphae);
+}
+```
+
+---
+
+### 7. `PlacePlantTest.IntoGarden` `_PlantAlreadyExists_ReturnsFailure()`
+- **Zweck:** Validiert Use Case `PlacePlant` (Fehlerfall, Geschäftsregel).
+- **Testet:** Korrekte Fehlerbehandlung (via `Result` Pattern), wenn eine `Plant` doppelt hinzugefügt werden soll.
+
+---
+
+```csharp
+// Arrange
+var testGarden = FakeGardenFactory.CreateRawTestGarden("TestGarden");
+
+// Set up the repositories
+var gardenRepo = new InMemoryGardenRepository([testGarden]);
+var arboretumRepo = new InMemoryArboretumRepository([testGarden]);
+var plantRepo = new InMemoryPlantRepository();
+
+// Create Test Plant
+var testPlant = FakePlantFactory.CreateTestPlant(
+	"TestPlant",
+    "#this-strain-should-not-be-associated#neither-this-one", null, null);
+
+var testPlantDto = PlantMapper.IntoDto(testPlant);
+
+var gardenId = new GardenIdentifierInput(testGarden.UniqueMarker.ToString());
+
+// Create the use case with our in-memory repositories
+var placePlantUseCae = new PlacePlant(arboretumRepo, gardenRepo, plantRepo);
+
+// Act
+var firstResult = await placePlantUseCae
+    .IntoGarden(testPlantDto, gardenId);
+
+var secondResult = await placePlantUseCae
+    .IntoGarden(testPlantDto, gardenId);
+
+// Assert
+Assert.IsTrue(firstResult.IsSuccess);
+Assert.IsFalse(secondResult.IsSuccess);
+Assert.AreEqual(PlacePlantErrors.PlantAlreadyExists, secondResult.Error.Code);
+```
+
+---
+### 8. `RetrievePlantsTest.ByPrimaryHyphaeAsync` `_NonExistingPlant_ReturnsFailurePlantNotFound()`
+- **Zweck:** Validiert Use Case `RetrievePlants` (Fehlerfall, "Not Found").
+- **Testet:** Korrekte Fehlerbehandlung (via `Result` Pattern), wenn eine `Plant` über einen nicht existierenden primären `HyphaeStrain` gesucht wird.
+
+---
+
+```csharp
+// Arrange
+var retrievePlantsUseCase = SetupRepositoriesAndUseCase();
+var input = new HyphaeStrainDto("#NonExistentPlant");
+
+// Act
+var result = await retrievePlantsUseCase.ByPrimaryHyphaeAsync(input);
+
+// Assert
+IsFalse(result.IsSuccess);
+AreEqual(RetrievePlantsError.PlantNotFound, result.Error.Code);
+```
+---
+### 9. `PlacePlantTest.IntoGardenWithoutAdditionalMycorrhization` `_ValidPlant_ReturnsSuccess()`
+- **Zweck:** Validiert eine spezielle Variante des `PlacePlant`-Use-Cases.
+- **Testet:** Erfolgreiches Hinzufügen einer `Plant` zu einem `Garden`, wobei explizit _keine_ zusätzliche Verbindung zum globalen `Mycelium` (außer der Garten-Assoziation) hergestellt wird.
+
+---
+
+```csharp
+// # Arrange
+var testGarden = FakeGardenFactory.CreateRawTestGarden("TestGarden");
+
+// Set up the repositories
+var gardenRepo = new InMemoryGardenRepository([testGarden]);
+var arboretumRepo = new InMemoryArboretumRepository([testGarden]);
+var plantRepo = new InMemoryPlantRepository();
+
+// Create Test Plant
+var testPlant = FakePlantFactory.CreateTestPlant(
+    "TestPlant",
+    "#this-strain-should-not-be-associated#neither-this-one", null, null);
+
+var testPlantDto = PlantMapper.IntoDto(testPlant);
+
+var gardenId = new GardenIdentifierInput(testGarden.UniqueMarker.ToString());
+
+// Create the use case with our in-memory repositories
+var placePlantUseCae = new PlacePlant(arboretumRepo, gardenRepo, plantRepo);
+
+// # Act
+var result = await placePlantUseCae
+    .IntoGardenWithoutAdditionalMycorrhization(testPlantDto, gardenId);
+
+// # Assert
+Assert.IsTrue(result.IsSuccess);
+var resultPlant = result.Value;
+Assert.IsNotNull(resultPlant);
+
+Assert.AreEqual("#TestPlant", resultPlant.PrimaryPlantHyphae); // Korrigiert gemäss Factory-Logik
+Assert.AreEqual(gardenId.GardenFingerprint, resultPlant.NewGardenFingerprint);
+
+// Nooow, the plant should still hold its hyphae (due to information preservation)
+//  => but, the mycelium should not be aware of the plant, just the garden.
+var arboretum = arboretumRepo.Open();
+
+// Plant should not be present by itself
+Assert.IsFalse(arboretum.Mycelium.ContainsMycorrhization(
+    testPlant.Name, testPlant.UniqueMarker
+    ));
+
+// Plants hyphae strains should not associate with plant.
+Assert.IsFalse(arboretum.Mycelium.ContainsMycorrhizations(
+    testPlant.AssociatedHyphae, testPlant.UniqueMarker
+    ));
+```
+
+---
+### 10. `RetrievePlantsTest.ByMyceliumQuery` `_VariousScenarios_ReturnsExpectedResult()`
+- **Zweck:** Validiert Use Case `RetrievePlants` (Datengetriebener Test).
+- **Testet:** Mehrere Query-Szenarien (AND/OR/NOT) effizient durch eine Methode gegen erwartete Ergebnisse (Erfolg/Fehler, Anzahl Treffer).
+
+---
+
+```csharp
+// Arrange
+var retrievePlantsUseCase = SetupForMyceliumQueryTests();
+var input = new QueryMyceliumInput(testCase.HyphaeQuery);
+
+// Act
+var result = await retrievePlantsUseCase.ByMyceliumQuery(input);
+
+// Assert
+AreEqual(
+	testCase.ExpectedSuccess, result.IsSuccess,
+    $"Query '{testCase.HyphaeQuery}' - Success state mismatch.");
+
+if (testCase.ExpectedSuccess)
+{
+    IsNotNull(result.Value, $"Query '{testCase.HyphaeQuery}' - Value should not be null on success.");
+    AreEqual(
+	    testCase.ExpectedGardenCount, result.Value.MatchingGardens.Count,
+        $"Query '{testCase.HyphaeQuery}' - Garden count mismatch.");
+
+    var totalDistinctPlants = result.Value.MatchingGardens
+        .SelectMany(garden => garden.Plants)
+        .DistinctBy(plant => plant.UniqueMarker)
+        .ToList();
+
+    AreEqual(
+	    testCase.ExpectedDistinctPlantCount, totalDistinctPlants.Count,
+        $"Query '{testCase.HyphaeQuery}' - Total plant count mismatch.");
+        
+}
+    else
+    {
+        IsNotNull(result.Error,
+            $"Query '{testCase.HyphaeQuery}' - Error object should not be null on failure.");
+        AreEqual(testCase.ExpectedErrorCode, result.Error.Code,
+            $"Query '{testCase.HyphaeQuery}' - Error code mismatch.");
+    }
+}
+```
+
+---
+##  **Domain Driven Design**
+
+---
+### Ubiquitous Language
+
+---
+
+- **Arboretum:** Das Gesamtsystem; enthält `Gardens` und das zentrale `Mycelium`.
+- **Garden:** (**Aggregate Root**) Ein Container/Namespace für `Plants`; hat `Fingerprint` und `PrimaryLocation` (`HyphaeStrain`). Verwaltet enthaltene `Plants`.
+
+---
+
+- **Plant:** (**Entity**) Die zentrale Informationseinheit (z.B. Datei); hat `Fingerprint`, `Name` (`HyphaeStrain`), `AssociatedHyphae` und besteht aus `Cells`.
+- **Cell:** (Value Object/**Entity**) Kleinste Dateneinheit einer `Plant`; verweist via `OrganellLocation` (`HyphaeStrain`) auf Daten; hat `Fingerprint` und `CellType`.
+
+---
+
+- **Mycelium:** (**Aggregate Root**/Domain Service) Das zentrale Beziehungsnetzwerk; verbindet `Plants` (`Mycorrhization`) und `Gardens` (`Association`) über `HyphaeStrains`; ermöglicht `Queries`.
+- **HyphaeStrain:** (**Werteobjekt**) Eine spezifische, unveränderliche Sequenz von `Hypha`-Objekten; repräsentiert einen vollständigen Attributpfad oder Beziehungsschlüssel; wird für `Name`, `PrimaryLocation`, `OrganellLocation`, `AssociatedHyphae` und im `Mycelium` verwendet.
+
+---
+
+- **Hypha:** (**Werteobjekt**) Atomarer Baustein einer Beziehung/eines Attributs (`HyphaKey` + Wert); kann hierarchisch sein.
+- **HyphaApex:** (Werteobjekt) Eine spezielle, atomare `Hypha`, die nur aus einem `HyphaKey` besteht (wie ein Tag).
+
+---
+
+- **HyphaKey:** (**Werteobjekt**) Der reine Schlüssel/Bezeichner-Teil einer `Hypha`.
+- **Fingerprint:** (**Werteobjekt**) Eindeutiger, zeitbasierter Identifikator (GUID v7) für `Plant`, `Garden`, `Cell`.
+
+---
+
+- **Mycorrhization / Mycorrhizate:** (Domain Verb/Noun) Der Prozess oder Zustand der Verbindung einer `Plant` mit dem `Mycelium` über ihre `HyphaeStrains`.
+- **Association:** (Domain Noun) Allgemeiner Begriff für Verbindungen im `Mycelium` (z.B. Garden <-> HyphaeStrain).
+
+---
+
+- **Cultivate / Cross:** (Domain Verbs) Aktionen auf `Plants` zur Erzeugung neuer Versionen oder Kombinationen.
+- ***PhenotypedPlant:** (Memento) Ein unveränderlicher Schnappschuss des Zustands einer* `Plant`.
+
+---
+### **Repositories**
+
+---
+
+Repositories, wie `IPlantRepository` und `IGardenRepository`, werden als Abstraktionsschicht eingesetzt, um die Details des Datenzugriffs (z. B. Speichern, Laden, Aktualisieren von `Plants` oder `Gardens`) von der restlichen Anwendungslogik zu entkoppeln.
+
+---
+
+Die Use Cases und Services (`PlacePlant`, `RetrievePlants`, `MyceliumQueryService`) interagieren ausschließlich mit diesen Interfaces und erhalten die konkreten Repository-Implementierungen (aktuell die `InMemory...`-Versionen) 
+über Dependency Injection im Konstruktor.
+
+---
+## Refactoring
+
+---
+### Code Smells
+
+---
+
+**Shotgun Surgery**: Die `HyphaeStrain` Klasse zieht sich wie die Hyphen in der Endanwendung   praktisch überall durch die Domänen- und Applikations-Schicht. 
+
+Änderung zieht viele Folgeänderungen mit sich. Ist bedingt by Design, da im Sinne der Bionik die Hyphe das Übertragungsnetz zwischen Pflanzen aufspannt. Werden jedoch weitere Features, zum Nährstoff- oder Informations-Austausch implementiert, so sind spezielle Varianten (Kinder) zu erstellen.
+
+---
+
+**Feature Envy** (& Method-Bloat): Die `GroupPlantsIntoGardens` ist neidisch auf `Garden` und `Plant`. 
+
+Idealerweise kann Beziehung `Plant` -> `Garden` (eben das inverse) implizit bereits in der Domäne aufgelöst werden, wom. direkt in Plant, obwohl das eigentlich nicht die richtige Abstraktion ist.
+
+---
+### 1. Refactoring
+
+---
+
+Die `Mycelium` Klasse übernimmt vermehrt Aufgaben zur Assoziation und Mycorrhization,
+wobei besonders Problem mit Trennbarkeit von Pflanzen und Gärten auftritt,
+da beide mit Fingerprints identifiziert werden.
+
+In diesem Refactoring geht es darum die Eindeutigkeit herzustellen,
+da nur `Plant`-Instanzen mycchoriziert werden können.
+Des Weiteren können bislang ungenutzte Methoden gestrichen werden,
+was zu einer kompakteren Klasse führt. 
+
+---
+
+Die API bleibt gleich*, implementierende Klassen müssen nicht angepasst werden.
+Lediglich die Erwartungshaltung gegenüber einzelnen Methoden hat sich korrigiert,
+sodass GetMycchorization(s) nur noch Fingerprints von `Plant`-Instanzen zurückgeben kann,
+weil nur diese eingelagert werden können.
+
+*Die Idee in eine `MyceliumAssociation` Klasse auszulagern wäre nicht mit den Refactoring-Grundsätzen zu vereinbaren gewesen, da sich die API geändert hätte. Dennoch kann das i.Zkt. eine sinnvolle Zerlegung sein.*
+
+---
+
+**Commits** 
+ - 6e0dc691ad1cef9ca4cc55f37ae16e91e5426322
+ - 92cb4a9b87b2d217cd27e061ab980111ad0f9237
+
+---
+
+**UML vorher**:
+```mermaid
+classDiagram
+    %% Core Mycelium Class with Fields
+    class Mycelium {
+        - _hyphalPlexus: ConcurrentDictionary~HyphaKey, HashSet HyphaeStrain ~
+        - _mycorrhizalAssociations: ConcurrentDictionary~HyphaeStrain, HashSet Fingerprint ~
+        + Mycelium(IList~Hypha~ hyphae, ConcurrentDictionary~HyphaeStrain, HashSet Fingerprint ~ mycorrhizalAssociations)
+        + Mycelium(IList~HyphaeStrain~ hyphaeStrains, ConcurrentDictionary~HyphaeStrain, HashSet Fingerprint ~ mycorrhizalAssociations)
+        + Mycelium()
+        - ExtendWith(IList~HyphaeStrain~ hyphaeStrains) Mycelium
+        - ExtendWith(HyphaeStrain hyphaeStrain) Mycelium
+        - ExtendWith(IEnumerable~Hypha~ hyphae) Mycelium
+        + ExtendWith(Hypha hypha) Mycelium
+        + Contains(ImmutableArray~Hypha~ flatHyphae) bool
+        + Contains(Hypha hypha) bool
+        + Contains(HyphaeStrain hyphae) bool
+        + AssociateWith(Hypha hypha, Fingerprint association) Mycelium
+        + AssociateWith(IEnumerable~Hypha~ hyphae, Fingerprint association) Mycelium
+        + AssociateWith(HyphaeStrain strain, Fingerprint association) Mycelium
+        + AssociateWith(IEnumerable~HyphaeStrain~ hyphaeStrains, Fingerprint plantUniqueMarker) void
+        + Mycorrhizate(Plant plant) void
+        + ContainsMycorrhization(HyphaeStrain hyphae, Fingerprint association) bool
+        + ContainsMycorrhization(Hypha hyphae, Fingerprint association) bool
+        + ContainsMycorrhizations(IEnumerable~Hypha~ manyHyphae, Fingerprint association) bool
+        + ContainsMycorrhizations(IEnumerable~HyphaeStrain~ manyHyphae, Fingerprint association) bool
+        + GetMycorrhization(HyphaeStrain hyphae) ImmutableList~Fingerprint~
+        + GetMycorrhizations(IList~HyphaeStrain~ hyphaeStrains) ImmutableDictionary~HyphaeStrain, ImmutableList~Fingerprint~~
+        + GetAllMycorrhizations() ImmutableDictionary~HyphaeStrain, HashSet~Fingerprint~~
+    }
+
+    %% Classes/Types Mycelium Directly Depends On
+    class HyphaeStrain { <<Aggregate Root>> }
+    class HyphaKey { <<Value Object>> }
+    class Fingerprint { <<Value Object>> }
+    class Plant { <<Entity>> }
+    class Garden { <<Aggregate Root>> }
+
+
+    %% Classes/Interfaces that Use or Contain Mycelium
+    class Arboretum {
+      <<Aggregate Root>>
+      + Mycelium Mycelium
+      + InitializeMyceliumWith(ICollection~Garden~ gardens) void
+    }
+    
+    class MyceliumQueryService {
+      <<Service>>
+      - mycelium : Mycelium
+      + FindAllByHyphaeQueryAsync(QueryMyceliumInput hyphaeQuery) Task~Result~...~~
+    }
+    
+    class PlacePlant {
+       %% Use Case - Indirectly uses Mycelium via Arboretum
+    }
+  
+    %% Mycelium's Internal Dependencies
+    Mycelium --> HyphaeStrain : uses
+    Mycelium --> HyphaKey : uses
+    Mycelium --> Fingerprint : uses
+    Mycelium --> Plant : uses in methods
+    Mycelium --> Garden : uses in methods
+  
+    %% Composition/Usage Relationships
+    Arboretum "1" *-- "1" Mycelium : contains / owns
+    MyceliumQueryService --> Arboretum : uses (to get Mycelium)
+    MyceliumQueryService --> Mycelium : uses methods
+  
+    %% Indirect Usage (Example)
+    PlacePlant --> Arboretum : uses
+```
+
+---
+
+**UML nachher**:
+```mermaid
+classDiagram
+    %% Core Mycelium Class with Fields
+    class Mycelium {
+        <<Aggregate Root>>
+        - _hyphalPlexus : ConcurrentDictionary~HyphaKey, HashSet HyphaeStrain~
+        - _plantMycorrhizations : ConcurrentDictionary~HyphaeStrain, HashSet Fingerprint~
+        - _gardenAssociations : ConcurrentDictionary~HyphaeStrain, HashSet Fingerprint~
+ 
+
+        + Mycorrhizate(Plant plant) void
+        + AssociateWithGarden(HyphaeStrain strain, Garden association) Mycelium
+        + GetMycorrhization(HyphaeStrain hyphae) ImmutableList~Fingerprint~
+        + GetMycorrhizations(IList~HyphaeStrain~ hyphaeStrains) ImmutableDictionary~HyphaeStrain, ImmutableList Fingerprint ~
+        + GetAllMycorrhizations() ImmutableDictionary~HyphaeStrain, HashSet Fingerprint ~
+        + ContainsMycorrhization(HyphaeStrain hyphae, Fingerprint association) bool
+    }
+
+    %% Classes/Types Mycelium Directly Depends On
+    class HyphaeStrain { <<Aggregate Root>> }
+    class HyphaKey { <<Value Object>> }
+    class Fingerprint { <<Value Object>> }
+    class Plant { <<Entity>> }
+    class Garden { <<Aggregate Root>> }
+    %% Used implicitly via HyphaeStrain
+
+ 
+    %% Classes/Interfaces that Use or Contain Mycelium
+    class Arboretum {
+      <<Aggregate Root>>
+      + Mycelium : Mycelium
+      + InitializeMyceliumWith(ICollection~Garden~ gardens) void
+    }
+
+    class MyceliumQueryService {
+      <<Service>>
+      - mycelium : Mycelium
+      + FindAllByHyphaeQueryAsync(QueryMyceliumInput hyphaeQuery) Task~Result~...~~
+    }
+
+    class PlacePlant {
+       %% Use Case - Indirectly uses Mycelium via Arboretum
+    } 
+
+    %% Mycelium's Internal Dependencies
+    Mycelium --> HyphaeStrain : uses
+    Mycelium --> HyphaKey : uses
+    Mycelium --> Fingerprint : uses
+    Mycelium --> Plant : uses in methods
+    Mycelium --> Garden : uses in methods
+
+    %% Composition/Usage Relationships
+    Arboretum "1" *-- "1" Mycelium : contains / owns
+    MyceliumQueryService --> Arboretum : uses (to get Mycelium)
+    MyceliumQueryService --> Mycelium : uses methods
+  
+    %% Indirect Usage (Example)
+    PlacePlant --> Arboretum : uses
+```
+
+---
+### 2. Refactoring
+
+---
+
+`MyceliumQueryService` ist ein Bloater.
+Die Idee ist die Aufgaben in einem Interpreter zu teilen und den Service zu vereinfachen. 
+Dafür sollte Bottom-Up zunächst das Sprachkonstrukt mit den verschiedenen `Or`, `And` und `Not` Ausdrücken definiert werden.
+Diese sollen schließlich in einem `HyphaeQueryParser` zusammengeführt werden
+mit dem die aktuelle Sprache beibehalten wird.
+
+---
+
+**UML vorher**:
+```mermaid
+classDiagram
+    %% The Service being described
+    class MyceliumQueryService {
+        <<Service>>
+        %% Fields representing dependencies
+        - _arboretumRepo IArboretumRepository
+        - _plantRepo IPlantRepository
+        - mycelium Mycelium %% Instance obtained via _arboretumRepo
+
+        #Key Public Methods:
+        + FindAllByHyphaeQueryAsync(QueryMyceliumInput hyphaeQuery) Task Result~MyceliumQuerySuccess, MyceliumQueryError~
+        + GroupPlantsIntoGardens(IList~Fingerprint~ plantIdentifyingFingerprints) Task Result~MyceliumQuerySuccess, MyceliumQueryError~
+        + 
+        # Private Methods
+        - FindAllInSingleOrBucket(string orBucket) Task Result~...~
+        - QueryMyceliumIntersection(plainHyphae, negatedHyphae) Task Result~...~
+        - QueryMyceliumNegatedAll(IList~HyphaeStrain~ negated) Task Result~...~
+        - QueryMyceliumMixedIntersection(plainHyphae, negatedHyphae) Task Result~...~
+    }
+  
+    %% Interfaces the Service Depends On
+    class IArboretumRepository {
+        <<interface>>
+        + Open() Arboretum
+    }
+    
+    class IPlantRepository {
+        <<interface>>
+        + GetByFingerprintAsync(Fingerprint id) Task~Plant?~
+        %% Other IRepository<Plant> methods...
+    }
+  
+    %% Concrete Implementations of Dependent Interfaces (used in context/DI)
+    class InMemoryArboretumRepository {
+        <<Infrastructure>>
+    }
+    
+    class InMemoryPlantRepository {
+        <<Infrastructure>>
+    }
+  
+    %% Domain Objects Used/Accessed by the Service
+    class Arboretum { <<Aggregate Root>> }
+    class Mycelium { <<Aggregate Root>> }
+    class Plant { <<Entity>> }
+    class Garden { <<Aggregate Root>> }
+    class Fingerprint { <<Value Object>> }
+    class HyphaeStrain { <<Aggregate Root>> }
+     %% Also acts like a Value Object in comparisons
+    class HyphaKey { <<Value Object>> }
+  
+    %% DTOs Used by the Service
+    class QueryMyceliumInput { <<DTO>> }
+    class MyceliumQuerySuccess { <<DTO>> }
+    class GardenDto { <<DTO>> }
+    class PlantDto { <<DTO>> }
+    class Result~TSuccess, TError~ { <<Utility>> }
+    %% Generic Result Pattern
+
+    %% Other Services/Utilities Used
+    class PlantMapper { <<Mapper Utility>> }
+    class HyphaeSerializationService { <<Service>> }
+
+    %% Classes that Use MyceliumQueryService
+    class RetrievePlants { <<Use Case>> }
+  
+    %% --- Relationships ---  
+    %% Implementation Relationships
+    InMemoryArboretumRepository ..|> IArboretumRepository
+    InMemoryPlantRepository ..|> IPlantRepository
+  
+    %% Dependencies OF MyceliumQueryService
+    MyceliumQueryService --> IArboretumRepository : uses
+    MyceliumQueryService --> IPlantRepository : uses
+    MyceliumQueryService --> Arboretum : accesses (via IArboretumRepository)
+    MyceliumQueryService --> Mycelium : uses methods of (via Arboretum)
+    MyceliumQueryService --> Plant : accesses (via IPlantRepository)
+    MyceliumQueryService --> Garden : accesses (via Arboretum/Plant)
+    MyceliumQueryService --> Fingerprint : uses
+    MyceliumQueryService --> HyphaeStrain : uses
+    MyceliumQueryService --> HyphaKey : uses (indirectly via parsing/serialization)
+    MyceliumQueryService --> QueryMyceliumInput : input parameter
+    MyceliumQueryService --> MyceliumQuerySuccess : returns in Result
+    MyceliumQueryService --> GardenDto : constructs for result
+    MyceliumQueryService --> PlantDto : constructs for result
+    MyceliumQueryService --> Result~TSuccess, TError~ : returns
+    MyceliumQueryService --> PlantMapper : uses
+    MyceliumQueryService --> HyphaeSerializationService : uses
+
+    %% Dependencies TO MyceliumQueryService
+    RetrievePlants --> MyceliumQueryService : uses
+```
+
+---
+
+**UML nachher**:
+```mermaid
+classDiagram
+    direction LR
+
+    class MyceliumQueryService {
+        -IArboretumRepository _arboretumRepo
+        -IPlantRepository _plantRepo
+        
+        +FindAllByHyphaeQueryAsync(QueryMyceliumInput) Task~Result~MyceliumQuerySuccess, MyceliumQueryError~~
+        +GroupPlantsIntoGardens(IList~Fingerprint~) Task~Result~MyceliumQuerySuccess, MyceliumQueryError~~
+        -MapParserErrorToServiceError(MyceliumQueryParserError) MyceliumQueryError
+    }
+
+    class HyphaeQueryParser {
+        %% Private Konstanten/statische Felder sind konzeptionell Teil der Klasse
+        -OR_MARKER : char
+        -NOT_MARKER : char
+        -HYPHAE_START_MARKER : char
+        +Parse(string query) Result~IHyphaeQueryExpression, MyceliumQueryParserError~
+        -ParseAndGroup(sring andGroupString) Result~IHyphaeQueryExpression, MyceliumQueryParserError~
+        -TokenizeAndGroup(string groupString) List~TermToken~
+    }
+    %% Der private Record TermToken innerhalb von HyphaeQueryParser
+    class TermToken {
+        <<record>>
+        +Term : string
+        +IsNegated : bool
+    }
+
+  
+    class MyceliumContext {
+        +Mycelium Mycelium
+    }
+  
+    class IHyphaeQueryExpression {
+        <<interface>>
+        +Interpret(MyceliumContext context) ImmutableList~Fingerprint~
+    }
+  
+    class TerminalHyphaeExpression {
+        -HyphaeStrain _strain
+        +Interpret(MyceliumContext context) ImmutableList~Fingerprint~
+    }
+  
+    class AndExpression {
+        -IHyphaeQueryExpression _left
+        -IHyphaeQueryExpression _right
+        +Interpret(MyceliumContext context) ImmutableList~Fingerprint~
+    }
+  
+    class OrExpression {
+        -IHyphaeQueryExpression _left
+        -IHyphaeQueryExpression _right
+        +Interpret(MyceliumContext context) ImmutableList~Fingerprint~
+    }
+  
+    class NotExpression {
+        -IHyphaeQueryExpression _expression
+        +Interpret(MyceliumContext context) ImmutableList~Fingerprint~
+    }
+  
+    %% Externe, aber direkt relevante Klassen (nur Namen)
+    class QueryMyceliumInput
+    class MyceliumQuerySuccess
+    class MyceliumQueryError
+    class MyceliumQueryParserError
+    class Fingerprint
+    class Mycelium
+    class HyphaeStrain
+    class IArboretumRepository
+    class IPlantRepository
+    class HyphaeSerializationService
+  
+    %% Beziehungen
+    MyceliumQueryService ..> HyphaeQueryParser : uses
+    MyceliumQueryService ..> MyceliumContext : creates
+    MyceliumQueryService ..> Mycelium : uses (to create context)
+    MyceliumQueryService ..> IArboretumRepository : uses
+    MyceliumQueryService ..> IPlantRepository : uses
+    MyceliumQueryService ..> QueryMyceliumInput : receives
+    MyceliumQueryService ..> MyceliumQuerySuccess : returns
+    MyceliumQueryService ..> MyceliumQueryError : returns
+  
+    HyphaeQueryParser ..> IHyphaeQueryExpression : creates
+    HyphaeQueryParser ..> TerminalHyphaeExpression : creates
+    HyphaeQueryParser ..> AndExpression : creates
+    HyphaeQueryParser ..> OrExpression : creates
+    HyphaeQueryParser ..> NotExpression : creates
+    HyphaeQueryParser ..> TermToken : uses (creates instances of private record)
+    HyphaeQueryParser ..> HyphaeSerializationService : uses
+    HyphaeQueryParser ..> MyceliumQueryParserError : returns
+
+  
+    IHyphaeQueryExpression <|.. TerminalHyphaeExpression
+    IHyphaeQueryExpression <|.. AndExpression
+    IHyphaeQueryExpression <|.. OrExpression
+    IHyphaeQueryExpression <|.. NotExpression
+  
+    TerminalHyphaeExpression ..> MyceliumContext : uses
+    TerminalHyphaeExpression ..> HyphaeStrain : uses
+    AndExpression ..> MyceliumContext : uses
+    AndExpression o-- IHyphaeQueryExpression : aggregates (left)
+    AndExpression o-- IHyphaeQueryExpression : aggregates (right)
+    OrExpression ..> MyceliumContext : uses
+    OrExpression o-- IHyphaeQueryExpression : aggregates (left)
+    OrExpression o-- IHyphaeQueryExpression : aggregates (right)
+    NotExpression ..> MyceliumContext : uses
+    NotExpression o-- IHyphaeQueryExpression : aggregates
+  
+    MyceliumContext ..> Mycelium : uses
+  
+    %% Weitere Relationen zu externen Klassen (vereinfacht)
+    TerminalHyphaeExpression ..> Fingerprint : returns via Interpret
+    AndExpression ..> Fingerprint : returns via Interpret
+    OrExpression ..> Fingerprint : returns via Interpret
+    NotExpression ..> Fingerprint : returns via Interpret
+```
+*Commit: 4f9b678b2856bfd9ab0e3e3ead60be0a94023712*
+*⚠️ zwei Tests failen bewusst, die möchte ich nicht länger zulassen, da sie vorher sowieso nur leere Ergebnisse geliefert haben.*
+
+---
+## **Entwurfsmuster**
+
+`HyphaeBuilder`
+```mermaid
+classDiagram
+    class HyphaeBuilder {
+        -List~HyphaKey~ _hyphaeStrain
+        -Hypha _root
+        +HyphaeBuilder(Hypha root, List~HyphaKey~?)
+        +ExtendBy(HyphaKey) HyphaeBuilder
+        +ExtendBy(Hypha) HyphaeBuilder
+        +Build() Hypha
+    }
+    class Hypha {
+      +Key: HyphaKey
+      +Value: object
+      +NextExtension() Hypha?
+      +DoesExtend() bool
+    }
+
+    class HyphaKey {
+      +Value: string
+    }
+
+    class HyphaeSerializationService {
+      <<static>> +Deserialize(string) ImmutableList~HyphaeStrain~
+      <<static>> -ParseHypha(string) HyphaeStrain
+      <<static>> +Serialize(Hypha) string
+    }
+
+    HyphaeBuilder ..> Hypha : builds
+    HyphaeBuilder ..> HyphaKey : uses
+    HyphaeBuilder ..> Hypha : depends on (for root)
+    HyphaeSerializationService ..> HyphaeBuilder : uses (within ParseHypha)
+```
+
+
+---
+
+`PlantMapper`
+*Entspricht dem Data Mapper-Muster aus Martin Fowlers Buch 
+"Patterns of Enterprise Application Architecture".*
+```mermaid
+classDiagram
+    direction LR
+
+    class PlantMapper {
+        <<static>>
+        +IntoPlant(PlantDto plantTemplate) Plant
+        +IntoDto(Plant plant) PlantDto
+    }
+
+  
+
+    class Plant {
+        <<Domain Entity>>
+        +Name: HyphaeStrain
+        +UniqueMarker: Fingerprint
+        +Cells: ImmutableDictionary<Fingerprint, Cell>
+        +AssociatedHyphae: ImmutableList<HyphaeStrain>
+    }
+
+    class PlantDto {
+        <<Data Transfer Object>>
+        +UniqueMarker: String
+        +PrimaryHyphae: String
+        +Cells: IList<CellDto>
+        +AssociatedHyphae: IList<String>
+    }
+
+
+    class Cell { }
+    class CellDto { }
+    class HyphaeStrain { }
+    class Fingerprint { }
+    
+    class HyphaeSerializationService {
+        <<static>>
+        +Serialize(...) string
+        +Deserialize(...) ImmutableList<HyphaeStrain>
+    }
+
+
+    class GardenMapper {
+        <<static>>
+        +IntoGarden(GardenDto) Garden
+        +IntoDto(Garden) GardenDto
+    }
+
+  
+
+    class PlacePlant {
+        <<Use Case>>
+        +IntoGarden(...) Task<Result<PlacePlantSuccess, PlacePlantErrors>>
+    }
+
+  
+
+    class RetrievePlants {
+        <<Use Case>>
+        +GetAllAsync() Task<Result<RetrievePlantsSuccess, RetrievePlantsError>>
+    }
+
+  
+
+    class MyceliumQueryService {
+        <<Service>>
+        +GroupPlantsIntoGardens(...) Task<Result<...>>
+    }
+
+
+    PlantMapper ..> Plant : creates/uses
+    PlantMapper ..> PlantDto : creates/uses
+    PlantMapper ..> Cell : uses (indirectly via Plant)
+    PlantMapper ..> CellDto : uses
+    PlantMapper ..> HyphaeStrain : uses
+    PlantMapper ..> Fingerprint : uses
+    PlantMapper ..> HyphaeSerializationService : uses
+    GardenMapper ..> PlantMapper : uses
+    PlacePlant ..> PlantMapper : uses (IntoPlant)
+    RetrievePlants ..> PlantMapper : uses (IntoDto)
+    MyceliumQueryService ..> PlantMapper : uses (IntoDto)
+```
+
+---
+
+ `Result<TSuccess, TError>`
+Eine explizite Fehlerbehandlungsstrategie, eingesetzt in der Anwendungs-Schicht.
+
+```mermaid
+classDiagram
+
+    class Result~TSuccess, TErrorEnum~ {
+        #_value: TSuccess?
+        #_error: ErrorResult~TErrorEnum~?
+        +IsSuccess: bool
+        +Value: TSuccess
+        +Error: ErrorResult~TErrorEnum~
+        +Ok(value) Result~TSuccess, TErrorEnum~$
+        +Fail(error) Result~TSuccess, TErrorEnum~$
+        +Match~TResult~(onSuccess, onFailure) TResult
+    }
+
+    note for Result "Generic record for operation outcomes"
+
+    class ErrorResult~TErrorEnum~ {
+         <<record>>
+         +Code: TErrorEnum
+         +Message: string
+         +Target: string?
+         +ErrorResult(TErrorEnum code, string message, string? target)
+    }
+
+    class ResultFactory {
+        <<static>>
+        +Ok~TSuccess, TErrorEnum~(value) Result
+        +Fail~TSuccess, TErrorEnum~(code, message, ?target) Result
+        +Fail~TSuccess, TErrorEnum~(ErrorResult~TErrorEnum~ error) Result
+    }
+  
+    %% Core Relationships
+    Result~TSuccess, TErrorEnum~ o-- "1" ErrorResult~TErrorEnum~ : contains (on failure)
+    ResultFactory ..> Result~TSuccess, TErrorEnum~ : creates
+    ResultFactory ..> ErrorResult~TErrorEnum~ : creates/uses
+
+    %% --- Example Usage ---
+    class PlacePlant {
+        <<Use Case>>
+        +IntoGarden(...) Task~Result
+        +IntoGardenWithoutAdditionalMycorrhization(...) Task~Result
+    }
+  
+    class PlacePlantSuccess {
+        <<record>>
+        +PlantFingerprint: string
+        +NewGardenFingerprint: string
+        +PrimaryPlantHyphae: string
+        +HyphaeStrains: ImmutableList~string~
+    }
+
+    class PlacePlantErrors {
+        <<enumeration>>
+        PlantAlreadyExists
+        GardenNotFound
+        AssociationWithMyceliumFailed
+        PlantCannotBeConstructed
+    }
+
+    PlacePlant ..> Result~PlacePlantSuccess, PlacePlantErrors~ : returns
+
+    %% Specific Result contents and Error association
+    Result~PlacePlantSuccess, PlacePlantErrors~ o-- "1" PlacePlantSuccess : contains (on success)
+    ErrorResult~TErrorEnum~ ..> PlacePlantErrors : uses (as TErrorEnum)
+```
