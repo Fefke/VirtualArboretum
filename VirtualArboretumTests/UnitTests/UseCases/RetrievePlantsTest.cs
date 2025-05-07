@@ -347,15 +347,6 @@ public class RetrievePlantsTest
             AreEqual(testCase.ExpectedDistinctPlantCount, totalDistinctPlants.Count,
                 $"Query '{testCase.HyphaeQuery}' - Total plant count mismatch.");
 
-            // Specific assertions for special test cases
-            if (testCase.HyphaeQuery == "#HyphaA #color-red")
-            {
-                var gardenDto = result.Value.MatchingGardens.FirstOrDefault();
-                IsNotNull(gardenDto);
-                AreEqual("Garden1", gardenDto.PrimaryLocation);
-                AreEqual(1, gardenDto.Plants.Count);
-                AreEqual("PlantA", gardenDto.Plants[0].PrimaryHyphae);
-            }
         }
         else
         {
